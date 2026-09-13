@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lzxphys-su2"
+version = "0.1.0"
+description = "Explicit SU(2) anomaly cocycles with finite global geometric fillings"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["mpmath==1.3.0"]
+
+[project.optional-dependencies]
+validation = ["numpy==2.4.4"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+py-modules = ["su2_omega"]

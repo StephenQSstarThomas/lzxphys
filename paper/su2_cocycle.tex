@@ -1,0 +1,1451 @@
+\documentclass[UTF8,11pt,fontset=none]{ctexart}
+\usepackage[a4paper,margin=25mm,headheight=15pt]{geometry}
+\setCJKmainfont{Droid Sans Fallback}[AutoFakeBold=2,AutoFakeSlant=0.15]
+\setCJKsansfont{Droid Sans Fallback}[AutoFakeBold=2,AutoFakeSlant=0.15]
+\setCJKmonofont{Droid Sans Fallback}[AutoFakeBold=2,AutoFakeSlant=0.15]
+\setmainfont{DejaVu Serif}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}[Scale=MatchLowercase]
+\usepackage{amsmath,amssymb,mathtools,amsthm}
+\usepackage{booktabs,array,longtable}
+\usepackage{xcolor}
+\usepackage[unicode,colorlinks=true,linkcolor=blue!45!black,
+  citecolor=blue!45!black,urlcolor=blue!45!black]{hyperref}
+\hypersetup{pdftitle={SU(2) 对称缺陷三余循环：从反常内流到全局有限闭式}}
+\allowdisplaybreaks[2]
+\setlength{\emergencystretch}{2em}
+\setlength{\parskip}{0.25em}
+\raggedbottom
+\numberwithin{equation}{section}
+\theoremstyle{definition}
+\newtheorem{theorem}{定理}[section]
+\newtheorem{proposition}[theorem]{命题}
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{definition}[theorem]{定义}
+\newtheorem{remark}[theorem]{说明}
+\renewcommand{\proofname}{证明}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\Li}{Li}
+\DeclareMathOperator{\Arg}{Arg}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\conv}{conv}
+\DeclareMathOperator{\Span}{span}
+\DeclareMathOperator{\curv}{curv}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\C}{\mathbb C}
+\newcommand{\dd}{\mathrm d}
+\newcommand{\ee}{\mathrm e}
+\newcommand{\SU}{\mathrm{SU}(2)}
+\newcommand{\Id}{I}
+\newcommand{\Vor}{V_{\mathrm{or}}}
+\newcommand{\delG}{\delta_G}
+\newcommand{\file}[1]{\texttt{\detokenize{#1}}}
+
+\title{SU(2) 对称缺陷三余循环：\\从反常内流到全局有限闭式}
+\author{}
+\date{2026年9月13日}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+本文研究 $1+1$ 维玻色体系的整数 level $\SU$ 背景规范反常，
+将群元标记的可逆对称缺陷之 F-move 相位写成三个任意群元的显式函数。
+从有限规范变换与三维 Chern--Simons 内流出发，先固定迹、取向、融合方向及共享面，
+把相位表示为 $\SU\simeq S^3$ 上的整数归一化体积积分。
+一般位置的积分由 Murakami 球面四面体公式化为八项主支二重对数；
+全部异常输入则由一个确定的有限锥填充规则处理，最多需要 $24$ 个合法四面体。
+
+文中证明共享面的严格相容、左平移等变、五边形及归一化，
+并通过通用平坦束的三骨架截面，将所得具体 bar 代表识别为
+$-k\widehat c_2$ 的平坦二级类。换面余边界、Bockstein 符号、
+有限循环子群不变量及两类不同分支跳变均予以说明。
+另给棱长闭式的显式对数偏导、局部与全局解析校准，以及简洁的可复现数值记录。
+所求结果是一个全局可不连续的标量代表；其定义不要求在退化输入处任取极限。
+\end{abstract}
+
+\tableofcontents
+\clearpage
+
+\section{问题、约定与结论的层次}\label{sec:conventions}
+
+令 $D_g$ 表示由 $g\in\SU$ 标记的可逆对称缺陷。
+研究对象是两种融合次序之间的标量
+\begin{equation}
+ (D_{g_1}D_{g_2})D_{g_3}
+ \longrightarrow D_{g_1}(D_{g_2}D_{g_3}),
+ \qquad \omega_k(g_1,g_2,g_3)\in U(1).
+ \label{eq:fmove-direction}
+\end{equation}
+三个群元不受对易、转轴或小角限制。整数 $k$ 是理论的反常系数；
+$\omega_k$ 是在固定结点与几何填充约定后依赖群元的函数。
+二者与其上同调类 $[\omega_k]$ 应分别看待。
+
+\begin{table}[htbp]
+\centering
+\caption{固定的规范化和方向}
+\begin{tabular}{@{}p{0.23\linewidth}p{0.70\linewidth}@{}}
+\toprule
+项目 & 本文约定\\
+\midrule
+联络与曲率 & $A$ 反厄米，$F=\dd A+A\wedge A$\\
+迹 & $\Tr$ 为二维基本表示普通迹，$\Tr\Id=2$\\
+矩阵坐标 & $g=x_0\Id+i\sum_{a=1}^3x_a\sigma_a$\\
+球面取向 & $\R^4$ 顺序 $(x_0,x_1,x_2,x_3)$ 的外法向诱导取向\\
+积分特征类 & $c_2(F)=\Tr(F\wedge F)/(8\pi^2)$，$u_k=-kc_2$\\
+相位约定 & 正向 F-move 取 $\exp(2\pi i\int I_3)$；反向取逆\\
+群作用 & 共享链按左平移等变；累计顶点使用右侧逐次群乘法\\
+Bockstein & $\mathcal B([t\bmod\Z])=[\delta t]$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+全文采用普通带联络 $\SU$ 背景反常的 Chern--Simons 微分特征，再限制到平坦背景。
+这是将局部多项式提升为指定全局反常类的物理输入。
+本文不计算整个 $H^3(\SU^\delta;U(1))$，不讨论四维 Witten 反常，
+也不把群元结合子替换成 WZW 初级场融合矩阵或量子群 $6j$ 符号。
+这里 $\SU^\delta$ 表示同一个抽象群赋予离散拓扑。
+
+\begin{theorem}[本文构造的结果]\label{thm:main}
+对任意 $k\in\Z$，下文给出一个定义于全部 $\SU^3$ 的规范化三余循环。
+当四个累计顶点线性独立时，相位由式 \eqref{eq:main-phase} 的有限二重对数公式给出。
+在全部输入上，式 \eqref{eq:global-phase} 至多使用 $24$ 个同类体积项，
+且面与三维填充的锥点分别至多检查 $19$、$73$ 个候选。
+该代表实现 $-k\widehat c_2$ 的平坦限制，满足
+\[
+ \omega_k(1,g,h)=\omega_k(g,1,h)=\omega_k(g,h,1)=1
+\]
+及群三余循环关系。其有限环面子群不变量为
+\[
+ \prod_{r=0}^{n-1}\omega_k(h,h^r,h)=\ee^{-2\pi ik/n},
+ \qquad h=\ee^{2\pi i\sigma_1/n}.
+\]
+\end{theorem}
+
+这一结果包括两个互相衔接的层次：一般位置的单四面体闭式，以及异常集合上的有限分块规则。
+「全局」指后者覆盖每个输入并满足同一五边形关系，不要求非平凡标量代表处处连续。
+连续标量模型的限制可与 Baez--Lauda 的定理 59、推论 60 对照 \cite{baezlauda}。
+
+\section{从反常内流到有向体积}\label{sec:physics}
+
+\subsection{反常多项式与普通第二陈类}
+
+固定
+\begin{align}
+ I_4(F)&=-\frac{k}{8\pi^2}\Tr(F\wedge F),\label{eq:I4}\\
+ I_3(A)&=-\frac{k}{8\pi^2}
+ \Tr\left(A\wedge\dd A+\frac23A\wedge A\wedge A\right),
+ \qquad \dd I_3=I_4.\label{eq:I3}
+\end{align}
+由总陈类 $\det(1+iF/(2\pi))$ 展开，$\Tr F=0$ 时
+\begin{equation}
+ c_2(F)=-\frac12\Tr\left(\frac{iF}{2\pi}\right)^2
+ =\frac{\Tr(F\wedge F)}{8\pi^2}.
+ \label{eq:c2-sign}
+\end{equation}
+因此所给多项式代表 $u_k=-kc_2$。这只是生成元与 level 的明确符号约定，
+不引入 $k+2$ 等量子 level 位移。
+与 Jia 等正文的 $\mathrm{CS}_k=(k/2)\mathrm{tr}(A\dd A+2A^3/3)$ 对接时，
+其双线性型应取 $\mathrm{tr}(XY)=-\Tr(XY)/(4\pi^2)$
+\cite[式 (7)--(10)、附录 E]{jia}。
+
+\subsection{有限规范变换及其边界项}
+
+对 $u:M\to\SU$，记
+\[
+ A^u=u^{-1}Au+u^{-1}\dd u,\qquad
+ \theta=u^{-1}\dd u,\qquad B=u^{-1}Au.
+\]
+有 $\dd\theta=-\theta^2$ 及
+$\dd B=u^{-1}(\dd A)u-\theta B-B\theta$。
+代入三次多项式并使用微分形式的分次循环迹，得到
+\begin{align}
+ \Tr\left(A^u\dd A^u+\frac23(A^u)^3\right)
+ ={}&\Tr\left(A\dd A+\frac23A^3\right)
+ -\dd\Tr(\dd u\,u^{-1}\wedge A)\notag\\
+ &-\frac13\Tr(u^{-1}\dd u)^3.
+ \label{eq:finite-cs-unscaled}
+\end{align}
+所以精确的有限变换公式是
+\begin{align}
+ I_3(A^u)-I_3(A)&=\dd Q_2(A,u)+k\,u^*\eta,\label{eq:finite-gauge}\\
+ Q_2(A,u)&=\frac{k}{8\pi^2}\Tr(\dd u\,u^{-1}\wedge A),\qquad
+ \eta=\frac1{24\pi^2}\Tr(h^{-1}\dd h)^3.\label{eq:Q2-eta}
+\end{align}
+式 \eqref{eq:finite-gauge} 同时固定三维 Wess--Zumino 项与二维边界项的符号。
+若将二维有限规范变换延拓到有向插值柱 $\Sigma\times[0,1]$，
+其相位由指数化 CS 积分计算；边界标架固定后，更换内部延拓只产生允许的整数周期。
+这就是有限规范变换描述缺陷重排的内流路线 \cite[附录 E]{jia}。
+
+缺陷网络给出平坦背景。在单个可缩三维块上，平行标架中联络为零；
+改用指定的边界标架后可写
+\begin{equation}
+ A=f^{-1}\dd f,\qquad
+ I_3(A)=\frac{k}{24\pi^2}\Tr(f^{-1}\dd f)^3=k f^*\eta.
+ \label{eq:pure-gauge}
+\end{equation}
+在这一局部计算中，式 \eqref{eq:finite-gauge} 从 $A=0$ 出发，$Q_2$ 为零。
+拼接时的边界标架由共享面约定固定；若在其他背景标架直接计算，
+必须保留 $Q_2$，其变化与后文结点重定相完全相容。
+
+\begin{remark}[局部纯规范与全局平坦必须区分]
+三维基底上的 $\SU$ 束平凡，并不推出平坦联络在基底上是全局纯规范。
+例如 $S^1\times S^2$ 的平凡束上
+$A=i\lambda\sigma_3\,\dd\vartheta$ 平坦，却一般有非平凡 holonomy。
+本文只在可缩块上使用 \eqref{eq:pure-gauge}；
+全局拼接由第 \ref{sec:class} 节的带联络微分特征处理。
+\end{remark}
+
+\subsection{球面三形式的系数与取向}
+
+写 $h=x_0\Id+i\boldsymbol{x}\cdot\boldsymbol{\sigma}$。
+在单位元 $(1,0,0,0)$ 处，
+\[
+ h^{-1}\dd h=i\sigma_a\,\dd x_a,\qquad
+ \Tr(i\sigma_a i\sigma_b i\sigma_c)=2\epsilon_{abc}.
+\]
+反对称求和给出
+\[
+ \Tr(h^{-1}\dd h)^3=12\,\dd x_1\wedge\dd x_2\wedge\dd x_3.
+\]
+迹三形式和球面体积形式均左平移不变，因而
+\begin{equation}
+ \eta=\frac{\dd V_{S^3}}{2\pi^2},
+ \qquad \int_{S^3}\eta=1.
+ \label{eq:eta-normalized}
+\end{equation}
+整数 $k$ 的作用在此十分具体：任何整系数闭三链 $Z$ 满足
+$\exp(2\pi ik\int_Z\eta)=1$。
+
+\subsection{两种融合的共享面}
+
+先选从 $e$ 到 $g$ 的边链 $\gamma(g)$，以及面链 $S(g,h)$，满足
+\begin{align}
+ \partial\gamma(g)&=[g]-[e],\\
+ \partial S(g,h)&=g\gamma(h)-\gamma(gh)+\gamma(g).
+ \label{eq:bar-face}
+\end{align}
+所有平移后的链都由左等变规则定义。
+两种融合面为
+\begin{equation}
+ B_L=S(g,h)+S(gh,l),\qquad
+ B_R=gS(h,l)+S(g,hl).
+ \label{eq:BLBR}
+\end{equation}
+二者有同一条边界。正向 F-move \eqref{eq:fmove-direction} 的三维链取
+\begin{equation}
+ \partial C(g,h,l)=B_R-B_L
+ =gS(h,l)-S(gh,l)+S(g,hl)-S(g,h).
+ \label{eq:bar-C}
+\end{equation}
+按正向 CS 插值的定义，
+\begin{equation}
+ \boxed{\;
+ \omega_k(g,h,l)=\exp\left(2\pi ik\int_{C(g,h,l)}\eta\right)
+ =\exp\left(\frac{ik}{\pi}\Vor(C(g,h,l))\right).
+ \;}
+ \label{eq:geometric-phase}
+\end{equation}
+若采用抵消此 bulk 变化的边界因子，或反转 F-move，标量取逆。
+面约定在式 \eqref{eq:bar-C} 中具有独立角色：
+固定面后改变三维填充不改变相位；改变面一般给出二上链余边界。
+
+\section{从三个一般群元到球面四面体}\label{sec:geometry}
+
+\subsection{累计顶点、乘法与六个迹}
+
+给定三个任意 $\SU$ 矩阵，定义
+\begin{equation}
+ U_0=\Id,\quad U_1=g_1,\quad U_2=g_1g_2,\quad U_3=g_1g_2g_3,
+ \qquad U_j=q_{j0}\Id+i\sum_{a=1}^3q_{ja}\sigma_a.
+ \label{eq:cumulative}
+\end{equation}
+坐标可直接从矩阵取得：
+\[
+ q_{j0}=\frac12\Tr U_j,\qquad
+ q_{ja}=\frac1{2i}\Tr(\sigma_aU_j),\qquad
+ q_j=(q_{j0},q_{j1},q_{j2},q_{j3})^T\in S^3.
+\]
+所用 $+i\sigma_a$ 约定给出负叉积：
+\begin{equation}
+ (a_0,\boldsymbol a)(b_0,\boldsymbol b)
+ =\big(a_0b_0-\boldsymbol a\cdot\boldsymbol b,\,
+ a_0\boldsymbol b+b_0\boldsymbol a-\boldsymbol a\times\boldsymbol b\big).
+ \label{eq:quaternion-product}
+\end{equation}
+改变叉积号时必须同步改变相应坐标或取向，不能只替换这一项。
+
+置
+\begin{equation}
+ Q=(q_0,q_1,q_2,q_3),\qquad D=\det Q,\qquad \Gamma=Q^TQ.
+ \label{eq:QGD}
+\end{equation}
+记 $T_J=\frac12\Tr(g_J)$，乘积按下标顺序，则
+\begin{equation}
+ \Gamma=
+ \begin{pmatrix}
+ 1&T_1&T_{12}&T_{123}\\
+ T_1&1&T_2&T_{23}\\
+ T_{12}&T_2&1&T_3\\
+ T_{123}&T_{23}&T_3&1
+ \end{pmatrix}.
+ \label{eq:trace-gram}
+\end{equation}
+$\Gamma$ 确定 $D^2$，却不确定 $D$ 的符号。一般位置的相位必须同时保留取向信息。
+同时共轭只在空间三坐标上作保向旋转，因此一般位置公式同时共轭不变。
+
+\subsection{开半球与径向积分}
+
+以下暂设 $D\ne0$。向量
+$n=Q^{-T}(1,1,1,1)^T$ 满足 $n\cdot q_j=1$，
+故四点同处一个开半球，并构成非退化凸球面四面体。
+其有序径向参数化为
+\begin{equation}
+ x(t)=\frac{Qt}{|Qt|},\qquad
+ t_i\ge0,\quad \sum_{i=0}^3t_i=1.
+ \label{eq:radial-map}
+\end{equation}
+取 $t_0=1-t_1-t_2-t_3$。
+对 $x$ 求导时，平行于 $Qt$ 的项在四列行列式中不贡献，故
+\begin{align}
+ \det(x,\partial_1x,\partial_2x,\partial_3x)
+ &=\frac{\det(Qt,q_1-q_0,q_2-q_0,q_3-q_0)}{|Qt|^4}\notag\\
+ &=\frac{D}{|Qt|^4}.
+ \label{eq:radial-jacobian}
+\end{align}
+最后一步用列变换及 $\sum t_i=1$。
+于是
+\begin{equation}
+ \Vor=D\int_{\Delta_3}\frac{\dd t_1\dd t_2\dd t_3}{(t^T\Gamma t)^2}.
+ \label{eq:radial-integral}
+\end{equation}
+非定向体积满足 $0<V<\pi^2$，$\Vor=\sgn(D)V$。
+四点处于开半球还保证每个三角面及每条边都是其一致的径向面限制。
+
+\subsection{棱长、内二面角与编号}
+
+各顶点间的最短棱长为 $\ell_{pq}=\arccos\Gamma_{pq}$。
+令 $F_i$ 是与顶点 $i$ 相对的面，$H=\Gamma^{-1}$。
+对偶基 $Q^{-T}e_i$ 垂直于 $F_i$ 并朝向顶点 $q_i$，
+从而单位内法向的内积为 $H_{ij}/\sqrt{H_{ii}H_{jj}}$。
+内二面角因此满足
+\begin{equation}
+ \cos\vartheta_{ij}
+ =-\frac{H_{ij}}{\sqrt{H_{ii}H_{jj}}}.
+ \label{eq:dihedral-inverse}
+\end{equation}
+这一角位于其余两个顶点组成的实际棱上。
+使用与 Murakami 图 1 和角 Gram 矩阵相容的编号 \cite{murakami}：
+
+\begin{table}[htbp]
+\centering
+\caption{面编号对、实际棱和 Murakami 六棱编号}
+\begin{tabular}{@{}cccc@{}}
+\toprule
+$j$ & 面编号对 $(u_j,v_j)$ & 实际棱 & $\ell_j$\\
+\midrule
+1 & $(0,1)$ & $23$ & $\arccos\Gamma_{23}$\\
+2 & $(0,2)$ & $13$ & $\arccos\Gamma_{13}$\\
+3 & $(1,2)$ & $03$ & $\arccos\Gamma_{03}$\\
+4 & $(2,3)$ & $01$ & $\arccos\Gamma_{01}$\\
+5 & $(1,3)$ & $02$ & $\arccos\Gamma_{02}$\\
+6 & $(0,3)$ & $12$ & $\arccos\Gamma_{12}$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+定义
+\begin{equation}
+ \theta_j=\arccos\left(-\frac{H_{u_jv_j}}
+ {\sqrt{H_{u_ju_j}H_{v_jv_j}}}\right)\in(0,\pi),
+ \qquad a_j=\ee^{i\theta_j}.
+ \label{eq:angles}
+\end{equation}
+特别地，棱 $j$ 与 $j+3$ 相对，下标在 $1,\ldots,6$ 中按模 $6$ 读取。
+
+\section{一般位置的八项二重对数闭式}\label{sec:dilog}
+
+\subsection{辅助二次方程与唯一采用的根}
+
+为避免与四维顶点 $q_j$ 混淆，把 Murakami 的三个辅助量记为 $r_0,r_1,r_2$：
+\begin{align}
+ r_0={}&a_1a_4+a_2a_5+a_3a_6
+       +a_1a_2a_6+a_1a_3a_5+a_2a_3a_4\notag\\
+     &+a_4a_5a_6+a_1a_2a_3a_4a_5a_6,\label{eq:r0}\\
+ r_1={}&4\big(\sin\theta_1\sin\theta_4+
+             \sin\theta_2\sin\theta_5+
+             \sin\theta_3\sin\theta_6\big),\qquad
+ r_2=\overline{r_0}.
+ \label{eq:r1r2}
+\end{align}
+角 Gram 矩阵为
+\begin{equation}
+ \mathsf G_{ij}=\frac{H_{ij}}{\sqrt{H_{ii}H_{jj}}},\qquad
+ \mathsf G=
+ \begin{pmatrix}
+ 1&-\cos\theta_1&-\cos\theta_2&-\cos\theta_6\\
+ -\cos\theta_1&1&-\cos\theta_3&-\cos\theta_5\\
+ -\cos\theta_2&-\cos\theta_3&1&-\cos\theta_4\\
+ -\cos\theta_6&-\cos\theta_5&-\cos\theta_4&1
+ \end{pmatrix}.
+ \label{eq:angle-gram}
+\end{equation}
+其正定性给出
+\begin{equation}
+ \Delta=r_1^2-4r_0r_2=16\det\mathsf G>0.
+ \label{eq:discriminant}
+\end{equation}
+采用下式的根，并始终取正实平方根：
+\begin{equation}
+ \boxed{\quad
+ z=\frac{-r_1+\sqrt\Delta}{2r_2}
+   =-\frac{2r_0}{r_1+4\sqrt{\det\mathsf G}}.
+ \quad}
+ \label{eq:root}
+\end{equation}
+第二式由分子有理化得到，数值上避免相减消去。
+在非退化球面四面体域中 $r_2\ne0$；Murakami 引理 2.2 保证此根满足 $|z|<1$。
+由 $r_1>0$、$r_0r_2=|r_0|^2$ 和 \eqref{eq:discriminant}，
+式 \eqref{eq:root} 的第二种写法也直接给出 $|z|<1$。
+
+\subsection{完整体积表达式与相位}
+
+对六个角和独立变量 $z$ 定义
+\begin{align}
+ \mathcal L(a,z)=\frac12\Bigg[&
+ \Li_2(z)
+ +\Li_2\left(\frac{z}{a_1a_2a_4a_5}\right)
+ +\Li_2\left(\frac{z}{a_1a_3a_4a_6}\right)\notag\\
+ &+\Li_2\left(\frac{z}{a_2a_3a_5a_6}\right)
+ -\Li_2\left(\frac{-z}{a_1a_2a_3}\right)
+ -\Li_2\left(\frac{-z}{a_1a_5a_6}\right)\notag\\
+ &-\Li_2\left(\frac{-z}{a_2a_4a_6}\right)
+ -\Li_2\left(\frac{-z}{a_3a_4a_5}\right)
+ -\sum_{j=1}^3\theta_j\theta_{j+3}\Bigg].
+ \label{eq:L-full}
+\end{align}
+将 \eqref{eq:root} 代入后，令
+\begin{equation}
+ W=-\Re\mathcal L(a,z)
+ +\pi\left(\Arg(-r_2)+\frac12\sum_{j=1}^6\theta_j\right)
+ -\frac32\pi^2.
+ \label{eq:W}
+\end{equation}
+Murakami 定理 1.1 给出 $V=W\bmod 2\pi^2$ \cite{murakami}。
+因此一般位置的最终相位是
+\begin{equation}
+ \boxed{\qquad
+ \omega_k(g_1,g_2,g_3)
+ =\exp\left(\frac{ik\,\sgn D}{\pi}W\right),
+ \qquad D\ne0.
+ \qquad}
+ \label{eq:main-phase}
+\end{equation}
+所有辅助量均已由输入矩阵有限确定，式中不再含未求积分。
+若需要实际体积而非相位，取 $W\bmod2\pi^2$ 中唯一位于 $(0,\pi^2)$ 的代表，
+再乘 $\sgn D$。整数 $k$ 使式 \eqref{eq:main-phase} 无需先取模。
+
+\subsection{分支为何完整}
+
+$\Li_2$ 取从单位圆内幂级数
+$\sum_{m\ge1}z^m/m^2$ 延拓的主支，通常割线为 $[1,\infty)$。
+式 \eqref{eq:L-full} 的八个参数均有模 $|z|<1$，故不会碰到该割线。
+$\Arg$ 的范围固定为 $(-\pi,\pi]$，在负实轴取 $+\pi$。
+主值 $\log a_j=i\theta_j$ 已在式 \eqref{eq:L-full} 中化为
+$-\theta_j\theta_{j+3}$，不存在待选的对数分支。
+
+公式的几何归一化由球面 Schläfli 恒等式
+\begin{equation}
+ \dd V=\frac12\sum_{j=1}^6\ell_j\,\dd\theta_j
+ \label{eq:schlafli}
+\end{equation}
+和正交四面体 $V=\pi^2/8$ 固定。
+Murakami 的证明先证明其复表达式具有上述角导数，再校准加法常数；
+本文使用该已发表体积定理求值，
+群余循环性质则来自后文共享链与整数周期，二者逻辑分工不同。
+
+\section{全部输入上的确定有限填充}\label{sec:global}
+
+\subsection{链模型及三个必须保留的区别}
+
+工作于规范化光滑奇异链复形
+\begin{equation}
+ N_*^\infty(S^3;\Z)
+ =C_*^\infty(S^3;\Z)/D_*^\infty(S^3;\Z),
+ \label{eq:normalized-complex}
+\end{equation}
+其中 $D_*^\infty$ 由通常的单纯退化映射生成。
+对实际单位顶点 $v_0,\ldots,v_r$，仅当 $0\notin\conv\{v_i\}$ 时定义
+\begin{equation}
+ [v_0,\ldots,v_r](t)
+ =\frac{\sum_i t_iv_i}{|\sum_i t_iv_i|},\qquad
+ t_i\ge0,\quad\sum_i t_i=1.
+ \label{eq:ordered-simplex}
+\end{equation}
+本文称其为合法径向单纯形。分母在闭单纯形上有正下界，
+故映射可光滑延拓到其邻域；每个有序面恰是删去相应顶点的同类映射。
+
+若相邻两顶点相同，映射通过 $t_i+t_{i+1}$ 的合并因子化，
+因此在 \eqref{eq:normalized-complex} 中为零。
+但是一般降秩或非相邻重复不等于标准退化：
+$[a,b,a]$ 通常是非零规范化二链，其边界为 $[b,a]+[a,b]$。
+同理，反向参数化的 $[b,a]$ 不等于形式链 $-[a,b]$。
+计算体积为零，也不能据此在构造下一层边界前删去该链。
+
+齐次有理坐标在精确计算中很方便，但每个链顶点应先取
+$\widehat v=v/|v|$。这是严格边界相容所需的条件。
+未经单位化的正缩放径向映射一般只是重参数化：
+\begin{equation}
+ [\lambda_0v_0,\ldots,\lambda_rv_r]_{\rm raw}
+ =[v_0,\ldots,v_r]\circ\phi_\lambda,\qquad
+ (\phi_\lambda(t))_i=
+ \frac{\lambda_it_i}{\sum_j\lambda_jt_j},\quad \lambda_i>0.
+ \label{eq:rescaling}
+\end{equation}
+$\phi_\lambda$ 保向且保各个面，故积分相同，但两个普通奇异单纯形不因此相等。
+例如 $[a,2a,b]_{\rm raw}$ 一般不通过合并前两个重心坐标因子化。
+下文始终以单位顶点定义链；正齐次表示仅用于代数判定和体积求值。
+
+\subsection{合法性判定与局部锥引理}
+
+合法性等价于不存在非零非负关系
+\begin{equation}
+ \sum_i\lambda_iv_i=0,\qquad \lambda_i\ge0.
+ \label{eq:positive-dependence}
+\end{equation}
+因为非零非负关系总可除以系数和，化为凸组合。
+这也说明判定不随各顶点的独立正缩放改变。
+需要有限代数判据时，枚举全部非空支持子集：
+最小支持的正线性依赖必有一维核。
+否则可用另一个核向量扰动正依赖，直到某一系数首次为零，
+产生更小支持的非负依赖，矛盾。
+所以只需检查一维核生成向量是否可取所有非零分量同号。
+这里原始输入至多四个顶点，枚举本身有限。
+
+\begin{lemma}[可用的局部锥点]\label{lem:cone}
+若 $[v_0,\ldots,v_r]$ 合法，且
+$p\notin\Span_\R\{v_0,\ldots,v_r\}$，
+则 $[p,v_0,\ldots,v_r]$ 合法。
+在有限径向链 $B$ 及其所有面上，若 $p$ 避开每个最高维项的顶点张成，
+则可定义
+\[
+ c_p[v_0,\ldots,v_r]=[p,v_0,\ldots,v_r].
+\]
+该局部锥算子满足
+\begin{equation}
+ \partial(c_pB)=B-c_p(\partial B).
+ \label{eq:cone-boundary}
+\end{equation}
+\end{lemma}
+\begin{proof}
+若 $\lambda p+\sum_i\lambda_iv_i=0$ 为非零非负关系，
+$\lambda>0$ 迫使 $p$ 属于原顶点张成，
+$\lambda=0$ 则违反原单纯形合法性。故锥单纯形合法。
+最高维项的面张成包含于其顶点张成，所以所有所需面锥也合法。
+展开有序单纯形的交替边界即可得到 \eqref{eq:cone-boundary}。
+锥算子保留相邻重复的退化性，故该等式下降到规范化复形。
+这里仅构造当前有限子复形上的锥，未假设存在整个 $S^3$ 的全局锥算子。
+\end{proof}
+
+\subsection{边、面与三维链的规则}
+
+为区别于曲率 $F$，将三层填充记为
+$\mathcal E,\mathcal F,\mathcal T$，简称 E/F/T。
+令 $j=i\sigma_1$，对两个群顶点定义
+\begin{equation}
+ \mathcal E(a,b)=
+ \begin{cases}
+ 0,&a=b,\\
+ [a,b],&b\ne\pm a,\\
+ [a,aj]+[aj,b],&b=-a.
+ \end{cases}
+ \label{eq:E}
+\end{equation}
+反足情形中 $a$ 与 $aj$ 正交，所以两条分段边都合法，且
+$\partial\mathcal E(a,b)=[b]-[a]$。
+注意右乘固定 $j$ 是此代表的选择；它保证左平移等变。
+
+下面所有列表按所写公式顺序展开为带整数符号的有序项。
+仅删除相邻重复的退化项，不排序顶点、不用反向链替换、不事先合并项。
+空列表直接返回零链。
+对原输入的首顶点 $a$，以及列表 $B$ 的 $m$ 个需避开子空间 $W_\nu$，定义
+\begin{equation}
+ r(t)=\frac{(1,t,t^2,t^3)}{\sqrt{1+t^2+t^4+t^6}},
+ \qquad p=a\,r(t).
+ \label{eq:moment-curve}
+\end{equation}
+选择 $t\in\{0,1,\ldots,3m\}$ 中第一个满足
+$p\notin W_\nu$ 对所有 $\nu$ 成立的整数。
+$W_\nu$ 是该项所有顶点的实线性张成。
+这个规则不要求在后续计算中任意挑选锥点。
+
+面规则如下：若 $a=b$ 或 $b=c$，置 $\mathcal F(a,b,c)=0$；
+否则
+\begin{equation}
+ \mathcal F(a,b,c)=
+ \begin{cases}
+ [a,b,c],&0\notin\conv\{a,b,c\},\\
+ c_pB_2,&0\in\conv\{a,b,c\},
+ \end{cases}
+ \quad
+ B_2=\mathcal E(b,c)-\mathcal E(a,c)+\mathcal E(a,b).
+ \label{eq:F}
+\end{equation}
+第二分支的 $p$ 按 \eqref{eq:moment-curve} 由 $B_2$ 选择。
+
+三维规则类似：若四个顶点有相邻重复，置 $\mathcal T=0$；
+否则
+\begin{align}
+ \mathcal T(a,b,c,d)&=
+ \begin{cases}
+ [a,b,c,d],&0\notin\conv\{a,b,c,d\},\\
+ c_pB_3,&0\in\conv\{a,b,c,d\},
+ \end{cases}\label{eq:T}\\
+ B_3&=\mathcal F(b,c,d)-\mathcal F(a,c,d)
+      +\mathcal F(a,b,d)-\mathcal F(a,b,c).
+ \label{eq:B3}
+\end{align}
+第二分支的 $p$ 由 $B_3$ 按同一规则选择。
+三角面的锥点与三维填充的锥点可以不同；共同面本身早已固定。
+
+\begin{proposition}[统一终止上界]\label{prop:termination}
+每个面的锥点搜索至多检查 $19$ 个候选，输出至多 $6$ 个三角形；
+每个三维链的锥点搜索至多检查 $73$ 个候选，输出至多 $24$ 个四面体。
+\end{proposition}
+\begin{proof}
+$B_2$ 至多由三条分段边构成，每条至多两项，所以 $m\le6$；
+$B_3$ 至多由四个面构成，每面至多六项，所以 $m\le24$。
+边项的张成至多二维，三角项的张成至多三维，因而均是 $\R^4$ 的真子空间。
+对每个 $W_\nu$，取非零线性泛函 $\ell_\nu$ 在 $L_a^{-1}W_\nu$ 上为零。
+若 $ar(t)\in W_\nu$，则
+\[
+ \ell_\nu(1,t,t^2,t^3)=0.
+\]
+这是非零的至多三次多项式，因此每个子空间至多排除三个候选整数。
+全部 $m$ 个子空间至多排除 $3m$ 个，而搜索列表有 $3m+1$ 个候选，
+故必在规定上界内终止。引理 \ref{lem:cone} 保证所有输出项合法。
+这给出 $3\cdot6+1=19$ 和 $3\cdot24+1=73$。
+即使原面降秩，张成仍是真子空间，论证不变。
+\end{proof}
+
+\subsection{有限分块相位公式}
+
+令
+\begin{equation}
+ C(g_1,g_2,g_3)=\mathcal T(q_0,q_1,q_2,q_3)
+ =\sum_{\nu=1}^{N}\epsilon_\nu
+ [v_{\nu0},v_{\nu1},v_{\nu2},v_{\nu3}],\qquad N\le24,
+ \label{eq:T-expansion}
+\end{equation}
+其中 $q_j$ 为 \eqref{eq:cumulative} 的单位四元数。
+对每个合法四面体，以其四个单位顶点重新构成 $Q_\nu$。
+若 $\det Q_\nu\ne0$，用第 \ref{sec:dilog} 节求其有向体积
+$\mathcal V_\nu=\sgn(\det Q_\nu)(W_\nu\bmod2\pi^2)$。
+若 $\det Q_\nu=0$，其像在至多二维的大子球面中，三形式拉回为零，令
+$\mathcal V_\nu=0$。于是全部输入的答案为
+\begin{equation}
+ \boxed{\qquad
+ \omega_k(g_1,g_2,g_3)
+ =\exp\left(\frac{ik}{\pi}
+ \sum_{\nu=1}^{N\le24}\epsilon_\nu\mathcal V_\nu\right).
+ \qquad}
+ \label{eq:global-phase}
+\end{equation}
+仅求相位时可直接用 $\sgn(\det Q_\nu)W_\nu$，不必显式取模。
+式 \eqref{eq:global-phase} 连同 E/F/T 是有统一步数上界的实数分段特殊函数公式，
+其中没有未求积分、无穷搜索或未求和级数。
+
+若原始 $D\ne0$，四点线性独立，凸包不含零，三维、面及边全部采用直接分支。
+所以此时式 \eqref{eq:global-phase} 与式 \eqref{eq:main-phase}
+使用同一个径向奇异链，严格是同一代表。
+若原始 $D=0$ 且仍合法，体积可以为零；
+若凸包含零，必须使用分块填充，不能将所有 $D=0$ 输入统一赋相位 $1$。
+
+\section{共享面、左等变与全局五边形}\label{sec:pentagon}
+
+\subsection{严格面边界与归一化}
+
+\begin{proposition}[三层边界相容]\label{prop:boundary}
+在规范化光滑奇异链复形中，
+\begin{align}
+ \partial\mathcal E(a,b)&=[b]-[a],\notag\\
+ \partial\mathcal F(a,b,c)&=
+ \mathcal E(b,c)-\mathcal E(a,c)+\mathcal E(a,b),\label{eq:EF-boundary}\\
+ \partial\mathcal T(a,b,c,d)&=
+ \mathcal F(b,c,d)-\mathcal F(a,c,d)
+ +\mathcal F(a,b,d)-\mathcal F(a,b,c).
+ \label{eq:T-boundary}
+\end{align}
+\end{proposition}
+\begin{proof}
+边界等式由 \eqref{eq:E} 直接成立，故 $\partial B_2=0$。
+异常面分支由 \eqref{eq:cone-boundary} 得到 \eqref{eq:EF-boundary}。
+直接面分支也成立，因为合法三角形的全部边合法，
+E 与它的径向面限制相同。相邻重复输入使右边逐项相消，
+因此提前赋零相容。
+
+再把 \eqref{eq:EF-boundary} 代入 \eqref{eq:B3}，
+每个保持原顺序的边项出现两次且符号相反，故 $\partial B_3=0$。
+异常三维分支由锥恒等式得到 \eqref{eq:T-boundary}。
+直接分支中每个三点子集都合法，所以 F 同样是径向面限制。
+四点相邻重复的三种情形，右边分别化为
+\begin{align*}
+ a=b:\;&\mathcal F(a,c,d)-\mathcal F(a,c,d)+0-0,\\
+ b=c:\;&0-\mathcal F(a,b,d)+\mathcal F(a,b,d)-0,\\
+ c=d:\;&0-0+\mathcal F(a,b,c)-\mathcal F(a,b,c),
+\end{align*}
+均严格为零。
+\end{proof}
+
+每个有序面仅由自身三个顶点决定，不依赖它属于哪个四面体。
+这比「相邻四面体的边界在积分后抵消」更强：
+式 \eqref{eq:T-boundary} 是链级的相同面、相反符号。
+
+\subsection{左平移等变}
+
+单位四元数左乘 $L_h$ 是 $\R^4$ 的正交线性变换，
+保持凸包合法性、相等、反足及线性张成。
+又有
+\[
+ h(aj)=(ha)j,\qquad h(ar(t))=(ha)r(t).
+\]
+所以每个候选整数 $t$ 在左平移前后的可用性完全一致，
+选出的第一个整数也一致。逐层归纳得到
+\begin{align}
+ \mathcal E(ha,hb)&=h\mathcal E(a,b),\notag\\
+ \mathcal F(ha,hb,hc)&=h\mathcal F(a,b,c),\label{eq:equivariance}\\
+ \mathcal T(ha,hb,hc,hd)&=h\mathcal T(a,b,c,d).\notag
+\end{align}
+单位顶点的径向参数化与 $L_h$ 严格交换。
+由于 $S^3$ 连通，$\det L_h\in\{\pm1\}$ 连续且 $\det L_e=1$，
+它还保持所选取向，因此 $L_h^*\eta=\eta$。
+固定 $j$ 与曲线 $r(t)$ 不破坏左等变；它们一般会打破异常集合上的同时共轭对称性，
+本文不要求后一性质。
+
+\subsection{规范化链中的整数周期}
+
+规范化复形与普通光滑奇异复形有相同同调。
+更具体地，单纯阿贝尔群的标准归一化定理给出链级分裂：
+规范化商可由 Moore 子复形实现，退化子复形无同调
+\cite[第 2.1 节，式 (2.1)]{normalization}。
+若 $Z$ 是规范化三循环，取普通三链提升 $Z_0$，
+其边界可能是非零的退化链，即只在规范化商中为零。
+通过上述链级截面可选普通闭链 $\widehat Z$，
+且 $\widehat Z-Z_0$ 为退化三链。
+每个退化三单纯形通过二维单纯形因子化，三形式积分为零，故
+\begin{equation}
+ \int_Z\eta=\int_{\widehat Z}\eta\in\Z.
+ \label{eq:normalized-period}
+\end{equation}
+最后一步用 $H_3(S^3;\Z)=\Z$ 及 \eqref{eq:eta-normalized}。
+因此规范化商不会产生虚假的非整数周期。
+
+\subsection{五边形与所有异常输入}
+
+对四个群元定义五个累计顶点 $q_0,\ldots,q_4$，其中
+$q_4$ 对应 $g_1g_2g_3g_4$。置
+\begin{equation}
+ Z=\sum_{i=0}^4(-1)^i
+ \mathcal T(q_0,\ldots,\widehat q_i,\ldots,q_4).
+ \label{eq:five-chain}
+\end{equation}
+对每项应用 \eqref{eq:T-boundary}，每个保持原顺序的三点面出现两次、符号相反，
+故 $\partial Z=0$。利用左等变、$\eta$ 左不变及 \eqref{eq:normalized-period}，
+\begin{equation}
+ \frac{\omega_k(g_2,g_3,g_4)\,
+       \omega_k(g_1,g_2g_3,g_4)\,
+       \omega_k(g_1,g_2,g_3)}
+      {\omega_k(g_1g_2,g_3,g_4)\,
+       \omega_k(g_1,g_2,g_3g_4)}
+ =\exp\left(2\pi ik\int_Z\eta\right)=1.
+ \label{eq:pentagon}
+\end{equation}
+这证明全局三余循环关系，不需要五个顶点共处一个开半球，
+也不需要假设 $Z$ 在 $S^3$ 内界住某个四链。
+重复、反足、凸包含零等输入使用的正是同一组 E/F/T，因此全部包含在证明中。
+
+若任一 $g_j=e$，累计顶点中有相邻重复，按定义 $\mathcal T=0$，
+所以三个归一化条件严格成立。
+同一固定面边界的两个三维填充之差是闭三链，
+故指数相同；此自由度不能与下一节的换面自由度混淆。
+
+\section{指定 Chern--Simons 二级类的全局识别}\label{sec:class}
+
+\subsection{带联络的微分特征及自然唯一性}
+
+用现代次数约定，设
+\[
+ \widehat u_k(P,A):Z_3(M;\Z)\longrightarrow\R/\Z
+\]
+是 degree-$4$ 微分特征，其性质为
+\begin{align}
+ \widehat u_k(P,A)(\partial b)
+ &=\int_bI_4(F)\pmod{\Z},\label{eq:diffchar}\\
+ \curv(\widehat u_k)&=I_4(F),\qquad
+ c(\widehat u_k)=-kc_2(P).
+ \label{eq:diffchar-data}
+\end{align}
+还要求它对保持联络的束映射自然。
+Cheeger--Simons 定理 2.2 给出相容不变多项式与积分特征类的自然微分提升；
+命题 2.8 把其总空间拉回写为 CS 形式的循环积分
+\cite{cheegersimons}。该文以作用循环的维数编号，故其 degree-$3$
+相当于此处 degree-$4$，不涉及数学对象的改变。
+
+平坦时 \eqref{eq:diffchar} 对边界为零，给出
+\begin{equation}
+ a_k(P,A)\in H^3(M;\R/\Z).
+ \label{eq:flat-character}
+\end{equation}
+它依赖平坦联络，不仅依赖普通束的 $c_2(P)$。
+由自然性得到通用平坦类
+\begin{equation}
+ a_k^\delta\in H^3(B\SU^\delta;\R/\Z),\qquad
+ a_k(P,A)=\phi_\delta^*a_k^\delta,
+ \label{eq:universal-flat}
+\end{equation}
+其中 $\phi_\delta$ 为平坦束分类映射。
+这一路线保留了普通四次特征类在三维基底上消失时仍存在的 CS 信息。
+
+仅从系数序列 $0\to\Z\to\R\to\R/\Z\to0$ 找到一个 Bockstein 提升，
+不能选定 \eqref{eq:universal-flat}：
+两个提升可能相差 $H^3(B\SU^\delta;\R)$ 的像。
+另一方面，$B\SU\simeq\mathbb H P^\infty$ 给出
+\begin{equation}
+ H^4(B\SU;\Z)=\Z c_2,\qquad
+ H^3(B\SU;\R/\Z)=0.
+ \label{eq:universal-uniqueness}
+\end{equation}
+四次整系数到实系数的映射单射，因此 $I_4$ 唯一固定积分提升 $-kc_2$；
+自然的带联络微分提升也无额外通用平坦项。
+这说明所用物理输入充分，而不宣称任意只有相同局部密度的离散群类都相同。
+
+\subsection{参考三骨架截面与逐循环匹配}
+
+在齐次 bar 模型中，$E\SU^\delta$ 的单纯形记为
+$[a_0,\ldots,a_p]$，群同时左乘全部顶点。
+非齐次坐标为 $g_i=a_{i-1}^{-1}a_i$，
+所以三胞腔的规范提升具有顶点 $[e,g,gh,ghl]$。
+考虑主右 $\SU$ 束
+\begin{align}
+ \mathcal P&=(E\SU^\delta\times\SU)/\SU^\delta,
+ &a\cdot(x,v)&=(ax,av),\label{eq:universal-bundle}\\
+ [x,v]\cdot r&=[x,vr],
+ &\Theta&=v^{-1}\dd v.\notag
+\end{align}
+常数同时左乘保持 $\Theta$，故其下降为平坦联络。
+将 $E\SU^\delta$ 的主右作用写为 $x\cdot a=a^{-1}x$，
+则 $x\mapsto[x,e]$ 右等变，说明其普通分类映射确为
+$\iota:B\SU^\delta\to B\SU$。
+
+先构造一套由逐胞腔映射实现的参考填充。
+连通性允许选边，$\pi_1(S^3)=0$ 允许延拓面，
+$\pi_2(S^3)=0$ 允许延拓三胞腔。
+逐轨道选择并左平移后得到
+\begin{equation}
+ f:(E\SU^\delta)^{(3)}\longrightarrow\SU,\qquad
+ f(a)=a,\qquad f(ax)=af(x).
+ \label{eq:reference-map}
+\end{equation}
+退化胞腔取退化映射。由于群标签在这里取离散拓扑，不要求这些选择对标签全局连续。
+其推前边、面、三链满足 \eqref{eq:bar-face}、\eqref{eq:bar-C}。
+等变映射定义三骨架截面
+\begin{equation}
+ s([x])=[x,f(x)],\qquad A_s=s^*\Theta=f^{-1}\dd f.
+ \label{eq:section}
+\end{equation}
+$f$ 是覆盖空间上的 developing map；
+右式虽逐提升书写，却因左等变而拼成基底三骨架的联络形式。
+不需要基底上存在一个全局单值纯规范函数。
+
+$B\SU^\delta$ 不是有限维光滑流形。
+这里的联络与积分按相容的光滑单纯形读取；
+等价地，可在拉回到光滑流形的有限三角剖分循环上计算，
+然后由自然性解释通用类。
+对三骨架中的任意整系数三循环 $z=\sum_\sigma n_\sigma\sigma$，
+CS 总空间公式与 \eqref{eq:section} 给出
+\begin{align}
+ \widehat u_k(\mathcal P,\Theta)(z)
+ &=\int_zI_3(A_s)\pmod{\Z}\notag\\
+ &=k\sum_\sigma n_\sigma\int_{f_*\sigma}\eta\pmod{\Z}.
+ \label{eq:cycle-equality}
+\end{align}
+右边正是参考几何 bar 上链在 $z$ 上的值。
+此等式匹配每一个三循环的 holonomy，强于局部三次展开或 Bockstein 匹配。
+每个三维同调类可表示在三骨架中；$\R/\Z$ 可除，
+通用系数定理的 Ext 项为零，因此所有三循环的配对确定整个三上同调类。
+参考体积代表遂与 $a_k^\delta$ 完全相同。
+四胞腔上的延拓阻碍允许非零；不要求 \eqref{eq:reference-map} 继续延到全空间。
+
+\subsection{任意积分链与参考截面的比较}
+
+第 \ref{sec:global} 节的面及三链可能是多个单纯形之和。
+不能假定任何这样的形式积分链都原样来自单个胞腔映射。
+以下比较既证明它实现同一反常类，也给出结点重定相。
+
+先固定边而把面 $S$ 改为 $S'$。
+由于 $\partial(S'-S)=0$ 及 $H_2(S^3;\Z)=0$，可选三链 $B(g,h)$ 满足
+\begin{equation}
+ \partial B(g,h)=S'(g,h)-S(g,h).
+ \label{eq:face-change-chain}
+\end{equation}
+取值于群上链的左作用 bar 余边界记为 $\delG$。
+对应三维填充满足
+$\partial(C'-C-\delG B)=0$，因此
+\begin{align}
+ \beta(g,h)&=\exp\left(2\pi ik\int_{B(g,h)}\eta\right),\label{eq:beta}\\
+ \omega'_k&=\omega_k\,\delta\beta,\qquad
+ (\delta\beta)(g,h,l)=
+ \frac{\beta(h,l)\beta(g,hl)}{\beta(gh,l)\beta(g,h)}.
+ \label{eq:coboundary-change}
+\end{align}
+$\beta$ 的正号来自 \eqref{eq:face-change-chain} 中 $S'-S$ 的顺序。
+固定这张二循环后，更换 $B$ 的填充只增加整数周期，所以 $\beta$ 无填充歧义。
+
+若边也改变，先用 $H_1(S^3;\Z)=0$ 选二链 $A(g)$，
+再用 $H_2(S^3;\Z)=0$ 选三链 $B(g,h)$：
+\begin{align}
+ \partial A(g)&=\gamma'(g)-\gamma(g),\notag\\
+ \partial B(g,h)&=S'(g,h)-S(g,h)
+ -\big(gA(h)-A(gh)+A(g)\big).
+ \label{eq:edge-change-chain}
+\end{align}
+第二式右端为二循环。由 $\delG^2=0$，
+仍有 $\partial(C'-C-\delG B)=0$，所以 \eqref{eq:coboundary-change} 不变。
+这些论证也可在规范化复形中进行，因为其同调及周期已在前节处理。
+因此将参考截面数据与确定 E/F/T 比较，得到
+\begin{equation}
+ \boxed{\ [\omega_k]=a_k^\delta,\qquad
+ \widehat u_k=-k\widehat c_2.\ }
+ \label{eq:class-identification}
+\end{equation}
+式 \eqref{eq:cycle-equality} 与 \eqref{eq:edge-change-chain}
+排除了在体积构造中暗加另一个离散群类的可能。
+该比较无需分类整个离散化群的第三上同调。
+整数族的二级类构造也可参见 Baez--Lauda 第 8.5 节 \cite{baezlauda}。
+
+\subsection{Bockstein 符号}
+
+取微分特征的实上链提升 $t$，其数据可写成
+\[
+ \delta t=I_4(F)-c,\qquad
+ c\in Z^4(M;\Z),\quad[c]=u_k(P).
+\]
+平坦时 $\delta t=-c$，所以按本文 Bockstein 定义
+\begin{equation}
+ \mathcal B(a_k(P,A))=-u_k(P),\qquad
+ \boxed{\ \mathcal B([\omega_k])=+k\,\iota^*c_2.\ }
+ \label{eq:bockstein-sign}
+\end{equation}
+该符号与 Cheeger--Simons 推论 1.2(1)、式 (8.2)、(8.5) 一致
+\cite{cheegersimons}。将 $U(1)$ 识别为 $\R/\Z$ 时使用
+$t\mapsto\ee^{2\pi it}$；式 \eqref{eq:bockstein-sign}
+的正号不表示普通积分类变成了 $+kc_2$。
+
+\section{独立的棱长闭式及显式偏导}\label{sec:edgeformula}
+
+二面角路线先求逆 Gram 矩阵。为独立复算，也可直接从六条棱长使用
+Murakami 定理 1.2 \cite{murakami}。
+棱次序仍为 $(23,13,03,01,02,12)$，令
+\begin{equation}
+ b_j=\ee^{i\ell_j},\qquad
+ \bar j=1+((j+2)\bmod6),\qquad
+ \widetilde a_j=-b_{\bar j}^{-1},\qquad
+ \widetilde\theta_j=\pi-\ell_{\bar j}.
+ \label{eq:edge-substitution}
+\end{equation}
+也即 $\bar1=4,\bar2=5,\bar3=6,\bar4=1,\bar5=2,\bar6=3$。
+将 $a_j,\theta_j$ 替换为 $\widetilde a_j,\widetilde\theta_j$，
+用 \eqref{eq:r0}--\eqref{eq:root} 计算
+$\widetilde r_0,\widetilde r_1,\widetilde r_2,\widetilde z$，
+并令
+$\widetilde{\mathcal L}=\mathcal L(\widetilde a,\widetilde z)$。
+这些角是极对偶四面体的适当编号，因此仍在非退化球面域，
+使用同一正实平方根及 $|\widetilde z|<1$ 的根。
+
+定理 1.2 的棱长公式为
+\begin{equation}
+ V_{\rm edge}=
+ \Re\widetilde{\mathcal L}
+ -\pi\Arg(-\widetilde r_2)
+ -\sum_{j=1}^6\ell_jd_j-\frac{\pi^2}{2}
+ \pmod{2\pi^2},
+ \label{eq:edge-volume}
+\end{equation}
+其中
+\begin{equation}
+ d_j=
+ \left.
+ \frac{\partial}{\partial\ell_j}
+ \Re\mathcal L\big(\widetilde a(\ell),z\big)
+ \right|_{z=\widetilde z}
+ \label{eq:fixed-z-derivative}
+\end{equation}
+必须先在固定 $z$ 下求偏导，再代入根。
+若把 $\widetilde z(\ell)$ 也一起微分，会加入根的导数，改变公式。
+下面把全部六个偏导化成有限主支对数，不留下微分运算。
+
+定义七个实对数项：
+\begin{align}
+ P_1&=\Im\log\left(1-\frac{\widetilde z}
+ {\widetilde a_1\widetilde a_2\widetilde a_4\widetilde a_5}\right),
+ &
+ P_2&=\Im\log\left(1-\frac{\widetilde z}
+ {\widetilde a_1\widetilde a_3\widetilde a_4\widetilde a_6}\right),
+ \notag\\
+ P_3&=\Im\log\left(1-\frac{\widetilde z}
+ {\widetilde a_2\widetilde a_3\widetilde a_5\widetilde a_6}\right),
+ &
+ N_1&=\Im\log\left(1+\frac{\widetilde z}
+ {\widetilde a_1\widetilde a_2\widetilde a_3}\right),
+ \notag\\
+ N_2&=\Im\log\left(1+\frac{\widetilde z}
+ {\widetilde a_1\widetilde a_5\widetilde a_6}\right),
+ &
+ N_3&=\Im\log\left(1+\frac{\widetilde z}
+ {\widetilde a_2\widetilde a_4\widetilde a_6}\right),
+ \notag\\
+ N_4&=\Im\log\left(1+\frac{\widetilde z}
+ {\widetilde a_3\widetilde a_4\widetilde a_5}\right).
+ \label{eq:edge-logs}
+\end{align}
+则
+\begin{align}
+ d_1&=\tfrac12(P_1+P_2-N_3-N_4+\widetilde\theta_1),\notag\\
+ d_2&=\tfrac12(P_1+P_3-N_2-N_4+\widetilde\theta_2),\notag\\
+ d_3&=\tfrac12(P_2+P_3-N_2-N_3+\widetilde\theta_3),\notag\\
+ d_4&=\tfrac12(P_1+P_2-N_1-N_2+\widetilde\theta_4),\label{eq:six-derivatives}\\
+ d_5&=\tfrac12(P_1+P_3-N_1-N_3+\widetilde\theta_5),\notag\\
+ d_6&=\tfrac12(P_2+P_3-N_1-N_4+\widetilde\theta_6).\notag
+\end{align}
+所有对数参数的实部严格为正，因为被加减的复数有模 $|\widetilde z|<1$；
+主支对数因此无割线问题。
+
+为验证偏导符号，固定 $z$ 时
+$\partial_{\ell_j}\log\widetilde a_{\bar j}=-i$。
+若 $x=z/\prod_{r\in S}\widetilde a_r$ 且 $\bar j\in S$，
+则 $\partial_{\ell_j}\log x=i$。
+由 $\dd\Li_2(x)=-\log(1-x)\dd\log x$，
+正 Li$_2$ 项贡献 $+\Im\log(1-x)$，负 Li$_2$ 项贡献相反符号。
+角乘积 $-\frac12\sum_{r=1}^3
+\widetilde\theta_r\widetilde\theta_{r+3}$ 的导数则为
+$\widetilde\theta_j/2$，逐项恰得 \eqref{eq:six-derivatives}。
+
+取 \eqref{eq:edge-volume} 在 $(0,\pi^2)$ 中的体积代表并乘 $\sgn D$，
+即可与角公式比较。棱长路线不调用主路线的逆 Gram 或二面角辅助计算；
+它是另一个已发表体积公式的独立实现，不以数值相符代替定理本身。
+
+\section{局部与全局的解析校准}\label{sec:calibrations}
+
+\subsection{小群元的三次项}
+
+令 $g_j=\exp(i\varepsilon\boldsymbol v_j\cdot\boldsymbol\sigma)$，
+并固定 $k$。从累计顶点的空间部分得到
+\begin{align*}
+ q_1-q_0&=(O(\varepsilon^2),\,\varepsilon\boldsymbol v_1
+                      +O(\varepsilon^2)),\\
+ q_2-q_0&=(O(\varepsilon^2),\,\varepsilon(\boldsymbol v_1+\boldsymbol v_2)
+                      +O(\varepsilon^2)),\\
+ q_3-q_0&=(O(\varepsilon^2),\,\varepsilon(\boldsymbol v_1+\boldsymbol v_2
+                         +\boldsymbol v_3)+O(\varepsilon^2)).
+\end{align*}
+列相减给出
+$D=\varepsilon^3\boldsymbol v_1\cdot
+(\boldsymbol v_2\times\boldsymbol v_3)+O(\varepsilon^4)$。
+又 $t^T\Gamma t=1+O(\varepsilon^2)$，标准 $\Delta_3$ 体积为 $1/6$，
+所以单位元附近取零附近对数分支时
+\begin{equation}
+ \boxed{\quad
+ \log\omega_k=
+ \frac{ik\varepsilon^3}{6\pi}
+ \boldsymbol v_1\cdot(\boldsymbol v_2\times\boldsymbol v_3)
+ +O(\varepsilon^4).
+ \quad}
+ \label{eq:small-angle}
+\end{equation}
+若指数中的生成元改用 $\sigma_a/2$，三次系数除以八。
+此校准检验局部归一化；全局类的识别仍依赖第 \ref{sec:class} 节。
+
+\subsection{正交两平面的可积族}
+
+取
+\begin{align}
+ g_1&=\ee^{i\alpha\sigma_1},\qquad
+ g_2=i(\cos\alpha\,\sigma_2+\sin\alpha\,\sigma_3),\qquad
+ g_3=\ee^{i\beta\sigma_1},\label{eq:family-input}\\
+ &-\pi<\alpha<\pi,\quad\alpha\ne0,\qquad 0<\beta<\pi.\notag
+\end{align}
+由 \eqref{eq:quaternion-product} 直接得到累计顶点
+\begin{equation}
+ e_0,\quad
+ (\cos\alpha,\sin\alpha,0,0),\quad
+ e_2,\quad
+ (0,0,\cos\beta,\sin\beta),
+ \qquad D=\sin\alpha\sin\beta.
+ \label{eq:family-vertices}
+\end{equation}
+四面体是两个正交平面内圆弧扇区的球面联接，可参数化为
+\begin{equation}
+ x(u,\rho,v)=
+ (\cos\rho\cos u,\cos\rho\sin u,
+  \sin\rho\cos v,\sin\rho\sin v).
+ \label{eq:join-parameter}
+\end{equation}
+其中 $\rho\in[0,\pi/2]$，$v$ 从 $0$ 到 $\beta$，
+$u$ 从 $0$ 到 $\alpha$；$\alpha<0$ 时按相应反向扇区取向积分。
+度量为
+$\dd\rho^2+\cos^2\rho\,\dd u^2+\sin^2\rho\,\dd v^2$，
+并且
+$\dd V=\cos\rho\sin\rho\,\dd u\wedge\dd\rho\wedge\dd v$。
+这个取向与 \eqref{eq:family-vertices} 的 $\sgn D$ 一致，因此
+\begin{equation}
+ \Vor=\int_0^\alpha\dd u\int_0^{\pi/2}
+ \cos\rho\sin\rho\,\dd\rho\int_0^\beta\dd v
+ =\frac{\alpha\beta}{2},
+ \qquad
+ \omega_k=\exp\left(\frac{ik\alpha\beta}{2\pi}\right).
+ \label{eq:family-volume}
+\end{equation}
+正 $\alpha$ 时这是正体积；负 $\alpha$ 时保留有向体积的负号。
+
+\subsection{中心输入的八四面体半球}
+
+对于 $g_1=g_2=g_3=-\Id$，累计顶点是 $(1,-1,1,-1)$。
+记 $j=i\sigma_1$，以及正向大圆四分段
+\begin{equation}
+ L=[1,j]+[j,-1]+[-1,-j]+[-j,1].
+ \label{eq:center-circle}
+\end{equation}
+E/F/T 的第一层锥点搜索中 $t=0$ 不可用、$t=1$ 首次可用，
+故
+\begin{equation}
+ p_*=\frac{(1,1,1,1)}2,\qquad
+ \mathcal F(1,-1,1)=c_{p_*}L,\qquad
+ \mathcal F(-1,1,-1)=c_{-p_*}L.
+ \label{eq:center-faces}
+\end{equation}
+另两个面有相邻重复而为零，因此
+$B_3=c_{-p_*}L-c_{p_*}L$。
+每个三角形顶点张成同一个三维空间
+$W_*=\{x_2=x_3\}$。
+第二层候选 $t=0,1$ 都落在 $W_*$，$t=2$ 首次成功：
+\begin{equation}
+ q_*=\frac{(1,2,4,8)}{\sqrt{85}},\qquad
+ \mathcal T(1,-1,1,-1)
+ =c_{q_*}\big(c_{-p_*}L-c_{p_*}L\big).
+ \label{eq:center-T}
+\end{equation}
+
+以 $L$ 中的边 $[x,y]$ 为底，两项为
+$[q_*,-p_*,x,y]-[q_*,p_*,x,y]$。
+对第一条边 $x=e_0,y=e_1$，去掉正范数因子后
+\begin{align}
+ \det[(1,2,4,8),-(1,1,1,1),e_0,e_1]&=4,\notag\\
+ \det[(1,2,4,8),(1,1,1,1),e_0,e_1]&=-4.
+ \label{eq:center-determinants}
+\end{align}
+其余三条四分圆边的有序二维行列式同号。
+因此八个四面体在连同各自链系数后均贡献正有向体积。
+$c_{p_*}L$ 与 $c_{-p_*}L$ 覆盖 $W_*\cap S^3$ 的两个半球；
+它们的有向差覆盖整张大 $S^2$ 一次。
+从 $q_*$ 再作径向锥，八个四面体内部互不重叠，
+覆盖 $\{x_3>x_2\}\cap S^3$ 的整个开半球一次。故
+\begin{equation}
+ \Vor=\pi^2,\qquad \int_{\mathcal T}\eta=\frac12,\qquad
+ \boxed{\omega_k(-\Id,-\Id,-\Id)=(-1)^k.}
+ \label{eq:center-phase}
+\end{equation}
+这说明原始 $D=0$ 并不意味着所选填充的体积为零。
+特别是 $\mathcal E(a,-a)+\mathcal E(-a,a)$ 在此是整条大圆，
+不能擅自把反足反向边当作负链相消。
+
+\subsection{有限循环子群的标准 bar 不变量}
+
+令 $h=\exp(2\pi i\sigma_1/n)$，将 $C_n$ 元素写为 $h^a$，$0\le a<n$。
+记 $[a+b]_n$ 为标准余数，进位二余循环为
+\begin{equation}
+ q_n(a,b)=\frac{a+b-[a+b]_n}{n}
+ =\left\lfloor\frac{a+b}{n}\right\rfloor.
+ \label{eq:carry}
+\end{equation}
+它代表 $x\in H^2(BC_n;\Z)$。
+基本 $\SU$ 表示限制为两个互逆权线表示，故
+\begin{equation}
+ c_2|_{BC_n}=-x^2,\qquad u_k|_{BC_n}=+kx^2.
+ \label{eq:cyclic-primary}
+\end{equation}
+定义实三上链 $t_m(a,b,c)=ma\,q_n(b,c)/n$。
+利用 $\delta q_n=0$ 逐项计算，
+\begin{equation}
+ \delta t_m(a,b,c,d)=m\,q_n(a,b)q_n(c,d).
+ \label{eq:cyclic-coboundary}
+\end{equation}
+于是 $\mathcal B([t_m])=mx^2$。
+有限群的正次数实系数上同调可由平均收缩，所以这里的映射
+\[
+ \mathcal B:H^3(BC_n;\R/\Z)\longrightarrow H^4(BC_n;\Z)
+\]
+是同构。
+式 \eqref{eq:bockstein-sign} 与 \eqref{eq:cyclic-primary}
+因此对应 $m=-k\bmod n$。
+
+规范化 bar 三链
+\begin{equation}
+ z_n=\sum_{r=0}^{n-1}[h\mid h^r\mid h]
+ \label{eq:cyclic-cycle}
+\end{equation}
+是循环：其边界中的
+$[h^r\mid h]-[h^{r+1}\mid h]$ 与
+$[h\mid h^{r+1}]-[h\mid h^r]$ 分别望远镜相消。
+又 $\sum_{r=0}^{n-1}q_n(r,1)=1$，故
+\begin{equation}
+ \langle t_m,z_n\rangle=\frac mn,\qquad
+ \boxed{\quad
+ \prod_{r=0}^{n-1}\omega_k(h,h^r,h)=\ee^{-2\pi ik/n}.
+ \quad}
+ \label{eq:cyclic-invariant}
+\end{equation}
+余边界对循环配对为零，所以这一乘积与面、边约定无关。
+对所有 $n$ 比较 \eqref{eq:cyclic-invariant}，
+还说明两个不同整数 level 不可能给出同一全局类：
+否则每个 $n$ 都整除它们的差。
+
+\subsection{直接扫半球确定循环不变量的负号}
+
+上述负号还可不借 Bockstein 直接从几何算出。
+令 $E_0$ 是环面从 $e$ 正向到 $h$ 的弧，取长弧链
+\[
+ \gamma(h^a)=\sum_{j=0}^{a-1}h^jE_0,\qquad
+ T_0=\sum_{j=0}^{n-1}h^jE_0.
+\]
+$T_0$ 是细分的正向整圆，且作为链满足 $h^aT_0=T_0$。
+取半球
+$H_0=\{(x_0,x_1,x_2,0)\in S^3:x_2\ge0\}$，
+取向使 $\partial H_0=T_0$。可选
+\begin{equation}
+ S(h^a,h^b)=q_n(a,b)H_0.
+ \label{eq:cyclic-faces}
+\end{equation}
+
+令 $P_a$ 为左乘 $\exp(it\sigma_1)$、$0\le t\le2\pi a/n$ 的同伦棱柱算子。
+有
+$\partial P_aH_0=h^aH_0-H_0-P_aT_0$。
+由于 $h^aT_0=T_0$，$P_aT_0$ 是取值于大圆的二循环。
+由 $H_2(S^1)=0$ 取同在大圆中的三链 $R_a$，
+使 $\partial R_a=P_aT_0$。于是
+\begin{equation}
+ K_a=P_aH_0+R_a,\qquad \partial K_a=h^aH_0-H_0.
+ \label{eq:cyclic-sweep-chain}
+\end{equation}
+$R_a$ 的三形式积分为零，它保证严格奇异链边界而不改变体积。
+
+半球的取向参数为 $\dd\varphi\wedge\dd\rho$，
+$0\le\varphi<2\pi$、$0\le\rho\le\pi/2$。
+左乘后的扫掠参数化是
+\begin{equation}
+ x(t,\varphi,\rho)=
+ \big(\cos\rho\cos(\varphi+t),\,
+      \cos\rho\sin(\varphi+t),\,
+      \sin\rho\cos t,\,-\sin\rho\sin t\big).
+ \label{eq:cyclic-sweep}
+\end{equation}
+法平面 $(x_2,x_3)$ 旋转的是负角 $-t$。
+按 $\dd t\wedge\dd\varphi\wedge\dd\rho$ 的棱柱取向，
+\begin{equation}
+ x^*\eta=-\frac{\cos\rho\sin\rho}{2\pi^2}
+ \dd t\wedge\dd\varphi\wedge\dd\rho,
+ \qquad \int_{K_a}\eta=-\frac an.
+ \label{eq:cyclic-volume-sign}
+\end{equation}
+由 $\delta q_n=0$，\eqref{eq:cyclic-faces} 的 bar 边界正是
+$q_n(b,c)(h^aH_0-H_0)$，故可取 $C(h^a,h^b,h^c)=q_n(b,c)K_a$，
+得到有限子群上的具体代表
+\begin{equation}
+ \omega_k^{C_n}(h^a,h^b,h^c)
+ =\exp\left(-\frac{2\pi ika}{n}
+       \left\lfloor\frac{b+c}{n}\right\rfloor\right).
+ \label{eq:cyclic-representative}
+\end{equation}
+这直接复核 \eqref{eq:cyclic-invariant} 的负号；
+它与 E/F/T 的限制可以相差余边界，但循环乘积完全相同。
+中心 $n=2$ 的检查不能区分正负号，$n=4,8$ 等检查可以。
+
+\section{两类分支变化与退化极限}\label{sec:branches}
+
+\subsection{体积表达式的整数周期跳变}
+
+在一般位置，$D$ 的符号在每个连通分支固定，
+角、$\mathcal L$ 及主根局部解析。
+当 $\Arg(-r_2)$ 跨过负实轴，其主值跳变 $2\pi$，
+式 \eqref{eq:W} 的原始 $W$ 相应改变 $2\pi^2$。
+相位的比为
+\[
+ \exp\left(\frac{ik\,\sgn D}{\pi}\,2\pi^2\right)=1.
+\]
+因此这种特殊函数的分支跳变不改变标量余循环。
+计算实际体积时取 $(0,\pi^2)$ 中的唯一代表即可。
+
+\subsection{共享面变换可能产生不同相位极限}
+
+另一种变化发生在某个共享边或面的测地选择失去唯一性时。
+这时改变的不是同一固定边界的三维填充；
+两个相位的差不必为整数周期。
+式 \eqref{eq:family-input} 提供精确例子。
+固定 $0<\beta<\pi$，分别令 $\alpha\to\pi^-$ 和 $\alpha\to-\pi^+$。
+两条路径都趋于同一个输入
+\[
+ (g_1,g_2,g_3)\longrightarrow
+ (-\Id,-i\sigma_2,\ee^{i\beta\sigma_1}),
+\]
+但由具有明确扇区取向的 \eqref{eq:family-volume}，
+\begin{equation}
+ \lim_{\alpha\to\pi^-}\omega_k=\ee^{ik\beta/2},
+ \qquad
+ \lim_{\alpha\to-\pi^+}\omega_k=\ee^{-ik\beta/2}.
+ \label{eq:two-limits}
+\end{equation}
+两者之比为 $\ee^{ik\beta}$，对适当 $\beta$ 一般不等于 $1$。
+所以这套测地代表不能靠该异常点的「任意方向极限」唯一赋值。
+E/F/T 在该点按先前规则给出确定值，并与所有相邻胞腔共享同一面数据。
+
+式 \eqref{eq:two-limits} 证明的是当前测地代表的两侧极限不一。
+它本身不推出所有代表都不能连续；
+关于非零整数族在通常连续标量上链模型中的一般限制，
+仍应使用第 \ref{sec:conventions} 节所引连续上链定理。
+代表变换 $\omega'\!=\omega\,\delta\beta$ 可以重新分配分支，
+却不改变闭三循环上的反常不变量。
+
+\section{计算实现、交叉核验与精度范围}\label{sec:computation}
+
+理论公式的可执行实现位于 \file{src/su2_omega.py}。
+它使用 Python 标准库 \file{fractions} 中的 \file{Fraction} 保留输入有理正齐次四元数，
+对秩、反足、凸包含零和锥点候选作精确判定；
+每个概念上的链顶点仍为相应单位向量。
+有限特殊函数用 mpmath 1.3.0 求值，独立数组积分使用 NumPy 2.4.4。
+矩阵入口验证 $2\times2$ 的 $\SU$ 条件，再把容许残差内的输入投影为明确的单位四元数；
+计算结果对应这个输入所代表的精确群元。
+
+运行过程由以下文件组成：
+\file{scripts/su2_audit_checks.py} 复算三形式、既有解析族、原积分及级数基线；
+\file{scripts/validate_su2.py} 比较一般位置闭式与独立矩阵乘法、三重积分；
+\file{scripts/su2_edge_crosscheck.py} 实现第 \ref{sec:edgeformula} 节棱长路线；
+\file{tests/test_su2_omega.py} 检查链边界、等变、异常点五边形及输入接口。
+环境安装后，仓库的 \file{make verify} 调用这些验证，
+其中测试入口为 \file{python -m unittest discover -s tests -v}；
+各脚本也可按 \file{python -m scripts.validate_su2} 等模块形式单独运行。
+
+\begin{table}[htbp]
+\centering
+\caption{实际执行的主要交叉核验；误差为所运行样本的实测最大值}
+\begin{tabular}{@{}p{0.46\linewidth}p{0.43\linewidth}@{}}
+\toprule
+检查 & 样本与结果\\
+\midrule
+单元测试 & $15$ 项，全部通过\\
+一般输入：角闭式与独立三重积分 &
+$24$ 个，正负 $D$ 各 $12$ 个；最大绝对体积差 \mbox{$1.8474\times10^{-13}$}\\
+独立棱长与角闭式 &
+$4$ 个一般样本；最大绝对体积差 \mbox{$3.8525\times10^{-84}$}\\
+一般五边形 &
+$8$ 组；最大复相位残差约 $7.78\times10^{-62}$\\
+全局校准 &
+中心半球、$C_4/C_8$ 循环不变量、归一化、level 相加和模长检查通过\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+一般样本使用固定种子 $20260913$。
+三重积分从逐维 $48/96$ 阶求积起步，必要时提高至 $192/384$ 阶；
+本次 $24$ 个样本均达到设定的收敛门控，没有剔除样本。
+
+棱长比较使用既有样本编号 $0,3,12,18$，棱长路线 $85$ 位、
+角路线请求 $70$ 位。
+另检查了近退化输入的 $50/80$ 位精度比较和两类分支行为。
+
+详细数值保存在两份报告中，正文不粘贴完整实现：
+\begin{quote}
+\file{results/SU2_validation.json}\\
+\file{results/SU2_edge_crosscheck.json}
+\end{quote}
+
+相位对大整数 $k$ 或极小体积可能需要更多工作精度。
+实现按相关行列式、小体积下界 $|\Vor|\ge|D|/6$ 和 $k$ 的位数提高精度，
+但没有为任意输入提供区间算术认证的舍入误差上界。
+表中误差是实际交叉检查结果，不能推广为所有输入的严格误差证书。
+独立浮点矩阵乘法也不会自动保留乘积恰为中心元等代数关系；
+这类关系应使用精确四元数入口及其精确乘法表达。
+这些是数值输入和求值的限制，数学上的有限分段代表仍覆盖全部 $\SU^3$。
+
+\appendix
+\section{径向积分的收敛级数参考}\label{app:series}
+
+为给有限闭式提供另一种独立计算基线，式 \eqref{eq:radial-integral}
+还可在每个固定的合法非退化输入上展开为一致收敛级数。
+对六条顶点边取整数 $m_{ij}\ge0$，令
+\[
+ M=\sum_{i<j}m_{ij},\qquad
+ s_i=\sum_{j\ne i}m_{\min(i,j),\max(i,j)}.
+\]
+由于顶点为单位向量且 $\sum_i t_i=1$，
+\[
+ t^T\Gamma t
+ =1-\sum_{i<j}2(1-\Gamma_{ij})t_it_j.
+\]
+固定非退化输入时 $0<|Qt|^2\le1$，紧性给出
+$0\le1-|Qt|^2\le r<1$。
+因此可一致展开 $(1-u)^{-2}=\sum_{M\ge0}(M+1)u^M$，
+再用多项式展开与 Dirichlet 单纯形积分
+\[
+ \int_{\Delta_3}\prod_i t_i^{s_i}\,\dd^3t
+ =\frac{\prod_i s_i!}{(2M+3)!}.
+\]
+得到
+\begin{equation}
+ \Vor=
+ D\sum_{\{m_{ij}\ge0\}}
+ \frac{(M+1)!\prod_{i=0}^3s_i!}{(2M+3)!}
+ \prod_{i<j}
+ \frac{[2(1-\Gamma_{ij})]^{m_{ij}}}{m_{ij}!}.
+ \label{eq:series}
+\end{equation}
+一致收敛是对固定输入的陈述，不是在全部非退化域上的统一收敛；
+靠近某些退化配置时可能很慢。
+该级数仅作为参考核验，不作为替代有限闭式的最终表达。
+
+\begin{thebibliography}{9}
+\raggedright
+\bibitem{jia}
+Q. Jia, R. Luo, J. Tian, Y.-N. Wang and Y. Zhang,
+\emph{Anomaly of Continuous Symmetries from Topological Defect Network},
+arXiv:2510.14722v2, 2025.
+\url{https://arxiv.org/abs/2510.14722v2}.
+本文使用式 (7)--(14) 及附录 C、E。
+
+\bibitem{murakami}
+J. Murakami,
+\emph{Volume formulas for a spherical tetrahedron},
+arXiv:1011.2584v4, 2011.
+\url{https://arxiv.org/abs/1011.2584v4}.
+本文使用图 1、定理 1.1、1.2、引理 2.2 及式 (2.1)、(2.5)。
+
+\bibitem{cheegersimons}
+J. Cheeger and J. Simons,
+\emph{Differential characters and geometric invariants},
+in \emph{Geometry and Topology}, Lecture Notes in Mathematics 1167,
+Springer, 1985, pp.~50--80.
+\url{https://math.mit.edu/juvitop/pastseminars/notes_2019_Fall/cheeger-simons.pdf}.
+本文使用推论 1.2、定理 2.2、命题 2.8 和第 8 节。
+
+\bibitem{baezlauda}
+J. C. Baez and A. D. Lauda,
+\emph{Higher-Dimensional Algebra V: 2-Groups},
+arXiv:math/0307200v3, 2004.
+\url{https://arxiv.org/abs/math/0307200v3}.
+本文使用第 8.5 节、定理 55、59 及推论 60。
+
+\bibitem{normalization}
+S. Schwede and B. Shipley,
+\emph{Equivalences of monoidal model categories},
+2003, Section 2.1, formula (2.1).
+\url{https://homepages.math.uic.edu/~bshipley/monoidalequi.final.pdf}.
+\end{thebibliography}
+\end{document}

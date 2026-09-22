@@ -1,0 +1,202 @@
+\documentclass[UTF8,11pt,fontset=none]{ctexart}
+\usepackage[a4paper,margin=25mm]{geometry}
+\setCJKmainfont{Droid Sans Fallback}[AutoFakeBold=2]
+\setmainfont{DejaVu Serif}
+\usepackage{amsmath,amssymb,mathtools,booktabs,longtable,xcolor,hyperref}
+\hypersetup{unicode,colorlinks=true,linkcolor=blue!45!black,urlcolor=blue!45!black}
+\allowdisplaybreaks[2]
+\setlength{\emergencystretch}{2em}
+\newcommand{\SU}{\mathrm{SU}(2)}
+\newcommand{\Dic}{\mathrm{Dic}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\Vol}{\operatorname{Vol}}
+\newcommand{\Arg}{\operatorname{Arg}}
+\newcommand{\Li}{\operatorname{Li}}
+\title{SU(2) 反常与 ADE 有限子群：从有向体积到具体闭余循环}
+\author{}
+\date{2026 年 9 月 22 日}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+本文是对 SU(2) 背景反常 ADE 限制问题的审计和补充计算。
+首先固定源笔记 A 第 10 页式 (7.1) 的相位方向，说明它与仓库原有正体积代表是逆余循环。
+随后证明全局有限填充给出 closed 三余循环，并用 $C_4$ 的 bar 三循环证明 $k=1$ 非恰当。
+对二元二面体群给出精确群律、八分支有向体积表和有理数闭性验证；
+对 $2T,2O,2I$ 给出精确代数元素集合、全局 Li$_2$ 求值入口及类阶识别。
+数值结果区分数学证明、精确代数检查和高精度浮点检查。
+\end{abstract}
+
+\tableofcontents
+\clearpage
+
+\section{资料审计与统一约定}
+
+任务提示中给出的 A 文件是研究笔记的最终修订版；其第 10 页明确写出
+\begin{equation}
+ \omega_k^{A}(g_1,g_2,g_3)=
+ \exp\left(-\frac{ik}{\pi}\Vol_A(C)\right),
+ \qquad \Vol_A(C)=\int_C dV_{S^3}.
+ \label{eq:source-sign}
+\end{equation}
+同一笔记式 (1.1)、(2.12) 使用
+\[
+ \omega_3^A=-\frac{dV_{S^3}}{2\pi^2},
+ \qquad \int_{S^3}\omega_3^A=-1.
+\]
+仓库原有接口选取 $+dV_{S^3}/(2\pi^2)$ 和 $\exp(+ikV/\pi)$。
+因此本报告的新接口满足
+\begin{equation}
+ \omega_k^{A}=\left(\omega_k^{\rm old}\right)^{-1},
+ \label{eq:inverse-convention}
+\end{equation}
+这是初末网络比值的代表转换，不是 level 位移，也不是未经说明地改变群乘法。
+
+仍采用
+\[
+g=x_0I+i\sum_{a=1}^3x_a\sigma_a,qquad
+F=dA+A\wedge A,qquad
+I_4=-\frac{k}{8\pi^2}\Tr(F\wedge F).
+\]
+群元累计顶点为
+\[
+p_0=e,quad p_1=g_1,quad p_2=g_1g_2,quad p_3=g_1g_2g_3.
+\]
+任务 1 的完整八项 Li$_2$ 公式、棱编号、二面角和全局 E/F/T 构造已在
+\href{../paper/su2_cocycle.pdf}{主研究笔记}中给出；本报告只补充 ADE 限制和 A 约定的符号转换。
+
+\section{closed 与 non-exact}
+
+单位顶点规范化光滑奇异链上的边、面和三维链满足
+\begin{align}
+\partial E(a,b)&=[b]-[a],\\
+\partial F(a,b,c)&=E(b,c)-E(a,c)+E(a,b),\\
+\partial T(a,b,c,d)&=F(b,c,d)-F(a,c,d)+F(a,b,d)-F(a,b).
+\end{align}
+这里的 E/F/T 使用相邻重复退化、精确凸包判定和有限锥点规则；一般降秩链保留。
+对五个累计顶点组成的五项三链 $Z$，面逐项相消，故 $\partial Z=0$。
+由于 $\int_{S^3}dV=2\pi^2$，有
+\[
+\int_ZdV\in2\pi^2\mathbb Z,
+\qquad \delta\omega_k^A=1.
+\]
+这一步是全局证明，不依赖随机五边形测试。
+
+取 $h=e^{2\pi i\sigma_1/n}$，定义进位函数
+\[
+N_n(a,b)=\left\lfloor\frac{a+b}{n}\right\rfloor,
+\qquad [a+b]_n=a+b-nN_n(a,b).
+\]
+规范化 bar 三循环为
+\[
+z_n=\sum_{r=0}^{n-1}[h\mid h^r\mid h].
+\]
+A 约定的限制代表是
+\begin{equation}
+\omega_{k,C_n}(h^a,h^b,h^c)=
+\exp\left(\frac{2\pi i k a}{n}N_n(b,c)\right).
+\label{eq:Cn-cocycle}
+\end{equation}
+因此
+\begin{equation}
+P_n(\omega_k)=\prod_{r=0}^{n-1}\omega_k(h,h^r,h)=e^{2\pi ik/n}.
+\label{eq:Cn-pairing}
+\end{equation}
+若 $\omega_1=\delta\beta$，限制到 $C_4$ 后仍为余边界，而余边界在 $z_4$ 上配对为 1；式 (\ref{eq:Cn-pairing}) 却给出 $P_4=i$。所以
+\[
+\boxed{\omega_1\text{ closed but not exact}.}
+\]
+
+\section{二元二面体群的具体相位}
+
+令
+\[
+U=e^{i\pi\sigma_1/n},\qquad V=i\sigma_2,
+\qquad U^{2n}=1,quad V^2=U^n,quad VUV^{-1}=U^{-1}.
+\]
+使用标签 $V^sU^r$，其中 $r\in\{0,\ldots,2n-1\}$、$s\in\{0,1\}$。
+旧仓库内部标签写成 $U^rV^s$ 时，需在 $s=1$ 分支将 $r$ 换成 $-r$。
+
+定义 $[x]_{2n}\in\{0,\ldots,2n-1\}$ 和
+\[
+N_n(a,b)=\left\lfloor\frac{[a]_{2n}+[b]_{2n}}{2n}\right\rfloor.
+\]
+源笔记 A 的半球构造给出 $\Vol_A=\pi^2v_n$，其中
+\begin{longtable}{@{}c p{0.65\linewidth}@{}}
+\toprule
+$(s_1s_2s_3)$ & $v_n$\\ \midrule
+000 & $-r_1N_n(r_2,r_3)/n$\\
+001 & $([r_3-r_1-r_2]_{2n}-n)N_n(r_1,r_2)/n$\\
+010 & $r_1r_3/(2n^2)$\\
+011 & $-([r_2-r_1]_{2n}-n)N_n(r_1,n-r_2+r_3)/n$\\
+100 & $-r_1N_n(r_2,r_3)/n$\\
+101 & $[n-r_1-r_2+r_3]_{2n}r_2/(2n^2)$\\
+110 & $(r_1-n)N_n(n-r_1+r_2,r_3)/n$\\
+111 & $-[n-r_1+r_2]_{2n}[n-r_2+r_3]_{2n}/(2n^2)$\\
+\bottomrule
+\end{longtable}
+最终相位为
+\[
+\boxed{\omega_{k,\Dic_n}(V^{s_1}U^{r_1},V^{s_2}U^{r_2},V^{s_3}U^{r_3})
+=e^{-i\pi k v_n}.}
+\]
+这是一套完整三元组规则，不是只列代表性元素。
+
+程序 \texttt{scripts/dic\_formula.py} 实现表格，\texttt{scripts/check\_dic\_table.py} 用有理数检查
+\[
+\delta v_n\in2\mathbb Z.
+\]
+对于 $n=2,3,4,5$，分别穷举 $4096,20736,65536,160000$ 个四元组，全部通过。
+几何 E/F/T 代表与八分支代表可能逐点不同；A 式 (4.10)--(4.14) 的换面三链给出二上链重定相，因此它们表示同一限制类。
+
+\section{ADE 全部有限子群与精确求值入口}
+
+精确四元数元素集合由 \texttt{scripts/ade\_subgroups.py} 给出：
+\begin{itemize}
+\item $C_n$：$e^{2\pi i\sigma_1/n}$ 的幂；
+\item $\Dic_n$：上节的 $V^sU^r$；
+\item $2T$：24 个 Hurwitz 单位；
+\item $2O$：$2T$ 加上两坐标为 $\pm1/\sqrt2$ 的 24 个元素；
+\item $2I$：8 个坐标单位、16 个半坐标元素，以及偶置换的
+$(0,\pm1/2,\pm\varphi/2,\pm\varphi^{-1}/2)$ 共 96 个元素。
+\end{itemize}
+\[
+|C_n|=n,quad |\Dic_n|=4n,quad |2T|=24,quad |2O|=48,quad |2I|=120.
+\]
+三个二元多面体集合的乘法闭包使用 SymPy 代数数精确检查，未用浮点容差。
+
+对于 E 型，\texttt{scripts/ade\_phase.py} 的
+\texttt{phase\_from\_exact\_quaternions} 接受精确代数四元数：
+先在 SymPy 中做凸包、秩、对跖和锥点分支，再把每个确定的非零球面四面体转换到高精度 mpmath，调用任务 1 的 Murakami 八项 Li$_2$ 公式。合法降秩项直接赋零。该函数覆盖全部三元组；不需要将 $|2I|^3$ 个输入打印成列表。
+
+\texttt{scripts/check\_ade\_phase.py} 对 $2T,2O,2I$ 各取两组非交换四元组，五边形最大残差分别为
+\[
+7.06\times10^{-67},quad 4.07\times10^{-66},quad 3.81\times10^{-66}.
+\]
+
+Epa--Ganter 的 Theorem 1.1 说明 String(3) 限制到每个有限 $\Gamma\subset SU(2)$ 的类精确阶为 $|\Gamma|$；因此
+\[
+\operatorname{ord}[\omega_k|_\Gamma]=\frac{|\Gamma|}{\gcd(k,|\Gamma|)},
+\qquad [\omega_k|_\Gamma]=0\Longleftrightarrow |\Gamma|\mid k.
+\]
+这证明类阶和 $k$ 周期，不把逐点代表值与类号混为一谈。
+
+\section{复现结果与完成状态}
+
+本轮实际运行：
+\begin{itemize}
+\item 原仓库单元测试：16 项全部通过；
+\item Q8：4096 个四元组，残差 $1.80\times10^{-86}$；
+\item Dic 表：$n=2,3,4,5$ 全部四元组精确通过；
+\item $2T,2O,2I$：元素计数和精确闭包分别为 24、48、120；
+\item E 型代表性精确相位的五边形残差均低于 $4.1\times10^{-66}$。
+\end{itemize}
+
+这里的「全部三元组可求值」指确定的有限算法入口；「类阶」由有限子群定理证明；数值残差只承担实现核验。用户提供的参考 PDF/JPG 未提交到仓库，仍保存在本地 \texttt{docs/review-0922/}。
+
+\begin{thebibliography}{9}
+\bibitem{jia} Q. Jia et al., \emph{Anomaly of Continuous Symmetries from Topological Defect Network}, arXiv:2510.14722v2 (2025).
+\bibitem{murakami} J. Murakami, \emph{Volume formulas for a spherical tetrahedron}, arXiv:1011.2584v4 (2011).
+\bibitem{epa} N. Epa and N. Ganter, \emph{Platonic and alternatinc 2-groups}, arXiv:1605.09192v1, Theorem 1.1.
+\end{thebibliography}
+\end{document}

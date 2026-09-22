@@ -2,7 +2,7 @@
 
 从 1+1 维玻色体系的 SU(2) 反常内流出发，给出一般群元的有限二重对数表达，以及覆盖退化输入的全局有限填充规则。
 
-**阅读入口：[研究笔记 PDF](paper/su2_cocycle.pdf) · [LaTeX 源码](paper/su2_cocycle.tex)**
+**阅读入口：[主研究笔记 PDF](paper/su2_cocycle.pdf) · [ADE 补充报告 PDF](paper/su2_ade_review.pdf) · [ADE LaTeX 源码](paper/su2_ade_review.tex)**
 
 采用反厄米联络、基本表示普通迹，固定
 
@@ -84,6 +84,9 @@ python -m scripts.su2_edge_crosscheck
 
 ```bash
 make pdf
+
+# ADE 补充报告
+make adepdf
 ```
 
 LaTeX 源文件是 `paper/su2_cocycle.tex`；编译日志在忽略的 `build/paper/` 中。构建脚本检查缺字、未解析引用和溢出的排版盒子，通过后将 PDF 复制到 `paper/su2_cocycle.pdf` 并纳入版本控制。`make all` 顺序运行全部检查和 PDF 构建。

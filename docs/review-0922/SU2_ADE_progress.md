@@ -272,17 +272,43 @@ C_n&n&n\mid k\\
 
 这里的 ([\omega_k|_\Gamma]^{|\Gamma|}=0) 是上同调类的陈述；不表示未经二上链变换的几何代表逐点满足 (omega_k(g,h,l)^{|\Gamma|}=1)。也不表示任何具体物理体系的所有 gauging 条件已自动满足。
 
-## 6. 这一轮的结论和未完成项
+## 6. 这一轮的结论与完成边界
 
-**已经核验：** 新笔记 A 的整体号与旧仓库相反，已给出精确转换；`src/su2_omega.py` 现在同时提供旧代表和 `omega_quaternions_source` 的 A 约定入口；全局闭性证明适用于 Q8 等异常分支；Q8 全部 4096 个四元组已用精确有理四元数核验；\(C_n\) 配对给出 \(k=1\) 非恰当性；Dic_n 八分支代表已对 \(n=2,3,4,5\) 全部四元组做精确闭性检查；Dic_n 精确群律和 \(2T,2O,2I\) 精确元素闭包已实现；全部 ADE 的类阶、周期和平凡条件由有限子群 String(3) 定理识别。
+**已完成并核验：** 新笔记 A 的整体号与旧仓库相反，已给出精确转换；`src/su2_omega.py` 同时提供旧代表和 `omega_quaternions_source` 的 A 约定入口；全局闭性证明适用于 Q8 等异常分支；Q8 全部 4096 个四元组已用精确有理四元数核验；\(C_n\) 配对给出 \(k=1\) 非恰当性；Dic_n 八分支代表已对 \(n=2,3,4,5\) 全部四元组做精确闭性检查；Dic_n 精确群律和 \(2T,2O,2I\) 精确元素闭包已实现。
 
-**尚未声称：** 尚未为 E 型群打印一个像 Dic_n 八分支那样的短初等三余循环；E 型当前交付的是精确元素集合、乘法闭包、任务 1 的有限求值规则和类阶识别。E 型逐三元组的数值遍历仍不是本轮的独立证据；不应把浮点三角值当作精确群关系。
+E 型群现在也有可调用的精确相位入口：`scripts/ade_phase.py` 的 `phase_from_exact_quaternions` 先用 SymPy 代数数完成凸包、秩、对跖和锥点分支，再逐个非零四面体调用 mpmath 的 Murakami \(\operatorname{Li}_2\) 体积公式；它不把 \(\sqrt2,\sqrt5\) 或退化关系转换成浮点判定。`scripts/check_ade_phase.py` 对 (2T,2O,2I) 各取两组非交换四元组，检查五边形最大残差分别为
+\[
+7.06\times10^{-67},\quad 4.07\times10^{-66},\quad 3.81\times10^{-66}.
+\]
+
+因此任务 3 的“全部三元组可求值”现在由精确元素输入、确定的全局分支规则和有限 Li₂ 求值函数覆盖；不需要打印 (120^3) 项。全部 ADE 的类阶、周期和平凡条件由有限子群 String(3) 定理识别：
+\[
+\operatorname{ord}[\omega_k|_\Gamma]=\frac{|\Gamma|}{\gcd(k,|\Gamma|)},qquad [\omega_k|_\Gamma]=0\Longleftrightarrow |\Gamma|\mid k.
+\]
+
+“同一类”与“逐点相等”已分开：Dic_n 八分支表是半球构造的短代表，几何 E/F/T 代表与它的差由换面三链产生的 \(\delta\beta\)；E 型入口使用几何 E/F/T 代表本身。
+
+本轮的实际证据文件是：
+
+```text
+scripts/ade_subgroups.py
+scripts/dic_formula.py
+scripts/check_dic_table.py
+scripts/ade_phase.py
+scripts/check_ade_phase.py
+docs/review-0922/SU2_ADE_validation.json
+docs/review-0922/SU2_Dic_table_validation.json
+docs/review-0922/SU2_ADE_phase_validation.json
+```
+
+本轮未重新编译总论文 PDF；源笔记 A 的符号差异和 ADE 推进已单独记录，避免把旧论文中的正号继续当作新 review 的最终约定。
 
 ## 7. 可复现命令
 
 ```bash
 python -m scripts.check_ade_review
 python -m scripts.check_dic_table
+python -m scripts.check_ade_phase
 ```
 
-输出 JSON：`docs/review-0922/SU2_ADE_validation.json` 和 `docs/review-0922/SU2_Dic_table_validation.json`。
+输出 JSON：`docs/review-0922/SU2_ADE_validation.json`、`docs/review-0922/SU2_Dic_table_validation.json` 和 `docs/review-0922/SU2_ADE_phase_validation.json`。

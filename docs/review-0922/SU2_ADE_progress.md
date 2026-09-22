@@ -34,7 +34,7 @@
  \boxed{\omega_k^A=(\omega_k^{\rm old})^{-1}}
 \]
 
-在两者使用同一有向几何链时成立。这里不是悄悄修改 level：它是“源笔记 A 的 (Z_{\rm before}/Z_{\rm after}) 约定”与旧仓库正向相位的代表转换。A 的 (U(1)) 校准式 (6.21) 给出
+在两者使用同一有向几何链时成立。这里不是悄悄修改 level：它是“源笔记 A 的 (Z_{\rm before}/Z_{\rm after}) 约定”与旧仓库正向相位的代表转换。A 的 $U(1)$ 校准式 (6.21) 给出
 
 \[
  \omega_k^A(h(\alpha_1),h(\alpha_2),h(\alpha_3))
@@ -44,11 +44,11 @@
  \right].
 \]
 
-这与 (\operatorname{Vol}_{A}=-\pi\alpha_1N(\alpha_2,\alpha_3)) 和式 (7.1) 一致。旧仓库的 (C_n) 检查得到逆相位；本轮结果统一以 A 约定报告。
+这与 (\operatorname{Vol}_{A}=-\pi\alpha_1N(\alpha_2,\alpha_3)) 和式 (7.1) 一致。旧仓库的 $C_n$ 检查得到逆相位；本轮结果统一以 A 约定报告。
 
 ## 2. closed 性质：证明与实际 Q8 检查
 
-沿用已经审查过的单位顶点规范化奇异链。对边、面、三维填充分别记 (E,F,T)，它们满足
+沿用已经审查过的单位顶点规范化奇异链。对边、面、三维填充分别记 $E/F/T$，它们满足
 
 \[
 \begin{aligned}
@@ -58,7 +58,7 @@
 \end{aligned}
 \]
 
-对五个累计顶点 (p_0=e,p_1=g_1,p_2=g_1g_2,p_3=g_1g_2g_3,p_4=g_1g_2g_3g_4)，令
+对五个累计顶点 $p_0=e,p_1=g_1,p_2=g_1g_2,p_3=g_1g_2g_3,p_4=g_1g_2g_3g_4$，令
 
 \[
  Z=T(p_1,p_2,p_3,p_4)-T(p_0,p_2,p_3,p_4)
@@ -104,9 +104,9 @@
 
 这项数值不是 Q8 类阶为 4 的证明；它只核对符号和 (C_4) 限制。Q8 的完整类阶由第 4 节的有限子群定理识别。
 
-## 3. (C_n) 限制与 (k=1) 非恰当性
+## 3. $C_n$ 限制与 $k=1$ 非恰当性
 
-取 (h=e^{2\pi i\sigma_1/n})，(0\le a<n)，并定义进位函数
+取 $h=e^{2\pi i\sigma_1/n}$，$0\le a<n$，并定义进位函数
 
 \[
  N_n(a,b)=\left\lfloor\frac{a+b}{n}\right\rfloor,
@@ -135,7 +135,7 @@
  =e^{2\pi i k/n}.
 \]
 
-若 (omega_1=\delta\beta) 在整个 SU(2) 上恰当，则限制到 (C_n) 仍为 (delta(\beta|_{C_n}))，其对 bar 三循环的乘积必须为 1；取 (n=4) 得 (P_4=i\ne1)。因此
+若 $\omega_1=\delta\beta$ 在整个 SU(2) 上恰当，则限制到 $C_n$ 仍为 $\delta(\beta|_{C_n})$，其对 bar 三循环的乘积必须为 1；取 $n=4$ 得 $P_4=i\ne1$。因此
 
 \[
  \boxed{[\omega_1]\ne0;\quad \omega_1\text{ closed but not exact}.}
@@ -197,6 +197,35 @@
 | Q8 全部四元组闭性 | (4096) 组，最大残差 (1.80\times10^{-86}) |
 | Q8 (C_4) 配对 | (+i)（A 约定） |
 
+### 4.1 Dic_n 的八分支短代表与精确闭性
+
+按源笔记 A 的半球构造，令
+\[
+ g_i=V^{s_i}U^{r_i},\quad U=e^{i\pi\sigma_1/n},\quad V=i\sigma_2,
+\quad r_i\in\{0,\ldots,2n-1\},\ s_i\in\{0,1\},
+\]
+以及
+\[
+ N_n(a,b)=\left\lfloor\frac{[a]_{2n}+[b]_{2n}}{2n}\right\rfloor.
+\]
+源约定的有向体积除以 \(\pi^2\) 的八个分支为
+\[
+\begin{array}{c|l}
+(s_1s_2s_3)&\operatorname{Vol}_A/\pi^2\\ \hline
+000&-r_1N_n(r_2,r_3)/n\\
+001&([r_3-r_1-r_2]_{2n}-n)N_n(r_1,r_2)/n\\
+010&r_1r_3/(2n^2)\\
+011&-([r_2-r_1]_{2n}-n)N_n(r_1,n-r_2+r_3)/n\\
+100&-r_1N_n(r_2,r_3)/n\\
+101&[n-r_1-r_2+r_3]_{2n}r_2/(2n^2)\\
+110&(r_1-n)N_n(n-r_1+r_2,r_3)/n\\
+111&-[n-r_1+r_2]_{2n}[n-r_2+r_3]_{2n}/(2n^2).
+\end{array}
+\]
+相位为 \(\exp[-i\pi k(\operatorname{Vol}_A/\pi^2)]\)。这是一套比逐项 Li₂ 更短的 Dic_n 代表；它与几何 E/F/T 代表的差由 A 式 (4.10)--(4.14) 的换面链给出余边界，因而只要求同类，不要求逐点相等。
+
+`scripts/dic_formula.py` 和 `scripts/check_dic_table.py` 已实现这八个分支。后者用有理数检查 \(\delta v_n\in2\mathbb Z\)：\(n=2,3,4,5\) 的全部 \(4096,20736,65536,160000\) 个四元组均通过。
+
 ## 5. 全部 ADE 的类阶和 (k) 周期
 
 附件中给出的 ADE 分类为
@@ -245,14 +274,15 @@ C_n&n&n\mid k\\
 
 ## 6. 这一轮的结论和未完成项
 
-**已经核验：** 新笔记 A 的整体号与旧仓库相反，已给出精确转换；`src/su2_omega.py` 现在同时提供旧代表和 `omega_quaternions_source` 的 A 约定入口；全局闭性证明适用于 Q8 等异常分支；Q8 全部 4096 个四元组已用精确有理四元数核验；(C_n) 配对给出 (k=1) 非恰当性；Dic_n 精确群律和 (2T,2O,2I) 精确元素闭包已实现；全部 ADE 的类阶、周期和平凡条件由有限子群 String(3) 定理识别。
+**已经核验：** 新笔记 A 的整体号与旧仓库相反，已给出精确转换；`src/su2_omega.py` 现在同时提供旧代表和 `omega_quaternions_source` 的 A 约定入口；全局闭性证明适用于 Q8 等异常分支；Q8 全部 4096 个四元组已用精确有理四元数核验；\(C_n\) 配对给出 \(k=1\) 非恰当性；Dic_n 八分支代表已对 \(n=2,3,4,5\) 全部四元组做精确闭性检查；Dic_n 精确群律和 \(2T,2O,2I\) 精确元素闭包已实现；全部 ADE 的类阶、周期和平凡条件由有限子群 String(3) 定理识别。
 
-**尚未声称：** 尚未为 (mathrm{Dic}_n) 和 E 型群逐个打印一个短的初等三余循环表达式；当前交付是覆盖所有三元组的有限 Li₂/EFT 算法，以及由特征类定理识别的类。下一步若继续，应首先把 `source_phase` 的整体号转换正式并入主接口，再增加 Dic_n 的代表性非交换三元组数值表；不应把浮点三角值当作精确群关系。
+**尚未声称：** 尚未为 E 型群打印一个像 Dic_n 八分支那样的短初等三余循环；E 型当前交付的是精确元素集合、乘法闭包、任务 1 的有限求值规则和类阶识别。E 型逐三元组的数值遍历仍不是本轮的独立证据；不应把浮点三角值当作精确群关系。
 
 ## 7. 可复现命令
 
 ```bash
 python -m scripts.check_ade_review
+python -m scripts.check_dic_table
 ```
 
-输出 JSON：`docs/review-0922/SU2_ADE_validation.json`。
+输出 JSON：`docs/review-0922/SU2_ADE_validation.json` 和 `docs/review-0922/SU2_Dic_table_validation.json`。

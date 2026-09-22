@@ -1,0 +1,22 @@
+{
+  "2": {
+    "order": 8,
+    "quadruples": 4096,
+    "max_abs_integer_period": 2
+  },
+  "3": {
+    "order": 12,
+    "quadruples": 20736,
+    "max_abs_integer_period": 2
+  },
+  "4": {
+    "order": 16,
+    "quadruples": 65536,
+    "max_abs_integer_period": 2
+  },
+  "5": {
+    "order": 20,
+    "quadruples": 160000,
+    "max_abs_integer_period": 2
+  }
+}

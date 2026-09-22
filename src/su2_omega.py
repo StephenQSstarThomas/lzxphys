@@ -311,3 +311,18 @@ def omega_quaternions(g1, g2, g3, k=1, dps=50):
 def omega_su2(g1, g2, g3, k=1, dps=50):
     """Evaluate the phase from three numerical 2x2 SU(2) matrices."""
     return omega_quaternions(*(matrix_quaternion(g) for g in (g1, g2, g3)), k=k, dps=dps)
+
+
+def omega_quaternions_source(g1, g2, g3, k=1, dps=50):
+    """The 0922 source-note convention, Eq. (7.1).
+
+    The original repository helper uses +i*k*V/pi for its selected F-move.
+    The source note reports Z_before/Z_after with -i*k*V/pi, so this is the
+    inverse representative. The level and geometric chain are unchanged.
+    """
+    return 1 / omega_quaternions(g1, g2, g3, k=k, dps=dps)
+
+
+def omega_su2_source(g1, g2, g3, k=1, dps=50):
+    """Source-note phase for numerical 2x2 SU(2) matrices (Eq. (7.1))."""
+    return 1 / omega_su2(g1, g2, g3, k=k, dps=dps)

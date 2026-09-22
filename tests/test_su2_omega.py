@@ -7,7 +7,7 @@ import mpmath as mp
 import numpy as np
 
 from scripts.su2_audit_checks import PAULI, exp_vector
-from su2_omega import omega_su2, oriented_volume, omega_quaternions, quaternion_multiply, quaternion
+from su2_omega import omega_su2, oriented_volume, omega_quaternions, omega_quaternions_source, quaternion_multiply, quaternion
 from su2_omega import face_chain, tetrahedron_chain, hemisphere_safe
 
 
@@ -59,6 +59,13 @@ class ClosedFormulaTests(unittest.TestCase):
         matrices = [exp_vector(axis * a) for axis, a in zip(np.eye(3), [.7, .8, .9])]
         result = complex(omega_su2(*matrices, 1))
         self.assertLess(abs(result - np.exp(1j * .022543184393801173)), 2e-15)
+
+    def test_source_note_convention_is_inverse_representative(self):
+        x, z = (0, 1, 0, 0), (0, 0, 0, 1)
+        with mp.workdps(55):
+            old = omega_quaternions(x, z, x, k=1)
+            source = omega_quaternions_source(x, z, x, k=1)
+            self.assertLess(abs(source * old - 1), mp.mpf('1e-45'))
 
     def test_invalid_matrix_and_level_are_rejected(self):
         with self.assertRaises(ValueError):

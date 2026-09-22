@@ -25,7 +25,7 @@
 
 输入是
 \[
-p_0=1,quad p_1=g_1,quad p_2=g_1g_2,quad p_3=g_1g_2g_3,
+p_0=1,\quad p_1=g_1,\quad p_2=g_1g_2,\quad p_3=g_1g_2g_3,
 \qquad Q=(p_0,p_1,p_2,p_3),quad D=\det Q,quad \Gamma=Q^TQ.
 \]
 令 (H=\Gamma^{-1})，六个面对按
@@ -121,7 +121,7 @@ Q8 的精确检查使用有理四元数，不使用浮点 (cos(pi/2))。全部 4
 
 这三个问题是本轮审计发现并修复的，不是仅仅排版调整。修复后 (2T,2O,2I) 各两组非交换样本的五边形最大残差分别为
 \[
-9.56\times10^{-67},quad1.41\times10^{-66},quad2.33\times10^{-66}.
+9.56\times10^{-67},\quad1.41\times10^{-66},\quad2.33\times10^{-66}.
 \]
 
 Epa–Ganter Theorem 1.1 说明 String(3) 限制到有限 (Gamma\subset SU(2)) 的类精确阶为 (|Gamma|)。因此

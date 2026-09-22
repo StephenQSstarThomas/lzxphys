@@ -1,4 +1,8 @@
-# E 型有限子群的全局相位审查
+# E 型有限子群的全局相位审查（修复前记录）
+
+> 本文件记录 2026-09-22 中间审查发现的三个精确性问题。它们已在后续提交
+> `24d900d`、`795a939` 中修复；最终状态以 `SU2_ADE_HANDOFF_FINAL.md`、
+> `scripts/ade_phase.py` 和 `SU2_ADE_phase_validation.json` 为准。
 
 日期：2026-09-22。范围：审查 `scripts/ade_subgroups.py`、`scripts/ade_phase.py` 及 `scripts/check_ade_review.py`，为 Task 3 给出 2T、2O、2I 的精确输入、全局有限算法、类识别证明和最小修补接口。不修改 `src/su2_omega.py` 或 E 型脚本。
 

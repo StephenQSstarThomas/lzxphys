@@ -1,4 +1,8 @@
-# SU(2) ADE 类识别独立审查（2026-09-22）
+# SU(2) ADE 类识别独立审查（2026-09-22，中间版本）
+
+> 本文件保留中间审查意见。Dic 任意 (n) 的表格闭性、边链比较和 E 型类识别
+> 的最终限定已整合到 `SU2_ADE_HANDOFF_FINAL.md`；不要把本文件的“最小修正清单”
+> 当作当前未修复项。
 
 审查对象：docs/review-0922/SU2_ADE_progress.md、scripts/dic_formula.py、
 scripts/check_dic_table.py 以及 SU2_anomaly_ADE_agent_prompt_zh(1).md。

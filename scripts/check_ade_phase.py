@@ -4,8 +4,9 @@ from pathlib import Path
 
 import mpmath as mp
 
-from scripts.ade_phase import ade_group, phase_from_exact_quaternions
+from scripts.ade_phase import ade_group, phase_from_exact_quaternions, _moment, _safe
 from scripts.ade_subgroups import sympy_quaternion_multiply
+import sympy as sp
 
 
 CASES = {
@@ -38,6 +39,11 @@ def check_group(name, index_sets):
 
 
 def main():
+    s2 = sp.Symbol("s2")
+    # Reviewer regression: this convex hull contains zero and must not take the
+    # direct radial branch; the cone ray must stay in the quadratic field.
+    assert not _safe(((1, 0, 0, 0), (0, 1, 0, 0), (-s2/2, -s2/2, 0, 0)))
+    assert _moment(2) == (1, 2, 4, 8)
     result = {name: check_group(name, cases) for name, cases in CASES.items()}
     path = Path(__file__).resolve().parents[1] / "docs" / "review-0922" / "SU2_ADE_phase_validation.json"
     path.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n")

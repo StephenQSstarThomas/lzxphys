@@ -163,7 +163,7 @@ F'=C_m(L),\qquad D_F=\sum_ec_e[y,m,u_e,w_e].
 V(T)\equiv\Vol C_g(Z')-\sum_F\varepsilon_F\Vol D_F\pmod{2\pi^2}.
 \label{eq:degenerate-elementary}
 \end{equation}
-其中 $C_g(Z')$ 只含群四面体，用式 \eqref{eq:polar-master} 计算。$\Vol D_F$ 只有两种初等形式。
+其中 $C_g(Z')$ 只含群四面体，用式 \eqref{eq:polar-master} 计算。$\Vol D_F$ 有以下三种初等形式。
 \begin{itemize}
 \item \textbf{圆型}：$L$ 在大圆 $\gamma$（平面 $P$）上，作为 1-流 $L=W[\gamma]$；
   $\psi=\angle(y_\perp,m_\perp)<\pi$，投影取在 $P^\perp$ 上。
@@ -177,6 +177,10 @@ V(T)\equiv\Vol C_g(Z')-\sum_F\varepsilon_F\Vol D_F\pmod{2\pi^2}.
   秩为 4 时，沿 $p$ 的投影在 $\mathrm{span}(y,m_1,m_2)$ 上是单射，所以两锥拼成嵌入的悬挂体，
   $\Vol D_F=t\frac\pi2\Omega$。$\Omega$ 为 $\Delta$ 在赤道 $p^\perp$ 上投影的面积，
   由 Van Oosterom--Strackee 公式 $\tan\frac\Omega2=|\det|/(1+\text{点积和})$ 给出。
+\item \textbf{球面型}：二角型中若 $y\in S=\mathrm{span}(p,m_1,m_2)$，且 $D_F$ 含不安全的退化项，
+  则 $F$、$F'$ 都在 $S$ 内，$F-F'=k[S]$。把 $D_F$ 换成 $-kH$（$H$ 为以 $S$ 为边界、体积 $\pi^2$ 的半球），
+  得 $\Vol D_F\equiv k\pi^2\pmod{2\pi^2}$。$k$ 由两个测试点处的带号覆盖次数精确求出，两者必须一致。
+  这一情形由 $2I$ 全检发现。
 \end{itemize}
 原锥点 $a(1,t,t^2,t^3)$ 的坐标属于 $\mathbb Q(\sqrt d)^4$，所以 $\psi$、$\Omega$ 都是代数数的 arccos 或 arctan。
 退化相位因此全是初等函数，但依赖原锥点，不能按 $O(4)$ 类型归并。

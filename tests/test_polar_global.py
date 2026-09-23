@@ -60,6 +60,15 @@ class PolarGlobalTests(unittest.TestCase):
                 self.assertTrue(all(p in exact.exact_group('2T') for p in tetra))
         self.assertEqual(seen, {'circle', 'digon'})
 
+    def test_sphere_case_when_cone_point_lies_on_the_digon_sphere(self):
+        # Found by the exhaustive 2I check: the original face cone point y = (1,1,1,1)
+        # lies on the great sphere of the digon, so F - F' = k[S] and vol D_F == k pi^2.
+        group = importlib.import_module('su2_exact_ade').exact_group('2I')
+        r = self.api.global_polar_formula('2I', group[5], group[44], group[1])
+        kinds = {c['type']: c.get('multiplicity') for c in r['corrections']}
+        self.assertEqual(kinds.get('sphere'), 1)
+        self.assert_elementary(r['oriented_volume_mod'])
+
     def test_rejects_non_members_and_non_integer_level(self):
         with self.assertRaises(ValueError):
             self.api.global_polar_formula('2T', (1/s.sqrt(2), 1/s.sqrt(2), 0, 0), (1, 0, 0, 0), (1, 0, 0, 0))

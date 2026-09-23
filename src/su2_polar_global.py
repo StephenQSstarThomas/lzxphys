@@ -16,7 +16,9 @@ the representative is changed.  Only its volume modulo 2 pi^2 is rewritten:
      half-spheres through y and m, vol = sigma W pi psi, psi = angle(y_perp, m_perp);
    * L = two half great circles from p to -p through m1, m2 (m = m1): D_F is the
      suspension of the triangle (y, m1, m2) between p and -p,
-     vol = t (pi/2) Omega, Omega = area of its shadow on the equator p^perp.
+     vol = t (pi/2) Omega, Omega = area of its shadow on the equator p^perp;
+   * if y lies on the digon's great sphere S (D_F degenerate and unsafe), F and F'
+     both lie in S, F - F' = k[S], and vol D_F == k pi^2 (mod 2 pi^2).
 Proof: docs/review-0923/SU2_POLAR_DUAL_EXACT.md, section on singular inputs.
 """
 from functools import lru_cache
@@ -123,6 +125,36 @@ def _digon_correction(p, y, m1, m2, loop):
     return t*s.pi/2*omega, {'type': 'digon', 't': t, 'Omega': omega}
 
 
+def _sphere_multiplicity(chain, other, span):
+    """Integer k with chain - other = k [S] for two 2-chains in the great sphere S = span.
+
+    Evaluated exactly at test points of S off every edge circle: signed count of the
+    triangles containing the point (orientation relative to a fixed normal of S).
+    Two different test points must agree (the difference is a closed cycle on S).
+    """
+    basis = s.Matrix.hstack(*(_vec(v) for v in span))
+    normal = basis.T.nullspace()[0]
+    triangles = [(c, v) for c, v in chain]+[(-c, v) for c, v in other]
+    triangles = [(c, v) for c, v in triangles if _rank(v) == 3]
+    values = []
+    for r1, r2 in ((2, 3), (3, 5), (5, -2), (-3, 7), (7, 11), (-5, -9), (11, 4)):
+        x = [a+r1*b+r2*c for a, b, c in zip(*span)]
+        if any(_rank((tuple(x), v[i], v[j])) < 3 for _, v in triangles for i, j in ((0, 1), (1, 2), (0, 2))):
+            continue
+        count = 0
+        for c, v in triangles:
+            M = s.Matrix.hstack(*(_vec(u) for u in v))
+            lam = (M.T*M).inv()*M.T*_vec(x)
+            if all(_sgn(l) > 0 for l in lam):
+                count += c*_sgn(_det(v+(tuple(normal),)))
+        values.append(count)
+        if len(values) == 2:
+            break
+    if len(values) < 2 or values[0] != values[1]:
+        raise ArithmeticError('Sphere multiplicity undetermined')
+    return values[0]
+
+
 @lru_cache(maxsize=65536)
 def _face_replacement(name, face):
     """Unsafe face -> (F' chain of group triangles, elementary vol D_F, record)."""
@@ -166,6 +198,15 @@ def _face_replacement(name, face):
             if all(_safe(v) for _, v in new) and all(_safe(v) for _, v in D):
                 vol, record = _digon_correction(p, apex, m1, m2, loop)
                 return new, vol, dict(record, face_apex=apex, group_apex=m1)
+        for m1, m2 in (mids, mids[::-1]):
+            new = [(c, (m1,)+e) for c, e in loop]
+            if all(_safe(v) for _, v in new) and _rank((apex, p, m1, m2)) == 3:
+                # y lies on the digon's great 2-sphere S: F and F' both lie in S, so
+                # F - F' = k[S] (constancy on S^2); a hemisphere bounded by S has volume
+                # pi^2 and -pi^2 = pi^2 (mod 2 pi^2), hence vol D_F == k pi^2.
+                k = _sphere_multiplicity(cone, new, (p, m1, m2))
+                return new, k*s.pi**2, {'type': 'sphere', 'multiplicity': k,
+                                        'face_apex': apex, 'group_apex': m1}
         raise ArithmeticError('No admissible digon apex')
     raise ArithmeticError('Unexpected face loop rank')
 

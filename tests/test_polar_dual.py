@@ -68,6 +68,23 @@ class PolarDualTests(unittest.TestCase):
                 target = s.exp(2*s.I*s.pi*s.Rational(r.numerator, r.denominator))
                 self.assertEqual(s.minimal_polynomial(s.expand(product-target), x), x)
 
+    def test_independence_proof_identities(self):
+        """The algebraic facts used in the prime-valuation independence proof."""
+        I, r5, r2 = s.I, s.sqrt(5), s.sqrt(2)
+        alpha = (1+s.sqrt(-15))/2
+        expi2 = lambda t: s.expand(((1+I*t)**2)/(1+t*t))          # exp(2 i arctan t)
+        for lhs, rhs in ((expi2(s.Rational(1, 2)), (2+I)/(2-I)), (expi2(1/r5), (r5+I)/(r5-I)),
+                         (expi2(s.sqrt(15)), alpha/s.conjugate(alpha)), (expi2(1/r2), (r2+I)/(r2-I))):
+            self.assertEqual(s.simplify(lhs-rhs), 0)
+        self.assertEqual(s.expand((2+I)*(2-I)), 5)
+        self.assertEqual(s.expand((r5+I)*(r5-I)), 6)
+        self.assertEqual(s.expand((r2+I)*(r2-I)), 3)
+        self.assertEqual(s.expand(alpha*s.conjugate(alpha)), 4)
+        self.assertEqual(s.expand(alpha+s.conjugate(alpha)), 1)
+        # coprimality witnesses: the differences are 2i (a unit away from 2)
+        self.assertEqual(s.expand((2+I)-(2-I)), 2*I)
+        self.assertEqual(s.expand((r5+I)-(r5-I)), 2*I)
+
     def test_every_dihedral_angle_is_certified(self):
         for name in ('2O', '2I'):
             system = self.api.angle_system(name)

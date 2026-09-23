@@ -234,6 +234,52 @@ Epa--Ganter 的 Theorem 1.1 说明 String(3) 限制到每个有限 $\Gamma\subse
 
 这里的「全部三元组可求值」指确定的有限算法入口；「类阶」由有限子群定理证明；数值残差只承担实现核验。用户提供的参考 PDF/JPG 未提交到仓库，仍保存在本地 \texttt{docs/review-0922/}。
 
+\section{具体 E 型实例与代码位置}
+
+\begin{sloppypar}
+
+下面列出程序实际使用的六个非交换四元组索引及其 A 约定相位。
+索引对应精确列表中从零开始的元素位置；四元组为五边形检查中的
+$(g_1,g_2,g_3,g_4)$，表中相位是前三个元素的 $\omega_{1,A}$：
+
+\begin{longtable}{@{}c c c@{}}
+\toprule
+群 & 四元组索引 & $\omega_{1,A}(g_1,g_2,g_3)$\\ \midrule
+$2T$ & $(1,5,9,13)$ & $0.995600917115788-0.093695324526903i$\\
+$2T$ & $(2,7,14,20)$ & $0.986643332084879+0.162895473394589i$\\
+$2O$ & $(1,5,9,17)$ & $0.995600917115788-0.093695324526903i$\\
+$2O$ & $(3,11,21,31)$ & $0.707106781186548+0.707106781186548i$\\
+$2I$ & $(1,5,17,41)$ & $1.000000000000000+0.000000000000000i$\\
+$2I$ & $(3,13,29,67)$ & $0.863665074045758+0.504066106650244i$\\
+\bottomrule
+\end{longtable}
+
+这些数值来自固定精确代数元素、精确 E/F/T 分支和 65 位 mpmath 求值；
+对应五边形残差分别为 $9.56\times10^{-67}$、$1.41\times10^{-66}$、
+$2.33\times10^{-66}$（每个群取两组）。
+
+所有代码均已放在公开仓库
+\url{https://github.com/StephenQSstarThomas/lzxphys/tree/main}：
+\begin{itemize}
+\item 任务 1 主入口：\url{https://github.com/StephenQSstarThomas/lzxphys/blob/main/src/su2_omega.py}；
+源笔记 A 约定为 \texttt{omega\_quaternions\_source}；
+\item E 型精确入口：\url{https://github.com/StephenQSstarThomas/lzxphys/blob/main/scripts/ade_phase.py}；
+元素和精确闭包：\url{https://github.com/StephenQSstarThomas/lzxphys/blob/main/scripts/ade_subgroups.py}；
+\item Dic 表和闭性：\url{https://github.com/StephenQSstarThomas/lzxphys/blob/main/scripts/dic_formula.py}、
+\url{https://github.com/StephenQSstarThomas/lzxphys/blob/main/scripts/check_dic_table.py}；
+\item E 型实例和五边形：\url{https://github.com/StephenQSstarThomas/lzxphys/blob/main/scripts/check_ade_phase.py}。
+\end{itemize}
+复现命令为
+\begin{verbatim}
+python -m unittest discover -s tests -v
+python -m scripts.check_ade_review
+python -m scripts.check_dic_table
+python -m scripts.check_ade_phase
+make adepdf
+\end{verbatim}
+本报告对应提交为 \texttt{303a965}；参考 PDF/JPG 没有纳入提交。
+\end{sloppypar}
+
 \begin{thebibliography}{9}
 \bibitem{jia} Q. Jia et al., \emph{Anomaly of Continuous Symmetries from Topological Defect Network}, arXiv:2510.14722v2 (2025).
 \bibitem{murakami} J. Murakami, \emph{Volume formulas for a spherical tetrahedron}, arXiv:1011.2584v4 (2011).

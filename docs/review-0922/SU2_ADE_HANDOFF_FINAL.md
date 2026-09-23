@@ -26,7 +26,7 @@
 输入是
 \[
 p_0=1,\quad p_1=g_1,\quad p_2=g_1g_2,\quad p_3=g_1g_2g_3,
-\qquad Q=(p_0,p_1,p_2,p_3),quad D=\det Q,quad \Gamma=Q^TQ.
+\qquad Q=(p_0,p_1,p_2,p_3),\quad D=\det Q,\quad \Gamma=Q^TQ.
 \]
 令 (H=\Gamma^{-1})，六个面对按
 \[

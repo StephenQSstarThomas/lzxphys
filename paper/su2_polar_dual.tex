@@ -1,0 +1,271 @@
+\section[09-23 第二轮：极对偶精确公式与全部阶的 D 表证明]{09-23 第二轮：极对偶精确公式与任意 $n$ 的 D 表证明}
+\label{sec:polar-dual}
+
+本节执行用户批准的第二轮路线：按极对偶路线补全 $2O,2I$，退化输入保持原锥点，
+并证明 D 表对任意 $n$ 成立。本节\emph{不改变代表}，不做陪集转移，
+推导与证书中没有数值拟合或数值归约。上一节的 $\Li_2$ 主公式保持不变。
+数值只出现在单独标注的审计脚本中，用作两种精确公式之间的核对。
+
+\begin{center}\small
+\begin{tabular}{@{}lll@{}}\toprule
+项目 & 结果 & 性质\\\midrule
+$2O,2I$ 非退化类型 & 84/563 类都有不含 $\Li_2$ 的精确闭式 & 定理与精确证书\\
+有理体积 & $2T$ 12/12，$2O$ 60/84，$2I$ 268/563 & 精确判据\\
+群元直接求相位 & 六个迹、取向、一个正负号计数 $N$ & 定理\\
+退化输入 & 群四面体加月牙、悬挂或球面型初等修正 & 定理与逐输入全检\\
+D 表 & 对全部 $n$ 闭合、归一，与几何代表同类，类阶 $4n$ & 形式证明与标准定理\\
+\bottomrule\end{tabular}\end{center}
+
+\subsection{极对偶体积恒等式}
+
+\begin{theorem}\label{thm:polar-identity}
+设 $T$ 为非退化球面四面体，顶点 $v_0,\ldots,v_3$ 线性无关，
+边长为 $\ell_e$，内二面角为 $\theta_e$，极对偶为
+$T^*=\{x\in S^3:\langle x,v_i\rangle\ge0\}$。则
+\[
+\Vol T+\Vol T^*=\pi^2+\frac12\sum_e\ell_e\theta_e-\frac\pi2\sum_e\ell_e .
+\]
+\end{theorem}
+
+\begin{lemma}\label{lem:polar-edges}
+令 $u_k$ 为 $V^{-\mathsf T}$ 的第 $k$ 列，其中 $V=(v_0\cdots v_3)$，则 $\langle u_k,v_i\rangle=\delta_{ki}$，
+于是 $T^*$ 是 $u_0,\ldots,u_3$ 的径向四面体。$u_k$ 是面 $F_k$ 指向内部的法向，
+所以沿边 $v_iv_j$（$\{k,m\}$ 为补集）有 $\theta_{ij}=\pi-\angle(u_k,u_m)$。
+又因 $(u_k)$ 的 Gram 矩阵为 $G^{-1}=C/\det G$，其中 $C$ 为 Gram 余子式矩阵，所以
+\[
+\cos\theta_{ij}=-\frac{C_{km}}{\sqrt{C_{kk}C_{mm}}}.
+\]
+由 $T^{**}=T$，$T^*$ 在对偶边 $u_ku_m$ 上的长度为 $\pi-\theta_{ij}$，二面角为 $\pi-\ell_{ij}$。
+\end{lemma}
+
+\begin{proof}[定理 \ref{thm:polar-identity} 的证明]
+由球面 Schläfli 公式，$\dd\Vol T=\frac12\sum_e\ell_e\,\dd\theta_e$。
+对 $T^*$ 用引理 \ref{lem:polar-edges}，得
+$\dd\Vol T^*=-\frac12\sum_e(\pi-\theta_e)\,\dd\ell_e$。两式相加，
+$\dd(\Vol T+\Vol T^*)=\dd[\frac12\sum\ell\theta-\frac\pi2\sum\ell]$。
+非退化有序四面体的空间按 $\operatorname{sgn}\det$ 分为两个连通分支，
+它们分别是 $\mathrm{GL}^\pm(4)$ 的连续像，并由镜像互换，镜像保持所有长度、角度和体积。
+因此差是常数。在正交卦限处 $\Vol=\pi^2/8$、$T^*=T$、$\ell=\theta=\pi/2$，
+常数为 $\pi^2/4-3\pi^2/4+3\pi^2/2=\pi^2$。
+\end{proof}
+
+\subsection{有限群顶点：$T^*$ 由整数个 Coxeter 室组成}
+
+\begin{theorem}\label{thm:coxeter-chambers}
+设有限群 $G\subset\SU$ 满足 $-1\in G$ 且 $G$ 张成 $\R^4$。
+对 $v\in G$，$s_v(x)=x-2\langle x,v\rangle v=-v\bar xv$ 保持 $G$。
+所以 $\Phi=G$ 是根系，$W=\langle s_v\rangle$ 是有限反射群，镜面恰为 $\{v^\perp:v\in G\}$。
+若 $T$ 的顶点都在 $G$ 中，则
+\[
+\Vol T^*=\frac{2\pi^2}{|W|}\,N,\qquad
+N=\#\{w\in W:\langle w\rho,v_i\rangle>0,\ i=0,\ldots,3\},
+\]
+其中 $\rho$ 为任一开室中的点。
+\end{theorem}
+
+\begin{proof}
+由 Humphreys《Reflection Groups and Coxeter Groups》\S1.12 与 \S1.14，
+$W$ 在各室上单可迁，且 $W$ 中的反射正是各 $s_v$。
+所以各球面室彼此等距，内部不交，闭包覆盖 $S^3$，每个室的体积为 $2\pi^2/|W|$。
+$T^*$ 由镜面半空间围成；开室连通且与镜面不交，所以要么整个落在 $T^*$ 内，要么与之不交。
+$w\mapsto w\rho$ 给出「每室一点」的双射。
+\end{proof}
+
+实现取 $\rho=(7,3,2,1)$，并用精确整数判定它不在镜面上。
+三个群的轨道大小 $|W|$ 依次为 192、1152、14400，即 Coxeter 群 $D_4$、$F_4$、$H_4$ 的阶。
+群元内积为 $\cos(\pi q)$，$q$ 为有理数，因为 $p_i^{-1}p_j$ 的阶有限。
+若 $\theta=\pi k/N$ 且 $\cos^2\theta\in\mathbb Q(\sqrt d)$，则 $\cos2\theta$ 的次数至多为 2，
+由此 $\varphi(N')\le4$，即 $N'\in\{1,2,3,4,5,6,8,10,12\}$。
+所以程序中的有理角表是完备的，可以精确判定一个角是否为 $\pi$ 的有理倍数。
+
+\subsection{主公式}
+
+把两条定理合起来，并设 $\ell_e=\pi q_e$、$\theta_e=\pi r_e+\sum_jc_{e,j}\Theta_j$
+（$\Theta_j$ 见定理 \ref{thm:angle-independence}），得
+\begin{equation}
+\boxed{\begin{gathered}
+V=a\pi^2+\frac\pi2\sum_jb_j\Theta_j,\qquad
+a=1-\tfrac12\textstyle\sum_eq_e-\dfrac{2N}{|W|}+\tfrac12\sum_eq_er_e,\qquad
+b_j=\textstyle\sum_eq_ec_{e,j},\\
+\omega_k(g_1,g_2,g_3)=\exp\!\Bigl[-ik\sgn(D)\Bigl(a\pi+\tfrac12\textstyle\sum_jb_j\Theta_j\Bigr)\Bigr].
+\end{gathered}}\label{eq:polar-master}
+\end{equation}
+这里只需要四样输入：六个迹、Gram 余子式、取向迹的符号和计数 $N$，再加下面的角度证书表。
+按无向类型查表只是捷径。与式 \eqref{eq:exact-master-phase} 相比，两者是同一个四面体的体积，
+区别在于本式给出 $(0,\pi^2)$ 中的实际值。
+$2T$ 的 12 类与 $F_4$ 室表逐项精确相等；全部 659 类与 $\Li_2$ 式的数值审计偏差为 $5.5\times10^{-40}$。
+
+\subsection{二面角基底、证书与线性无关性}
+
+Gram 余子式在 $\mathbb Q(\sqrt d)$ 中，所以 $\cos^2\theta\in\mathbb Q(\sqrt d)$。
+无理二面角先规范到 $(0,\pi/2)$，此时它由 $T=\tan^2\theta$ 唯一确定。以下三类恒等式都能在 $\mathbb Q(\sqrt d)$ 中精确判定：
+\begin{itemize}
+\item 互余：$T_aT_b=1$；
+\item 倍角：$\tan^22\theta=4T/(1-T)^2$，$T$ 与 1 的大小决定 $2\theta$ 属于哪一半区间；
+\item 和差：若 $s=\sqrt{T_aT_b}\in\mathbb Q(\sqrt d)$，则 $\tan^2(\theta_a\pm\theta_b)=(T_a+T_b\pm2s)/(1\mp s)^2$。
+\end{itemize}
+全部候选关系用分数精确消元。$2O$ 用 3 条恒等式归到 $\beta=\arctan(1/\sqrt2)$；
+$2I$ 的 25 个无理值用 22 条恒等式归到
+$A=\arctan\frac12$、$B=\arctan\frac1{\sqrt5}$、$C=\arctan\sqrt{15}=\arccos\frac14$。
+表中的 $C-\pi/3=\arccos\frac{1+3\sqrt5}{8}$ 是 600 胞体二面角的补角。
+测试另用 $e^{2i\theta}$ 乘积和精确区间，独立复核了每条证书。
+
+\input{su2_polar_certificates.tex}
+
+\begin{theorem}\label{thm:angle-independence}
+$\pi,A,B,C$ 在 $\mathbb Q$ 上线性无关；$\pi,\beta$ 也线性无关。
+因此类型体积属于 $\mathbb Q\pi^2$ 当且仅当全部 $b_j=0$；
+非零 $k$ 下相位为单位根，也当且仅当全部 $b_j=0$。
+\end{theorem}
+
+\begin{proof}
+设 $u_A=\frac{2+i}{2-i}$、$u_B=\frac{\sqrt5+i}{\sqrt5-i}$、$u_C=\alpha/\bar\alpha$，
+其中 $\alpha=\frac{1+\sqrt{-15}}2$。
+若 $aA+bB+cC\in\pi\mathbb Q$，则 $u_A^au_B^bu_C^c$ 是单位根。
+在 $\mathbb Q(i,\sqrt3,\sqrt5)$ 中比较素理想赋值：
+\begin{itemize}
+\item 在 5 上，$2\pm i$ 互素，所以 $u_A$ 的赋值非零；$u_B$ 只涉及 $6=(\sqrt5+i)(\sqrt5-i)$，
+  $u_C$ 只涉及 $4=\alpha\bar\alpha$，二者赋值为零。故 $a=0$。
+\item 在 3 上，$(\sqrt5+i)(\sqrt5-i)=6$，二者之差 $2i$ 与 3 互素，所以每个 3 上的素理想恰整除其一，$u_B$ 的赋值非零。故 $b=0$。
+\item 顺序必不可少：$u_B$ 在 2 上的赋值可能非零，所以先由 5、3 得到 $a=b=0$。
+\item 在 2 上，$\alpha+\bar\alpha=1$，所以 $\alpha,\bar\alpha$ 互素，$u_C$ 的赋值非零。故 $c=0$。
+\end{itemize}
+$\beta$ 的情形同理，因为 $(\sqrt2+i)(\sqrt2-i)=3$。
+\end{proof}
+
+上一轮的两个反例由式 \eqref{eq:polar-master} 精确复核：
+$2O$ 为 $V=\frac\pi2(\beta-\frac\pi8)$，且 $\tan(\beta-\frac\pi8)=1/(3+\sqrt2)$；
+$2I$ 为 $V=\frac\pi2(\frac\pi4-B-\frac A2)$，且 $\cot(2B+A)=2t/(1-t^2)$，其中 $t=1/(4\varphi+1)$。
+全部类型的 $(N,a,b)$ 见第 \ref{sec:complete-gram-table} 节。
+
+\subsection{退化输入：保持原锥点}
+
+原 E/F/T 链保持不变。对不安全输入 $T=C_{a'}(Z)$，其中
+$Z=F(p_1p_2p_3)-F(p_0p_2p_3)+F(p_0p_1p_3)-F(p_0p_1p_2)$ 是闭 2-流。
+
+\begin{lemma}\label{lem:apex-free}
+由安全径向单形组成、边界流为零的有限整系数 3-链 $X$ 满足 $\Vol X\in2\pi^2\Z$。
+\end{lemma}
+\begin{proof}
+$X$ 是无边界的整 3-流，由常数定理（Federer 4.1.31）得 $X=m[S^3]$。
+安全的退化单形对应零流，其边界流也为零。
+\end{proof}
+
+对不安全面 $F=C_y(L)$，$y$ 为原锥点，取群点 $m$，令
+\[
+F'=C_m(L),\qquad D_F=\sum_ec_e[y,m,u_e,w_e].
+\]
+由于 $\partial L=0$，望远镜求和给出链恒等式 $\partial D_F=F'-F$。
+分段点 $aJ$ 属于群，因为 $J=e_1$ 属于三个群，所以 $Z'=\sum\varepsilon_FF'$ 只含群三角形，并且闭合。
+取群点 $g$ 使 $C_g(Z')$ 的单形都安全。3-链 $X=C_{a'}(Z)-C_g(Z')+\sum\varepsilon_FD_F$
+的边界为 $Z-Z'+(Z'-Z)=0$，且各单形都安全，由引理 \ref{lem:apex-free} 得
+\begin{equation}
+V(T)\equiv\Vol C_g(Z')-\sum_F\varepsilon_F\Vol D_F\pmod{2\pi^2}.
+\label{eq:degenerate-elementary}
+\end{equation}
+其中 $C_g(Z')$ 只含群四面体，用式 \eqref{eq:polar-master} 计算。$\Vol D_F$ 有以下三种初等形式。
+\begin{itemize}
+\item \textbf{圆型}：$L$ 在大圆 $\gamma$（平面 $P$）上，作为 1-流 $L=W[\gamma]$；
+  $\psi=\angle(y_\perp,m_\perp)<\pi$，投影取在 $P^\perp$ 上。
+  对 $x\in[y,m]$，有 $x\notin P$，且 $C_x(L)=W\cdot H_{\hat x_\perp}$（经过 $\hat x_\perp$ 的半球面）。
+  $D_F$ 支撑在月牙 $\Lambda=\gamma*\mathrm{arc}(m_\perp,y_\perp)$ 内，
+  且 $\partial D_F=\partial(\sigma W\Lambda)$，所以 $D_F-\sigma W\Lambda$ 是支撑在 $\Lambda\ne S^3$ 内的闭整流，只能为 0。
+  于是 $\Vol D_F=\sigma W\pi\psi$，这是精确等式。
+  符号 $\sigma$ 由 $\det(y,m,u,w)=\det_P(u,w)\det_\perp(y_\perp,m_\perp)$ 得出。
+\item \textbf{二角型}：$L=h_1-h_2$，$h_i$ 为经过 $m_i$ 从 $p$ 到 $-p$ 的半大圆，取 $m=m_1$。
+  非退化项 $[y,m_1,p,m_2]$ 与 $[y,m_1,m_2,-p]$ 同向，是从 $\pm p$ 对三角形 $\Delta=(y,m_1,m_2)$ 的两个锥。
+  秩为 4 时，沿 $p$ 的投影在 $\mathrm{span}(y,m_1,m_2)$ 上是单射，所以两锥拼成嵌入的悬挂体，
+  $\Vol D_F=t\frac\pi2\Omega$。$\Omega$ 为 $\Delta$ 在赤道 $p^\perp$ 上投影的面积，
+  由 Van Oosterom--Strackee 公式 $\tan\frac\Omega2=|\det|/(1+\text{点积和})$ 给出。
+\item \textbf{球面型}：二角型中若 $y\in S=\mathrm{span}(p,m_1,m_2)$，且 $D_F$ 含不安全的退化项，
+  则 $F$、$F'$ 都在 $S$ 内，$F-F'=k[S]$。把 $D_F$ 换成 $-kH$（$H$ 为以 $S$ 为边界、体积 $\pi^2$ 的半球），
+  得 $\Vol D_F\equiv k\pi^2\pmod{2\pi^2}$。$k$ 由两个测试点处的带号覆盖次数精确求出，两者必须一致。
+  这一情形由 $2I$ 全检发现。
+\end{itemize}
+原锥点 $a(1,t,t^2,t^3)$ 的坐标属于 $\mathbb Q(\sqrt d)^4$，所以 $\psi$、$\Omega$ 都是代数数的 arccos 或 arctan。
+退化相位因此全是初等函数，但依赖原锥点，不能按 $O(4)$ 类型归并。
+这是保持原锥点的必然结果，并非化简未完成。
+
+实现按群元顺序取第一个合格的 $m,g$；找不到时抛出错误，不会静默给出结果。
+对全部有序三元组做了精确全检，结果如下（完整分布见 \path{results/SU2_polar_global_existence.json}）：
+\begin{center}\small
+\begin{tabular}{@{}crrrrr@{}}\toprule
+群&三元组&empty&direct&cone&失败\\\midrule
+$2T$&13824&1657&8590&3577&0\\
+$2O$&110592&6769&85816&18007&0\\
+$2I$&1728000&42841&1544842&140317&0\\\bottomrule
+\end{tabular}\end{center}
+其中 $2I$ 有 946 个输入用到球面型修正。
+审计还与历史 mpmath 实现（同一条链）比较：
+$2T$ 全部输入、$2O$ 抽样 8000 例，最大偏差为 $1.2\times10^{-35}$。
+
+\subsection{D 表对任意 $n$ 的证明}
+
+把 $V^sU^r$ 写成 $(x,s)$，其中 $x=r/(2n)$。它们都属于 $K=N_{\SU}(U(1))\cong\mathrm{Pin}(2)$，
+群律为 $(x,s)(y,t)=(\{(-1)^tx+y+\tfrac{st}2\},s\oplus t)$。
+原表中 $\Vol_A=\pi^2v_n$，令 $q=v_n/2$，相位为 $e^{-2\pi ikq}$。
+八个分支与 $n$ 无关：
+\[
+\begin{array}{@{}ll@{\qquad}ll@{}}
+000,100:&-x\lfloor y+z\rfloor & 001:&(\{z-x-y\}-\tfrac12)\lfloor x+y\rfloor\\
+010:&xz & 011:&-(\{y-x\}-\tfrac12)\lfloor x+\{\tfrac12-y+z\}\rfloor\\
+101:&\{\tfrac12-x-y+z\}\,y & 110:&(x-\tfrac12)\lfloor\{\tfrac12-x+y\}+z\rfloor\\
+111:&-\{\tfrac12-x+y\}\{\tfrac12-y+z\}&&
+\end{array}
+\]
+测试对 $n=2,3,4$ 的全部三元组逐项核对：上式与原程序完全一致，群律也一致。
+
+\begin{theorem}\label{thm:dic-all-n}
+对 $K$ 上所有实数点，$\delta q\in\Z$，且 $q$ 是归一的。
+$q$ 的类等于几何代表在 $K$ 上的类；限制到每个 $\Dic_n$ 的类阶为 $4n$。
+\end{theorem}
+
+\begin{proof}
+\emph{闭性。}把 $\{L\}$ 展开为 $L-\lfloor L\rfloor$，嵌套的
+$\lfloor L+\text{整数原子}\rfloor$ 拆成 $\lfloor L\rfloor+\text{原子}$。
+仅用这两条恒等式，16 个分支的 $\delta q$ 都化为「整系数原子积加整数」，没有剩余项。
+\emph{归一化。}把单位元放进任一位置，只用到 $0\le x_i<1$ 时 $\lfloor x_i\rfloor=0$，值即为 0。
+
+\emph{度数引理。}设有限群 $G$ 自由作用于 $S^3$。对 $S^3$ 的自由 $G$-三角剖分（Illman 定理保证存在）到 bar 分解的任一等变链映射 $\phi$，几何代表与正定向基本闭链的配对都 $\equiv1/|G|$。
+理由：$\mathcal T$ 在模去退化单形后是链映射；由 $\tilde H_0=H_1=H_2=0$，$\mathcal T\circ\phi$ 与几何包含映射在 0 至 2 维等变同伦；在 3 维，两者只差 $[S^3]$ 的整数倍；同伦项在群平移下成对抵消。
+由于 $H_3(G)\cong\Z/|G|$，几何代表在 $G$ 上的类阶为 $|G|$，
+这对 $2T,2O,2I$ 给出 24、48、120，对 $\Dic_n$ 给出 $4n$。
+
+\emph{类识别。}$q$ 与几何代表都是处处有定义的 Borel 上闭链。对这一版本的可测上同调（Wigner 1973，Moore 1976，Austin--Moore 2013），
+$H^3_{\rm Borel}(K;\R/\Z)\cong H^4(BK;\Z)$，且与限制到有限子群相容。
+纤维化 $\mathbb{RP}^2\to BK\to B\SU$ 的 Serre 谱序列在总次数 4 只有 $E_2^{4,0}=\Z$，
+所以 $H^4(BK;\Z)\cong\Z$，不含挠。于是 $[q]=m\,\mathrm{gen}$，$[\gamma|_K]=m'\,\mathrm{gen}$。
+限制到 $U(1)$ 中的任一 $Z_M=\langle u\rangle$：join 三角剖分按「a 在 b 前」排序，
+这个排序在 $u$ 作用下不变，所以顶点映射就是等变链映射，给出透镜闭链 $\sum_j[u|u^j|u^{-1}]$。
+$q$ 在其上的配对为 $-(M-1)/M\equiv1/M$，由度数引理几何代表也是 $1/M$。
+$q$ 的配对为 $1/M$，说明 $\mathrm{gen}|_{Z_M}$ 的阶为 $M$，所以对每个 $M$ 有 $m\equiv m'\pmod M$，从而 $m=m'$。
+\end{proof}
+
+独立的精确核对：对 $n=2,\ldots,16$，用收缩同伦构造 $S^3/\Dic_n$ 的基本闭链，
+验证它闭合且 $q$ 的配对恰为 $1/(4n)$。
+几何代表的配对精确算得：$\Dic_2\subset2T$ 为 $1/8$，$\Dic_4\subset2O$ 为 $1/16$，
+$Z_4$ 为 $1/4$，$Z_8$ 为 $1/8$，都与表一致。
+关于配对符号：closed 与 non-exact 一节的 $z_n=\sum_r[h|h^r|h]$ 在同调中等于这里正定向基本类的相反数（同一表 $q$ 在两者上的配对分别为 $-1/n$ 与 $1/n$），所以该节写作 $e^{2\pi ik/n}$，这里写作 $e^{-2\pi ik/|G|}$，二者一致。
+
+四个线性无关的 $\Dic_n$ 元素在两圆上各有两个，所以非退化 $\Dic_n$ 四面体都是双圆弧 join，
+$V=\alpha\beta/2$，其中 $\alpha,\beta\in\frac\pi n\Z$。这正是第 \ref{sec:symbolic-ade} 节已证的双圆弧族。
+A 型（$Z_M\subset U(1)$）：表的 000 分支 $-x\lfloor y+z\rfloor$ 就是循环群的进位公式，上面的透镜配对说明它与几何代表同类，类阶为 $M$。几何代表的这类输入全部退化；式 \eqref{eq:degenerate-elementary} 只覆盖 2T、2O、2I 中的输入（在 $U(1)$ 中即 $Z_4$、$Z_8$），一般 $M$ 的逐点值仍由第一轮的 $\Li_2$ 全局链给出。
+
+\subsection{本节实现、复现与边界}
+
+\begin{itemize}
+\item \path{src/su2_polar_dual.py}：定理 \ref{thm:polar-identity} 至 \ref{thm:angle-independence}、证书和目录。
+\item \path{src/su2_polar_global.py}：式 \eqref{eq:degenerate-elementary}。
+\item \path{src/su2_dic_exact.py}：定理 \ref{thm:dic-all-n} 的形式证书与配对。
+\item \path{scripts/check_polar_dual.py}：生成精确 JSON。
+\item \path{scripts/check_polar_global_existence.py}：逐输入全检。
+\item \path{scripts/audit_polar_numeric.py}：数值审计，不参与证明。
+\item \path{docs/review-0923/SU2_POLAR_DUAL_EXACT.md}：完整文字推导。
+\end{itemize}
+需要专家重点审阅的外部定理有：
+\begin{itemize}
+\item Schläfli 微分公式（Milnor；Kneser）与 Federer 常数定理；
+\item Humphreys \S1.12 与 \S1.14 的反射群结果；
+\item Wigner--Moore 可测上同调、Illman 等变三角剖分与 Serre 谱序列。
+\end{itemize}
+其次是度数引理。退化相位依赖原锥点的坐标。本节不声称已经通过外部同行评议。

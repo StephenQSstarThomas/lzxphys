@@ -1,0 +1,37 @@
+{
+ "purpose": "numerical audit only; not used in any derivation or certificate",
+ "catalogue_vs_murakami_max_volume_difference": 5.510129769479473e-40,
+ "global_vs_historical_mpmath": {
+  "2T": {
+   "triples": 13824,
+   "branches": {
+    "empty": 1657,
+    "cone": 3577,
+    "direct": 8590
+   },
+   "max_phase_difference": {
+    "empty": 0.0,
+    "cone": 1.20370621524436e-35,
+    "direct": 0.0
+   }
+  },
+  "2O": {
+   "triples": 8000,
+   "branches": {
+    "direct": 6138,
+    "cone": 1334,
+    "empty": 528
+   },
+   "max_phase_difference": {
+    "direct": 0.0,
+    "cone": 1.203706215239685e-35,
+    "empty": 0.0
+   }
+  }
+ },
+ "global_2I_vs_exact_li2_chain": {
+  "cone_triples": 8,
+  "max_phase_difference": 3.944304526105059e-31
+ },
+ "seconds": 622
+}

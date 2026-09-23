@@ -1,0 +1,70 @@
+{
+ "description": "Exhaustive exact existence check of the elementary singular-input decomposition (scripts.check_polar_global_existence); every ordered triple of each group. No floating point.",
+ "groups": {
+  "2T": {
+   "ordered_triples": 13824,
+   "branches": {
+    "empty": 1657,
+    "cone": 3577,
+    "direct": 8590
+   },
+   "cone_correction_patterns": {
+    "circle": 576,
+    "circle+circle": 35,
+    "circle+circle+circle": 8,
+    "circle+circle+circle+circle": 6,
+    "circle+digon": 480,
+    "circle+digon+digon": 176,
+    "digon+digon": 2164,
+    "digon+digon+digon+digon": 60,
+    "none": 72
+   },
+   "failure_count": 0
+  },
+  "2O": {
+   "ordered_triples": 110592,
+   "branches": {
+    "empty": 6769,
+    "cone": 18007,
+    "direct": 85816
+   },
+   "cone_correction_patterns": {
+    "circle": 4224,
+    "circle+circle": 253,
+    "circle+circle+circle": 96,
+    "circle+circle+circle+circle": 18,
+    "circle+digon": 2880,
+    "circle+digon+digon": 400,
+    "digon+digon": 9080,
+    "digon+digon+digon+digon": 120,
+    "none": 936
+   },
+   "failure_count": 0
+  },
+  "2I": {
+   "ordered_triples": 1728000,
+   "branches": {
+    "empty": 42841,
+    "cone": 140317,
+    "direct": 1544842
+   },
+   "cone_correction_patterns": {
+    "circle": 40800,
+    "circle+circle": 863,
+    "circle+circle+circle": 8,
+    "circle+circle+circle+circle": 6,
+    "circle+digon": 2768,
+    "circle+digon+digon": 1546,
+    "circle+digon+sphere": 22,
+    "circle+sphere": 16,
+    "digon+digon": 77920,
+    "digon+digon+digon+digon": 340,
+    "digon+digon+digon+sphere": 8,
+    "digon+sphere": 898,
+    "none": 15120,
+    "sphere+sphere": 2
+   },
+   "failure_count": 0
+  }
+ }
+}

@@ -13,6 +13,15 @@
 \newcommand{\Vol}{\operatorname{Vol}}
 \newcommand{\Arg}{\operatorname{Arg}}
 \newcommand{\Li}{\operatorname{Li}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\dd}{\mathrm d}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Z}{\mathbb Z}
+\usepackage{amsthm}
+\theoremstyle{definition}
+\newtheorem{theorem}{定理}[section]
+\newtheorem{lemma}[theorem]{引理}
+\renewcommand{\proofname}{证明}
 \title{SU(2) 反常与 ADE 有限子群：从有向体积到具体闭余循环}
 \author{}
 \date{2026 年 9 月 23 日}
@@ -28,6 +37,7 @@
 对 $2T,2O,2I$ 写出精确元素集合、有限分支相位公式和三组独立手算实例。
 09-23 新增完整主支纯符号程序、$2T$ 十二类实际体积证明、
 $2O$ 的 84 类和 $2I$ 的 563 类完整解析参数，以及两群不能全部有理化的严格反例。
+第二轮的极对偶公式给出全部类型不含 $\Li_2$ 的精确体积和退化输入的初等相位，并完成 D 表对任意 $n$ 的证明。
 旧计数代表与数值记录仅作为历史材料保留，不参与新路线。
 \end{abstract}
 
@@ -69,6 +79,8 @@ p_0=e,\quad p_1=g_1,\quad p_2=g_1g_2,\quad p_3=g_1g_2g_3.
 \]
 \input{su2_group_edge_formula.tex}
 \input{su2_symbolic_ade.tex}
+\input{su2_polar_dual.tex}
+\input{su2_exact_catalogue.tex}
 
 \section{closed 与 non-exact}
 
@@ -164,10 +176,7 @@ $(s_1s_2s_3)$ & $v_n$\\ \midrule
 \delta v_n\in2\mathbb Z.
 \]
 对于 $n=2,3,4,5$，分别穷举 $4096,20736,65536,160000$ 个四元组，全部通过。
-有限穷举不构成任意 $n$ 的符号证明。旧交接只概述使用进位恒等式约去，
-未展示逐分支消去或此表对应的完整边面链；因此本报告将这一证明列为待补。
-将该表识别为几何 E/F/T 的同类代表，还需落实它所用的几何链，
-再应用上节的边、面比较；不能只从两者都闭就推出同类。
+有限穷举本身不构成任意 $n$ 的证明。完整证明见定理 \ref{thm:dic-all-n}：该表在正规化子 $K$ 上与 $n$ 无关，16 个分支的 $\delta q$ 经形式地板代数恒为整数，所以对全部 $n$ 闭合并归一；再经透镜配对、Wigner 定理和 $H^4(BK;\Z)\cong\Z$，证明它与几何 E/F/T 代表同类，类阶为 $4n$。另外对 $n\le16$ 的显式基本闭链做了精确核对。
 
 \input{su2_e_explicit.tex}
 \input{su2_e_algebraic.tex}

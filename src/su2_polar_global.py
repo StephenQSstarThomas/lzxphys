@@ -19,6 +19,7 @@ the representative is changed.  Only its volume modulo 2 pi^2 is rewritten:
      vol = t (pi/2) Omega, Omega = area of its shadow on the equator p^perp.
 Proof: docs/review-0923/SU2_POLAR_DUAL_EXACT.md, section on singular inputs.
 """
+from functools import lru_cache
 from itertools import combinations
 
 import sympy as s
@@ -122,8 +123,10 @@ def _digon_correction(p, y, m1, m2, loop):
     return t*s.pi/2*omega, {'type': 'digon', 't': t, 'Omega': omega}
 
 
-def _face_replacement(name, group, face):
+@lru_cache(maxsize=65536)
+def _face_replacement(name, face):
     """Unsafe face -> (F' chain of group triangles, elementary vol D_F, record)."""
+    group = exact_group(name)
     x, y0, z = face
     loop = _loop(x, y0, z)
     cone = _cone(x, loop)
@@ -167,6 +170,35 @@ def _face_replacement(name, group, face):
     raise ArithmeticError('Unexpected face loop rank')
 
 
+def cone_structure(name, vertices):
+    """Face replacements and the admissible group apex for an unsafe input.
+
+    Returns (Z' as (coefficient, group triangle) pairs, correction records,
+    sum eps_F vol D_F, group apex g).  Raises ArithmeticError if no admissible
+    choice exists, so nothing is ever returned silently.
+    """
+    group = exact_group(name)
+    p0, p1, q2, q3 = vertices
+    faces = ((1, (p1, q2, q3)), (-1, (p0, q2, q3)), (1, (p0, p1, q3)), (-1, (p0, p1, q2)))
+    z_prime, corrections = [], []
+    correction_total = s.S.Zero
+    for eps, face in faces:
+        if face[0] == face[1] or face[1] == face[2]:
+            continue
+        if _safe(face):
+            z_prime.append((eps, face))
+            continue
+        new, vol, record = _face_replacement(name, face)
+        z_prime.extend((eps*w, v) for w, v in new)
+        correction_total += eps*vol
+        corrections.append(dict(record, sign=eps, volume=vol, face=face))
+    simplices = [v for _, v in z_prime]
+    apex = next((g for g in group if _admissible(g, simplices)), None)
+    if apex is None:
+        raise ArithmeticError('No admissible group apex for the closed face cycle')
+    return z_prime, tuple(corrections), correction_total, apex
+
+
 def global_polar_formula(name, g1, g2, g3, k=1):
     """Exact elementary phase of the original global E/F/T representative."""
     k = exact_level(k)
@@ -191,24 +223,7 @@ def global_polar_formula(name, g1, g2, g3, k=1):
             volume, terms = s.S.Zero, ()
     else:
         branch = 'cone'
-        p0, p1, q2, q3 = vertices
-        faces = ((1, (p1, q2, q3)), (-1, (p0, q2, q3)), (1, (p0, p1, q3)), (-1, (p0, p1, q2)))
-        z_prime, corrections = [], []
-        correction_total = s.S.Zero
-        for eps, face in faces:
-            if face[0] == face[1] or face[1] == face[2]:
-                continue
-            if _safe(face):
-                z_prime.append((eps, face))
-                continue
-            new, vol, record = _face_replacement(name, group, face)
-            z_prime.extend((eps*w, v) for w, v in new)
-            correction_total += eps*vol
-            corrections.append(dict(record, sign=eps, volume=vol, face=face))
-        simplices = [v for _, v in z_prime]
-        apex = next((g for g in group if _admissible(g, simplices)), None)
-        if apex is None:
-            raise ArithmeticError('No admissible group apex for the closed face cycle')
+        z_prime, corrections, correction_total, apex = cone_structure(name, vertices)
         terms, total = [], s.S.Zero
         for w, v in z_prime:
             tetra = (apex,)+v

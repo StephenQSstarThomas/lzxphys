@@ -89,11 +89,13 @@ class _FloorAlgebra:
     def floor(self, expr):
         expr = s.expand(expr)
         atom_part = s.S.Zero
+        atoms = set(self.atoms.values())
         for term in s.Add.make_args(expr):
-            if term.free_symbols & set(self.atoms.values()):
-                coefficient, _ = term.as_coeff_Mul()
-                if not coefficient.is_integer:
-                    raise ArithmeticError('non-integer atom inside a floor')
+            if term.free_symbols & atoms:
+                coefficient, monomial = term.as_coeff_Mul()
+                # only integer multiples of products of atoms may leave the floor
+                if not coefficient.is_integer or not monomial.free_symbols <= atoms:
+                    raise ArithmeticError('non-integer term inside a floor')
                 atom_part += term
         affine = s.expand(expr-atom_part)
         constant = affine.subs({v: 0 for v in self.x})

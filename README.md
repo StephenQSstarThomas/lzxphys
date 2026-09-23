@@ -4,26 +4,65 @@
 
 **阅读入口：[完整综合 PDF](paper/su2_complete_report.pdf) · [主研究笔记 PDF](paper/su2_cocycle.pdf) · [ADE 补充报告 PDF](paper/su2_ade_review.pdf) · [ADE LaTeX 源码](paper/su2_ade_review.tex)**
 
-## 当前路线（2026-09-23）
+## 当前结果（2026-09-23 第二轮，分支 `polar-dual-exact`）
 
-[本轮完整推导](docs/review-0923/SU2_LI2_ADE_EXACT.md)：完整 Li₂ 解析式 → 纯符号恒等式 → 同一个四面体的直接几何。
-不使用 transfer、不进行数值拟合或数值归约、不以另一上同调代表替代原几何相位。
-旧计数代表和数值接口仅保留作历史材料及兼容性回归，不参与新结果证明。
+[第二轮完整推导](docs/review-0923/SU2_POLAR_DUAL_EXACT.md)：极对偶 + Schläfli 公式 + Coxeter 室，
+给出**同一个四面体**的不含 Li₂ 的精确体积。本轮不换代表、不做陪集转移，
+推导与证书中不用数值拟合或数值归约。
 
-| 范围 | 本轮结果 |
+| 范围 | 第二轮结果 |
+|---|---|
+| 2O/2I 非退化类型 | 84/563 类全部有精确初等闭式 V=aπ²+(π/2)Σb_jΘ_j；2O 的 Θ=arctan(1/√2)，2I 的 Θ=arctan(1/2)、arctan(1/√5)、arctan√15 |
+| 有理体积 | 2T 12/12、2O 60/84、2I 268/563；其余类型的无理性由线性无关性定理严格证明 |
+| 群元直接相位 | 六个迹、取向迹和一个正负号室计数 N；无需按类型查表，只用角度证书表 |
+| E 型退化输入 | 保持原 E/F/T 锥点，化为群四面体加月牙、悬挂两类初等修正；逐输入存在性精确全检 |
+| D 表 | 在连续群 K=N(U(1)) 上形式证明闭性与归一化，对任意 n 成立；与几何代表同类，类阶 4n |
+| 类阶 | 度数引理：几何代表在自由作用的有限群 G 上的类阶为 \|G\|（2T/2O/2I 为 24/48/120，Dic_n 为 4n） |
+
+退化输入的相位依赖原锥点 a(1,t,t²,t³) 的坐标，只能写成与锥点有关的初等角，不能归入有限类型表。
+需要专家重点审阅的是：Schläfli 公式、Humphreys §1.12/§1.14、Wigner 定理与 Serre 谱序列，以及度数引理。
+综合 PDF 的第 7 节是证明与证书，第 8 节是全部类型的短表。本文是专家审阅稿，未经外部同行评议。
+
+```python
+from sympy import Rational, sqrt
+from su2_polar_dual import polar_formula, polar_catalogue
+from su2_polar_global import global_polar_formula
+from su2_dic_exact import formal_closure_certificate, dic_pairing
+
+h = Rational(1, 2)
+r = polar_formula('2O', (0, 1, 0, 0), (1/sqrt(2), 0, 0, 1/sqrt(2)), (h, h, -h, h))
+r['volume']            # -pi**2/16 + pi*atan(sqrt(2)/2)/2，即 (π/2)(β−π/8)，精确值
+m = (-1, 0, 0, 0)
+global_polar_formula('2T', m, m, m)['phase']   # -1：退化输入，保持原锥点
+dic_pairing(7)         # Fraction(1, 28)：D 表与 S^3/Dic_7 基本类的配对 1/(4n)
+```
+
+输入必须是精确坐标（SymPy 有理数与根式）；模块拒绝浮点输入。
+
+```bash
+python -m unittest tests.test_polar_dual tests.test_polar_global tests.test_dic_exact -v   # 精确测试
+PYTHONPATH=src python -m scripts.check_polar_dual                                       # 精确目录与证书 JSON
+PYTHONPATH=src python -m scripts.check_polar_global_existence --group 2O --output results/x.json  # 逐输入全检
+PYTHONPATH=src python -m scripts.render_exact_catalogue                                 # PDF 短表与证书表
+PYTHONPATH=src python -m scripts.audit_polar_numeric                                    # 数值审计（不参与证明）
+```
+
+也可用 `make polarcheck`、`make polarreport`、`make polaraudit`。
+
+## 第一轮路线（2026-09-23）
+
+[第一轮推导](docs/review-0923/SU2_LI2_ADE_EXACT.md)：完整 Li₂ 解析式 → 纯符号恒等式 → 同一个四面体的直接几何。
+
+| 范围 | 第一轮结果 |
 |---|---|
 | 一般 SU(2) | 三个群元的六个迹、累计取向迹、完整主支 Li₂/log 程序 |
 | 纯符号化简 | 正交例、任意双圆弧族的完整证明；带适用域的共轭/Euler/倍角约简 |
 | 2T | 12 种非退化无向类型，F4 几何证明及实际有理体积短表 |
-| 2O | 全部 84 种非退化类型的精确参数与解析相位，无理体积反例 |
-| 2I | 全部 563 种非退化类型的精确参数与解析相位，无理体积反例 |
-| E 型退化输入 | 保持原 E/F/T，至多 24 项的完整精确解析表达 |
+| 2O/2I | 全部 84/563 种非退化类型的精确参数与解析 Li₂ 相位，无理体积反例 |
+| E 型退化输入 | 保持原 E/F/T，至多 24 项的完整精确解析 Li₂ 表达 |
 
-“完整解析表达”不等于“全部特殊函数已消去”：2O/2I 的全部进一步化简尚未完成。
-两群都存在严格证明的非有理体积，不能承诺像 2T 一样的全有理表。
-退化链锥点也不一定属于群，不能强行查群顶点类型表。
-A、D 沿用现有内容；本轮聚焦 E 型，不声称补齐旧任意 n 的 D 表逐分支证明。
-新版综合 PDF 保留原完整 SU(2)/CS 推导、统一目录及编号；它是专家审阅稿，并非已通过外部同行评议。
+第一轮的逐类 CAS 化简只完成了一部分（659 类中 53/91/515），现已被第二轮的极对偶闭式完全取代；
+其中已化简的 144 条记录经数值审计，与新闭式一致。
 
 ### 纯符号使用
 
@@ -77,9 +116,10 @@ python scripts/build_complete_report.py --engine tectonic
 完整兼容性回归需安装 `.[validation]`；其中旧 mpmath 测试不作为本轮数学证据。
 旧 `make verify` 会执行历史数值检查，不是新纯精确路线的必要步骤。
 
-新代码：[Li₂ 主程序](src/su2_symbolic.py)、[2T 几何](src/su2_2t_geometry.py)、
+第二轮代码：[极对偶体积](src/su2_polar_dual.py)、[退化输入初等相位](src/su2_polar_global.py)、[D 表任意 n 证明](src/su2_dic_exact.py)。
+第一轮代码：[Li₂ 主程序](src/su2_symbolic.py)、[2T 几何](src/su2_2t_geometry.py)、
 [三群分类及全局相位](src/su2_exact_ade.py)、[本轮 PDF 章节](paper/su2_symbolic_ade.tex)。
-完整参数表由 `python -m scripts.render_exact_catalogue` 纯整数枚举生成。
+完整参数与体积短表由 `PYTHONPATH=src python -m scripts.render_exact_catalogue` 纯精确枚举生成。
 
 ## 历史材料（以下截至 09-22）
 

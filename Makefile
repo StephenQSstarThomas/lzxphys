@@ -1,7 +1,7 @@
 PYTHON ?= python
 TECTONIC ?= tectonic
 
-.PHONY: install test baseline validate edge adecheck eexact symboliccheck symbolicreport verify pdf adepdf completepdf all clean
+.PHONY: install test baseline validate edge adecheck eexact symboliccheck symbolicreport polarcheck polarreport polarexistence polaraudit verify pdf adepdf completepdf all clean
 
 install:
 	$(PYTHON) -m pip install -e '.[validation]'
@@ -31,6 +31,22 @@ symboliccheck:
 # CAS timeouts are recorded as unfinished attempts, not impossibility claims.
 symbolicreport:
 	$(PYTHON) -m scripts.check_symbolic_2t --symbolic-trials all --symbolic-budget-seconds 4 --jobs 4 --output results/SU2_symbolic_ADE_exact.json
+
+# Second round: polar dual, exact only (no floating point).
+polarcheck:
+	$(PYTHON) -m unittest tests.test_polar_dual tests.test_polar_global tests.test_dic_exact -v
+
+polarreport:
+	PYTHONPATH=src $(PYTHON) -m scripts.check_polar_dual
+	PYTHONPATH=src $(PYTHON) -m scripts.render_exact_catalogue
+
+# Exhaustive per-input existence check of the elementary decomposition (2I takes hours).
+polarexistence:
+	for g in 2T 2O 2I; do PYTHONPATH=src $(PYTHON) -m scripts.check_polar_global_existence --group $$g --output build/polar_existence_$$g.json; done
+
+# Numerical audit only; never part of a proof.
+polaraudit:
+	PYTHONPATH=src $(PYTHON) -m scripts.audit_polar_numeric
 
 # Keep these sequential: the edge crosscheck consumes the main validation report.
 verify:

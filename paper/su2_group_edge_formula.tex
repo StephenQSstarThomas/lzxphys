@@ -1,80 +1,28 @@
 \section{三个群元素直接给出六边长及体积}
 
-这是本轮人类 review 要求的计算路线。旧版本在主答案重列二面角公式，
-边长路线只出现在复核附录，未把三个群元素与最终表达连起来。
+这是人类 review 要求的计算路线：从三个群元素出发，经六条边长直接得到体积。
 设 $q(p)$ 为群元的四元数坐标，因
-$q(p)\cdot q(r)=\tfrac12\Tr(p^{-1}r)$，六条短测地线边长直接为
+$q(p)\cdot q(r)=\tfrac12\Tr(p^{-1}r)$，六条短测地线边长按用户边序 $(01,02,03,23,13,12)$ 为
 \begin{equation}
 \boxed{\begin{aligned}
-\ell_1=\ell_{23}&=\arccos\tfrac12\Tr g_3,&
-\ell_2=\ell_{13}&=\arccos\tfrac12\Tr(g_2g_3),\\
+\ell_1=\ell_{01}&=\arccos\tfrac12\Tr g_1,&
+\ell_2=\ell_{02}&=\arccos\tfrac12\Tr(g_1g_2),\\
 \ell_3=\ell_{03}&=\arccos\tfrac12\Tr(g_1g_2g_3),&
-\ell_4=\ell_{01}&=\arccos\tfrac12\Tr g_1,\\
-\ell_5=\ell_{02}&=\arccos\tfrac12\Tr(g_1g_2),&
-\ell_6=\ell_{12}&=\arccos\tfrac12\Tr g_2.
+\ell_4=\ell_{23}&=\arccos\tfrac12\Tr g_3,\\
+\ell_5=\ell_{13}&=\arccos\tfrac12\Tr(g_2g_3),&
+\ell_6=\ell_{12}&=\arccos\tfrac12\Tr g_2 .
 \end{aligned}}\label{eq:group-six-lengths}
 \end{equation}
-这里是单位 $S^3$ 上的弧长，不能将欧氏 Cayley--Menger 体积代入反常相位。
-下式使用 Murakami 定理 1.2\cite{murakami}，不求原四面体的二面角。
+对边为 $j$ 与 $j+3$。这些是单位 $S^3$ 上的弧长，不能代入欧氏 Cayley--Menger 体积。
 
-令 $\bar j=j+3\pmod6\in\{1,\ldots,6\}$，
-$\tau_j=\pi-\ell_{\bar j}$、$a_j=-e^{-i\ell_{\bar j}}=e^{i\tau_j}$，并取
-\[
-\Gamma=\begin{pmatrix}
-1&\cos\ell_4&\cos\ell_5&\cos\ell_3\\
-\cos\ell_4&1&\cos\ell_6&\cos\ell_2\\
-\cos\ell_5&\cos\ell_6&1&\cos\ell_1\\
-\cos\ell_3&\cos\ell_2&\cos\ell_1&1
-\end{pmatrix}.
-\]
-在 $D=\det(q(p_0),q(p_1),q(p_2),q(p_3))\ne0$ 时，$\det\Gamma>0$。
-定义完全由边长决定的量
-\begin{align}
-r_0={}&a_1a_4+a_2a_5+a_3a_6+a_1a_2a_6+a_1a_3a_5
-+a_2a_3a_4+a_4a_5a_6+\prod_{j=1}^6a_j,\\
-r_1={}&4\sum_{j=1}^3\sin\tau_j\sin\tau_{j+3},\qquad r_2=\overline{r_0},\\
-z={}&\frac{-2r_0}{r_1+4\sqrt{\det\Gamma}},\qquad |z|<1.
-\end{align}
-此时 $r_1^2-4|r_0|^2=16\det\Gamma$；这里是顶点 Gram 行列式。
-设
-\[
-\mathcal P=(1245,1346,2356),\qquad
-\mathcal N=(123,156,246,345),\qquad A_S=\prod_{r\in S}a_r.
-\]
-编号串代表指标集合。八项二重对数为
-\begin{equation}
-L_e=\frac12\left[\Li_2(z)
-+\sum_{S\in\mathcal P}\Li_2(z/A_S)
--\sum_{S\in\mathcal N}\Li_2(-z/A_S)
--\sum_{j=1}^3\tau_j\tau_{j+3}\right].
-\end{equation}
-令 $P_r=\Im\log(1-z/A_{\mathcal P_r})$、
-$N_r=\Im\log(1+z/A_{\mathcal N_r})$。所有固定 $z$ 的偏导已展开成
-\begin{align*}
-d_1&=(P_1+P_2-N_3-N_4+\tau_1)/2,&
-d_2&=(P_1+P_3-N_2-N_4+\tau_2)/2,\\
-d_3&=(P_2+P_3-N_2-N_3+\tau_3)/2,&
-d_4&=(P_1+P_2-N_1-N_2+\tau_4)/2,\\
-d_5&=(P_1+P_3-N_1-N_3+\tau_5)/2,&
-d_6&=(P_2+P_3-N_1-N_4+\tau_6)/2.
-\end{align*}
-其推导用 $\partial_{\ell_j}\log a_{\bar j}=-i$ 和
-$d\Li_2(x)=-\log(1-x)d\log x$；不对根 $z(\ell)$ 作全导数。
+这六条边长的完整体积函数，是第 \ref{sec:symbolic-ade} 节的式 \eqref{eq:exact-master-phase}。
+它是 Murakami 定理 1.2\cite{murakami} 的群元代入形式，固定 $z$ 的全部偏导都已展开，
+取向由 $D=\tfrac14\Tr[A(BC-CB)]$（$A=g_1$，$B=g_1g_2$，$C=g_1g_2g_3$）的符号给出。
+当三个群元属于 ADE 有限群时，第 \ref{sec:polar-dual} 节的式 \eqref{eq:polar-master}
+进一步给出不含 $\Li_2$ 的精确值。
+六条边长不能区分镜像，$D=0$ 时也不能一概置零；完整分支见第 \ref{sec:E-explicit} 节。
 
-记 $[x]_{2\pi^2}=x-2\pi^2\lfloor x/(2\pi^2)\rfloor$，则完整边长函数为
-\begin{equation}
-\boxed{\mathcal B(\ell)=\left[\Re L_e-\pi\Arg(-r_2)
--\sum_{j=1}^6\ell_jd_j-\frac{\pi^2}{2}\right]_{2\pi^2}.}
-\label{eq:explicit-edge-B}
-\end{equation}
-平方根取正根，$\Li_2,\log,\Arg$ 取主支。
-非退化凸球面四面体的 $\mathcal B\in(0,\pi^2)$。
-六条边长不能区分镜像；群元素还确定 $\operatorname{sgn}D$。最终答案为
-\begin{equation}
-\boxed{V(g_1,g_2,g_3)=\operatorname{sgn}(D)\mathcal B(\ell(g_1,g_2,g_3)),
-\quad \omega_{A,k}=e^{-ikV/\pi},\quad D\ne0.}
-\label{eq:direct-group-phase}
-\end{equation}
-$D=0$ 时不能一概置零；完整分支见第 \ref{sec:E-explicit} 节。
-公开实现是 \texttt{edge\_lengths\_quaternions}、
-\texttt{oriented\_volume\_from\_edges}、\texttt{omega\_quaternions\_edge}。
+\paragraph{与历史接口的边序换算。}
+历史数值接口 \texttt{edge\_lengths\_quaternions} 与本报告后半部保留的原始推导使用旧边序
+$(23,13,03,01,02,12)$，它依次对应上面的 $(\ell_4,\ell_5,\ell_3,\ell_1,\ell_2,\ell_6)$。
+全文新结果一律使用用户边序；旧边序只出现在历史接口与原推导中。

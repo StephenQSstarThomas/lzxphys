@@ -59,6 +59,16 @@ class DicTableProofTests(unittest.TestCase):
         total = sum((geometric.global_polar_formula('2T', u(1), u(j), u(-1))['oriented_volume_mod']
                      for j in range(4)), s.S.Zero)
         self.assertEqual(s.simplify(total/(2*s.pi**2)), s.Rational(1, 4))
+        # Dic_4 = Q16 and Z_8 inside 2O.
+        total = s.S.Zero
+        for t, c in self.api.dic_fundamental_cycle(4):
+            g = [self.api.dic_point(x) for x in self.api.inhomogeneous(t)]
+            total += c*geometric.global_polar_formula('2O', *g)['oriented_volume_mod']
+        self.assertEqual(s.simplify(total/(2*s.pi**2)), s.Rational(1, 16))
+        u = lambda j: (s.cos(s.pi*j/4), s.sin(s.pi*j/4), 0, 0)
+        total = sum((geometric.global_polar_formula('2O', u(1), u(j), u(-1))['oriented_volume_mod']
+                     for j in range(8)), s.S.Zero)
+        self.assertEqual(s.simplify(total/(2*s.pi**2)), s.Rational(1, 8))
 
     def test_nondegenerate_dicyclic_tetrahedra_are_double_arcs(self):
         n = 4

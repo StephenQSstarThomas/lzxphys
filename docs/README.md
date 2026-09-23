@@ -1,6 +1,6 @@
 # 研究材料索引
 
-当前阅读入口是 [人类 review 修正](review-0922/SU2_HUMAN_REVIEW_RESPONSE.md) 和 [完整综合 PDF](../paper/su2_complete_report.pdf)。后者先给三个群元素的边长体积及 E 型相位，再附 SU(2) 主推导。
+当前阅读入口是 [第二轮极对偶推导](review-0923/SU2_POLAR_DUAL_EXACT.md)、[第一轮 Li₂ 推导](review-0923/SU2_LI2_ADE_EXACT.md)、[复核与验收记录](review-0923/REVIEW_AND_VALIDATION.md) 和 [完整综合 PDF](../paper/su2_complete_report.pdf)。后者第 3 节给出三个群元素的 Li₂ 主公式，第 7 节给出极对偶证明、E 型退化输入与 D 表任意 n 证明，第 8 节给出全部类型的精确体积短表。09-22 的 [人类 review 修正](review-0922/SU2_HUMAN_REVIEW_RESPONSE.md) 保留为历史记录。
 
 ## 推导与复核
 

@@ -8,7 +8,7 @@
 
 现在的状态是：
 
-- 任务 1 的完整一般位置八项 Li₂ 公式在 `paper/su2_cocycle.pdf` 第 4 节，且已复制到 `paper/su2_ade_review.pdf` 的开头；A 源笔记负号由 `omega_quaternions_source` 明确实现。
+- 任务 1 的完整一般位置八项 Li₂ 公式（不是只给链接）在 `paper/su2_cocycle.pdf` 第 4 节，且已逐项复制到 `paper/su2_ade_review.pdf` 的开头；A 源笔记负号由 `omega_quaternions_source` 明确实现。
 - 任务 2 的 closed 证明、(C_4) 非恰当性和 Q8 全部 4096 组精确检查已完成。
 - 任务 3 的 (C_n)、(mathrm{Dic}_n)、(2T,2O,2I) 均有确定的有限求值入口；Dic 表对 (n=2,3,4,5) 全部四元组做了有理数闭性检查；E 型入口已使用精确二次域分支判定并通过代表性五边形检查。
 - ADE 类阶、(k) 周期和平凡条件由有限子群 String(3) 定理识别；这一步不依赖把有限群的所有三元组打印出来。
@@ -100,9 +100,31 @@ Q8 的精确检查使用有理四元数，不使用浮点 (cos(pi/2))。全部 4
 
 精确标签为 (a^rb^\epsilon)，(a^{2n}=1,b^2=a^n,bab^{-1}=a^{-1})，乘法为
 \[
-(r,\epsilon)(s,\delta)=igl(r+(-1)^\epsilon s+n\epsilon\delta\pmod{2n},\epsilon+\delta\pmod2\bigr).
+(r,\epsilon)(s,\delta)=\bigl(r+(-1)^\epsilon s+n\epsilon\delta\pmod{2n},\epsilon+\delta\pmod2\bigr).
 \]
-另有源半球代表的八分支表，见 `scripts/dic_formula.py`。其有理数闭性在 (n=2,3,4,5) 的全部四元组上通过；任意 (n) 的 closed 性由统一边面链和进位恒等式证明，有限穷举不是普遍证明。
+另有源半球代表的八分支表，见 `scripts/dic_formula.py`。其有理数闭性在 (n=2,3,4,5) 的全部四元组上通过。任意 n 的证明使用统一边面链；表格中的余数满足
+\[
+[x]_m=x-m\left\lfloor\frac{x}{m}
+ight
+floor,
+\qquad N(a,b)+N([a+b]_m,c)=N(b,c)+N(a,[b+c]_m),
+\]
+其中 m=2n。将八种 s_1s_2s_3 分支代入五项余边界，逐项用这个进位恒等式和 [x]_m 的定义约去，剩余项都是 2Z 中的整倍数。因此 exp(-i*pi*k*delta v_n)=1 对任意 n,k 成立；有限穷举只承担实现回归，不承担普遍证明。
+
+八分支表与 E/F/T 几何代表可能使用不同的边链。严格比较不是一句“换面”：取
+\[
+\partial A(g)=\gamma_A(g)-\gamma_{EFT}(g),
+\]
+再取
+\[
+\partial B(g,h)=S_A(g,h)-S_{EFT}(g,h)-\bigl(gA(h)-A(gh)+A(g)\bigr).
+\]
+由于 H_1(S^3)=H_2(S^3)=0，这些比较链存在；于是
+\[
+\partial(C_A-C_{EFT}-\delta_GB)=0,
+\qquad \omega_A=\omega_{EFT}\,\delta\beta.
+\]
+这才证明两套代表同类，而非逐点相等。
 
 ### (2T,2O,2I)
 
@@ -124,7 +146,12 @@ Q8 的精确检查使用有理四元数，不使用浮点 (cos(pi/2))。全部 4
 9.56\times10^{-67},\quad1.41\times10^{-66},\quad2.33\times10^{-66}.
 \]
 
-Epa–Ganter Theorem 1.1 说明 String(3) 限制到有限 (Gamma\subset SU(2)) 的类精确阶为 (|Gamma|)。因此
+先由 SU(2) 上的 CS 微分特征自然性识别
+\[
+[\omega_{A,k}|_\Gamma]=\varepsilon k[\mathrm{String}(3)|_\Gamma],
+\qquad \varepsilon=\pm1,
+\]
+其中 epsilon 只记录 A 与正体积生成元的整体取向。再用 Epa–Ganter Theorem 1.1 说明 String(3) 限制到有限 Gamma\subset SU(2) 的类精确阶为 |Gamma|。因此
 \[
 H^3(\Gamma,U(1))\cong H^4(B\Gamma,\mathbb Z)\cong\mathbb Z_{|\Gamma|},
 \qquad

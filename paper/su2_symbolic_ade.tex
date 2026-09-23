@@ -168,11 +168,12 @@ $2T$ 点集为 $\{\pm e_j\}$ 与全部 $(\pm1,\pm1,\pm1,\pm1)/2$。
 当且仅当由一个 $O(4)$ 等距变换联系，因此此分类确实是无向几何分类。
 
 表中 $K=2(G_{01},G_{02},G_{03},G_{12},G_{13},G_{23})$ 的置换规范键，
-$m$ 为下文严格证明的室数。
+$N_{F_4}$ 为下文严格证明的 $F_4$ 室数（与第 \ref{sec:complete-gram-table} 节的锚定重数 $m$ 无关）。
+表中体积是无向体积；有序输入的有向体积再乘 $\operatorname{sgn}D$。
 \begin{center}\small
 \begin{tabular}{@{}rrrrrr|rrc@{}}
 \toprule
-\multicolumn{6}{c|}{$K$}&重数&$m$&$\Vol/\pi^2$\\\midrule
+\multicolumn{6}{c|}{$K$}&集合重数&$N_{F_4}$&$\Vol/\pi^2$\\\midrule
 -1&-1&-1&0&0&0&192&270&$15/32$\\
 -1&-1&-1&0&1&1&576&84&$7/48$\\
 -1&-1&0&0&-1&1&576&120&$5/24$\\
@@ -225,9 +226,9 @@ H(8,3,2,1)=(7,4,3,2),\qquad H(8,3,2,-1)=(6,5,4,1).
 \]
 因此这 1152 点属于同一 $W$ 轨道，恰好每个室一个。对顶点矩阵 $V$，
 \begin{align}
-m(V)&=\#\{p\in P:(V^{-1}p)_j>0\text{ 对所有 }j\},\\
-V_{\rm or}&=\operatorname{sgn}(\det V)\frac{m(V)\pi^2}{576},\\
-\omega_k&=\exp\left[-\frac{ik\pi}{576}\operatorname{sgn}(\det V)m(V)\right].
+N_{F_4}(V)&=\#\{p\in P:(V^{-1}p)_j>0\text{ 对所有 }j\},\\
+V_{\rm or}&=\operatorname{sgn}(\det V)\frac{N_{F_4}(V)\pi^2}{576},\\
+\omega_k&=\exp\left[-\frac{ik\pi}{576}\operatorname{sgn}(\det V)N_{F_4}(V)\right].
 \end{align}
 全部正负号由整数余子式判定。这是原四面体的实际体积，不包含 $\beta$ 或代表转换。
 各类型先尝试 $\Li_2$ 代入，未能消去的项由此几何恒等式识别。

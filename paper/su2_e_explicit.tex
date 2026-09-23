@@ -1,0 +1,107 @@
+\section{任务 3：E 型群元素的完整相位公式}\label{sec:E-explicit}
+
+\subsection{三个精确元素集合}
+令 $e_0,\ldots,e_3$ 为四维坐标基，$\varphi=(1+\sqrt5)/2$。
+用下面的集合直接表示 $E_6,E_7,E_8$ 所对应的二元群：
+\begin{align*}
+\mathcal Q_6={}&\{\pm e_r:0\le r\le3\}
+\cup\{(\epsilon_0,\epsilon_1,\epsilon_2,\epsilon_3)/2:\epsilon_r=\pm1\},\\
+\mathcal Q_7={}&\mathcal Q_6\cup
+\{(\epsilon e_r+\epsilon'e_s)/\sqrt2:r<s,\ \epsilon,\epsilon'=\pm1\},\\
+\mathcal Q_8={}&\mathcal Q_6\cup
+\{\rho(0,\epsilon_1/2,\epsilon_2\varphi/2,\epsilon_3\varphi^{-1}/2):
+\rho\in A_4,\ \epsilon_r=\pm1\}.
+\end{align*}
+其中 $A_4$ 表示偶坐标置换。三群阶分别为 $24,48,120$。
+在 $g=q_0I+i\mathbf q\cdot\boldsymbol\sigma$ 约定下，乘法是
+\[
+(a,\mathbf u)(b,\mathbf v)
+=(ab-\mathbf u\cdot\mathbf v,\ a\mathbf v+b\mathbf u-\mathbf u\times\mathbf v).
+\]
+所有乘积、相等、秩、正负号判定均在 $\mathbb Q$、
+$\mathbb Q(\sqrt2)$ 或 $\mathbb Q(\sqrt5)$ 中完成，平方根取正根。
+
+\subsection{所有三元组的有限分支}
+以下定义相位公式中每一求和项。$[v_0,\ldots,v_j]$ 是单位化顶点的径向有向单形；
+计算时可保存未归一化的正射线。令
+\[
+S(v_0,\ldots,v_j)\iff0\notin\operatorname{conv}\{v_0,\ldots,v_j\}.
+\]
+等价地，不存在非零全非负系数满足 $\sum_i\lambda_iv_i=0$。
+下列各链遇相邻相同顶点均定义为零；其余情形固定 $J=e_1$，取
+\[
+E(a,b)=\begin{cases}[a,b],&S(a,b),\\
+[a,aJ]+[aJ,b],&\text{否则}.
+\end{cases}
+\]
+对 $Z=\sum_{\nu=1}^M c_\nu[v_{\nu0},\ldots,v_{\nu r}]$ 定义
+\begin{align*}
+t_*&=\min\{t\in\{0,\ldots,3M\}:a(1,t,t^2,t^3)
+\notin\operatorname{span}(v_{\nu0},\ldots,v_{\nu r})\ \forall\nu\},\\
+C_a(Z)&=\sum_\nu c_\nu[a(1,t_*,t_*^2,t_*^3),v_{\nu0},\ldots,v_{\nu r}],
+\qquad C_a(0)=0.
+\end{align*}
+于是
+\[
+F(a,b,c)=\begin{cases}[a,b,c],&S(a,b,c),\\
+C_a(E(b,c)-E(a,c)+E(a,b)),&\text{否则},\end{cases}
+\]
+\[
+T(a,b,c,d)=\begin{cases}[a,b,c,d],&S(a,b,c,d),\\
+C_a(F(b,c,d)-F(a,c,d)+F(a,b,d)-F(a,b,c)),&\text{否则}.
+\end{cases}
+\]
+每个待避真子空间在三次矩曲线上至多排除三个整数，故 $F$ 至多 6 项、
+19 个候选，$T$ 至多 24 项、73 个候选。锥顶点在原单形张成之外，
+因而安全单形锥起后仍安全。降秩项保留在链中，其三维积分为零。
+
+给定任意 $q_1,q_2,q_3\in\mathcal Q_m$，展开
+\[
+T(e_0,q_1,q_1q_2,q_1q_2q_3)
+=\sum_{\nu=1}^{M\le24}c_\nu[v_{\nu0},v_{\nu1},v_{\nu2},v_{\nu3}].
+\]
+记 $D_\nu=\det(v_{\nu0},\ldots,v_{\nu3})$，每项边长为
+\[
+\ell_{\nu,ij}=\arccos\frac{v_{\nu i}\cdot v_{\nu j}}
+{\|v_{\nu i}\|\|v_{\nu j}\|},\qquad
+(ij)=(23,13,03,01,02,12).
+\]
+由式 \eqref{eq:explicit-edge-B} 中已全部展开的函数得到
+\begin{equation}
+\boxed{\omega_{E_m,k}(q_1,q_2,q_3)=
+\exp\!\left[-\frac{ik}{\pi}\sum_{\nu:D_\nu\ne0}
+c_\nu\operatorname{sgn}(D_\nu)\mathcal B(\ell_{\nu1},\ldots,\ell_{\nu6})\right],
+\quad m=6,7,8.}
+\end{equation}
+所有符号和求和项均已由群元定义。它是一个完整的几何代表，采用通用有限分支；
+尚未化成类似 D 型八行表的 E 型专属短表，不能把这项进一步化简写成已完成。
+左乘保持取向、秩与锥点选择，配合 $\partial T=\delta F$，给出全局五边形。
+
+\subsection{三组有独立手算推导的例子}
+共同取 $g_1=e_1=i\sigma_1$、$g_2=e_3=i\sigma_3$，则 $p_2=e_2$。
+\begin{align*}
+2T:\quad g_3&=(1,1,-1,-1)/2,& \omega_{A,k}&=e^{-ik\pi/32},\\
+2O:\quad g_3&=(1,1,0,0)/\sqrt2,& \omega_{A,k}&=e^{-ik\pi/16},\\
+2I:\quad g_3&=(\varphi/2,\varphi^{-1}/2,0,-1/2),&
+\omega_{A,k}&=\exp\!\left[-\frac{ik}{2}\arctan\frac1{4\varphi+1}\right].
+\end{align*}
+第一行的 $p_3=(1,1,1,1)/2$ 将正交球面四面体（体积 $\pi^2/8$）
+分成四个全等部分；第二行的 $p_3=(0,0,1,1)/\sqrt2$ 将它平分。
+第三行的 $p_3=(0,1/2,\varphi/2,\varphi^{-1}/2)$ 与 $e_1,e_2$ 构成 $S^2$ 三角形，面积
+\[
+\Omega=2\arctan\frac{\varphi^{-1}}{3+\varphi}
+=2\arctan\frac1{4\varphi+1}.
+\]
+它与 $e_0$ 的球面连接体积为
+$V=\Omega\int_0^{\pi/2}\sin^2u\,du=\pi\Omega/4$，得上述相位。
+第二、三行确实使用超出共享 $2T$ 子群的元素。
+
+\subsection{类阶与点值的区别}
+几何代表与基本 CS/String 类的识别使用归一化三形式及自然性，
+然后 Epa--Ganter 定理 1.1\cite{epa} 才给出
+\[
+\operatorname{ord}[\omega_k|_\Gamma]=\frac{|\Gamma|}{\gcd(k,|\Gamma|)},
+\qquad [\omega_k|_\Gamma]=0\iff |\Gamma|\mid k.
+\]
+E 型的类周期分别为 $24,48,120$；这不要求上述几何代表逐点为对应阶的单位根，
+也不是用几个数值相位证明类阶。

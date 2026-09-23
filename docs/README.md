@@ -1,6 +1,6 @@
 # 研究材料索引
 
-当前综合文稿位于 [paper/su2_cocycle.pdf](../paper/su2_cocycle.pdf)。
+当前阅读入口是 [人类 review 修正](review-0922/SU2_HUMAN_REVIEW_RESPONSE.md) 和 [完整综合 PDF](../paper/su2_complete_report.pdf)。后者先给三个群元素的边长体积及 E 型相位，再附 SU(2) 主推导。
 
 ## 推导与复核
 

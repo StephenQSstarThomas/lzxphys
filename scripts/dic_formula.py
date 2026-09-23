@@ -7,6 +7,7 @@ for epsilon=1 the table exponent is -r modulo 2n.
 """
 import mpmath as mp
 from fractions import Fraction
+from numbers import Integral
 
 from scripts.ade_subgroups import DicElement
 
@@ -77,4 +78,6 @@ def dic_volume_units(n, g1, g2, g3):
 
 
 def dic_phase(n, g1, g2, g3, k=1):
+    if not isinstance(k, Integral):
+        raise TypeError('The level k must be an integer')
     return mp.exp(-1j * int(k) * dic_oriented_volume(n, g1, g2, g3) / mp.pi)

@@ -1,7 +1,7 @@
 PYTHON ?= python
 TECTONIC ?= tectonic
 
-.PHONY: install test baseline validate edge verify pdf adepdf completepdf all clean
+.PHONY: install test baseline validate edge adecheck verify pdf adepdf completepdf all clean
 
 install:
 	$(PYTHON) -m pip install -e '.[validation]'
@@ -18,12 +18,16 @@ validate:
 edge:
 	$(PYTHON) -m scripts.su2_edge_crosscheck
 
+adecheck:
+	$(PYTHON) -m scripts.check_ade_phase
+
 # Keep these sequential: the edge crosscheck consumes the main validation report.
 verify:
 	$(MAKE) test
 	$(MAKE) baseline
 	$(MAKE) validate
 	$(MAKE) edge
+	$(MAKE) adecheck
 
 pdf:
 	$(PYTHON) scripts/build_paper.py --engine $(TECTONIC)
@@ -38,7 +42,7 @@ completepdf: pdf adepdf
 
 all:
 	$(MAKE) verify
-	$(MAKE) pdf
+	$(MAKE) completepdf
 
 clean:
 	$(PYTHON) -c "import shutil; shutil.rmtree('build', ignore_errors=True)"

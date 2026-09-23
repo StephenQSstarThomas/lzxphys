@@ -11,7 +11,7 @@ requires-python = ">=3.11"
 dependencies = ["mpmath==1.3.0"]
 
 [project.optional-dependencies]
-validation = ["numpy==2.4.4"]
+validation = ["numpy==2.4.4", "sympy==1.14.0"]
 
 [tool.setuptools]
 package-dir = {"" = "src"}

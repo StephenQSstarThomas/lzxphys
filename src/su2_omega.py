@@ -193,6 +193,82 @@ def tetrahedron_chain(vertices):
 # Murakami's face pairs: 01,02,12,23,13,03.
 # Actual edges, respectively: 23,13,03,01,02,12.
 FACE_PAIRS = ((0, 1), (0, 2), (1, 2), (2, 3), (1, 3), (0, 3))
+EDGE_PAIRS = ((2, 3), (1, 3), (0, 3), (0, 1), (0, 2), (1, 2))
+
+
+def _edge_lengths(vertices):
+    lengths = []
+    for i, j in EDGE_PAIRS:
+        aa, bb, ab = _dot(vertices[i], vertices[i]), _dot(vertices[j], vertices[j]), _dot(vertices[i], vertices[j])
+        # atan2 avoids loss of tiny lengths in acos(1-epsilon).
+        lengths.append(mp.atan2(mp.sqrt(_mp(aa*bb-ab*ab)), _mp(ab)))
+    return tuple(lengths)
+
+
+def edge_lengths_quaternions(g1, g2, g3, dps=50):
+    """Six spherical lengths, ordered (23,13,03,01,02,12).
+
+    Equivalently acos(Tr(h)/2) for h=(g3,g2*g3,g1*g2*g3,g1,g1*g2,g2).
+    Inputs are positive quaternion rays, as in omega_quaternions.
+    """
+    p1 = quaternion(g1)
+    p2 = quaternion_multiply(p1, g2)
+    p3 = quaternion_multiply(p2, g3)
+    with mp.workdps(int(dps)+15):
+        return _edge_lengths((IDENTITY, p1, p2, p3))
+
+
+def oriented_volume_from_edges(vertices, dps=50):
+    """Murakami Theorem 1.2, using lengths and explicit fixed-z logarithms.
+
+    No inverse Gram matrix or dihedral angles. Vertices supply only lengths,
+    orientation and exact degeneracy/conditioning predicates. The real volume
+    is the unique representative in (0, pi^2); safe rank-deficient terms are 0.
+    """
+    vertices = tuple(quaternion(q) for q in vertices)
+    if len(vertices) != 4:
+        raise ValueError('Four vertices required')
+    determinant = _det(list(zip(*vertices)))
+    if not determinant:
+        if hemisphere_safe(vertices):
+            return mp.mpf(0)
+        raise ValueError('Radial simplex hits zero: use the global chain evaluator')
+    norm_product = mp_product(_dot(v, v) for v in vertices)
+    det_gram = determinant**2/norm_product
+    with mp.workdps(30):
+        extra = max(0, int(mp.ceil(-mp.log10(_mp(det_gram)))))
+    with mp.workdps(int(dps)+extra+25):
+        lengths = _edge_lengths(vertices)
+        tau = [mp.pi-lengths[(j+3)%6] for j in range(6)]
+        a, b, c, d, e, f = [mp.exp(1j*t) for t in tau]
+        phases = (a, b, c, d, e, f)
+        r0 = a*d+b*e+c*f+a*b*f+a*c*e+b*c*d+d*e*f+a*b*c*d*e*f
+        r1 = 4*sum(mp.sin(tau[j])*mp.sin(tau[j+3]) for j in range(3))
+        # The substituted angle Gram is the VERTEX Gram, so Delta=16 det Gamma.
+        z = -2*r0/(r1+4*mp.sqrt(_mp(det_gram)))
+        if not abs(z) < 1 or not abs(r0):
+            raise ArithmeticError('Edge root check failed; increase precision')
+        positive_sets = ((0, 1, 3, 4), (0, 2, 3, 5), (1, 2, 4, 5))
+        negative_sets = ((0, 1, 2), (0, 4, 5), (1, 3, 5), (2, 3, 4))
+        positive = [z/mp.fprod(phases[j] for j in s) for s in positive_sets]
+        negative = [-z/mp.fprod(phases[j] for j in s) for s in negative_sets]
+        real_l = (mp.re(mp.polylog(2, z))
+                  + sum(mp.re(mp.polylog(2, v)) for v in positive)
+                  - sum(mp.re(mp.polylog(2, v)) for v in negative)
+                  - sum(tau[j]*tau[j+3] for j in range(3)))/2
+        derivatives = []
+        for j in range(6):
+            varied = (j+3)%6
+            derivatives.append((
+                sum(mp.im(mp.log(1-v)) for s, v in zip(positive_sets, positive) if varied in s)
+                - sum(mp.im(mp.log(1-v)) for s, v in zip(negative_sets, negative) if varied in s)
+                + tau[j])/2)
+        raw = (real_l-mp.pi*mp.arg(-mp.conj(r0))
+               - sum(length*dj for length, dj in zip(lengths, derivatives))-mp.pi**2/2)
+        volume = raw % (2*mp.pi**2)
+        if not 0 < volume < mp.pi**2:
+            raise ArithmeticError('Edge volume outside (0,pi^2); increase precision')
+        return +volume if determinant > 0 else -volume
 
 
 def oriented_volume(vertices, dps=50):
@@ -292,7 +368,7 @@ def matrix_quaternion(matrix, tolerance=1e-10):
     return quaternion(((ar+dr)/2, (bi+ci)/2, (br-cr)/2, (ai-di)/2))
 
 
-def omega_quaternions(g1, g2, g3, k=1, dps=50):
+def _omega_quaternions(g1, g2, g3, k, dps, volume_evaluator, phase_sign):
     if not isinstance(k, Integral):
         raise TypeError('The level k must be an integer')
     first = quaternion(g1)
@@ -304,8 +380,20 @@ def omega_quaternions(g1, g2, g3, k=1, dps=50):
     level_digits = (abs(int(k)).bit_length() * 30103) // 100000 + 1
     phase_dps = int(dps) + level_digits
     with mp.workdps(phase_dps + 15):
-        volume = mp.fsum(sign * oriented_volume(vertices, dps=phase_dps+5) for sign, vertices in chain)
-        return mp.exp(1j * int(k) * volume / mp.pi)
+        volume = mp.fsum(sign * volume_evaluator(vertices, dps=phase_dps+5) for sign, vertices in chain)
+        return mp.exp(phase_sign * 1j * int(k) * volume / mp.pi)
+
+
+def omega_quaternions(g1, g2, g3, k=1, dps=50):
+    return _omega_quaternions(g1, g2, g3, k, dps, oriented_volume, 1)
+
+
+def omega_quaternions_edge(g1, g2, g3, k=1, dps=50):
+    """Source-A phase exp(-ikV/pi), from three elements via the edge formula.
+
+    Uses the same compatible global filling as the angle route at degeneracies.
+    """
+    return _omega_quaternions(g1, g2, g3, k, dps, oriented_volume_from_edges, -1)
 
 
 def omega_su2(g1, g2, g3, k=1, dps=50):
@@ -320,9 +408,9 @@ def omega_quaternions_source(g1, g2, g3, k=1, dps=50):
     The source note reports Z_before/Z_after with -i*k*V/pi, so this is the
     inverse representative. The level and geometric chain are unchanged.
     """
-    return 1 / omega_quaternions(g1, g2, g3, k=k, dps=dps)
+    return _omega_quaternions(g1, g2, g3, k, dps, oriented_volume, -1)
 
 
 def omega_su2_source(g1, g2, g3, k=1, dps=50):
     """Source-note phase for numerical 2x2 SU(2) matrices (Eq. (7.1))."""
-    return 1 / omega_su2(g1, g2, g3, k=k, dps=dps)
+    return omega_quaternions_source(*(matrix_quaternion(g) for g in (g1, g2, g3)), k=k, dps=dps)

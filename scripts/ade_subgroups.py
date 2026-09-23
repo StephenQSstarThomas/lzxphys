@@ -59,7 +59,7 @@ def dic_quaternion(n, element):
     if not element.epsilon:
         return a
     # (q0,q1,q2,q3) multiplication by b=(0,0,1,0) with the +i sigma convention.
-    return (0.0, 0.0, cos(angle), sin(angle))
+    return (0.0, 0.0, cos(angle), -sin(angle))
 
 
 def dic_quaternion_exact_q8(element):
@@ -182,7 +182,13 @@ def exact_closure(points, modulus=None):
 
 def normalized_numeric(point, dps=80):
     import mpmath as mp
+    import sympy as sp
     with mp.workdps(dps):
-        values = [mp.mpf(str(value.evalf(dps))) if hasattr(value, "evalf") else mp.mpf(value) for value in point]
+        values = []
+        for value in point:
+            value = sp.sympify(value)
+            roots = {symbol: sp.sqrt(2 if symbol.name == 's2' else 5)
+                     for symbol in value.free_symbols if symbol.name in ('s2', 's5')}
+            values.append(mp.mpf(str(value.subs(roots).evalf(dps))))
         norm = mp.sqrt(mp.fsum(value * value for value in values))
         return tuple(value / norm for value in values)

@@ -6,6 +6,7 @@ and cone choices are made in exact algebraic arithmetic; only each nonzero
 tetrahedron volume is converted to high-precision real numbers for Li_2.
 """
 from itertools import combinations
+from numbers import Integral
 import sympy as sp
 import mpmath as mp
 
@@ -13,7 +14,7 @@ from scripts.ade_subgroups import (
     binary_tetrahedral, binary_octahedral, binary_icosahedral,
     sympy_quaternion_multiply,
 )
-from su2_omega import oriented_volume
+from su2_omega import oriented_volume, oriented_volume_from_edges, EDGE_PAIRS
 
 
 I4 = (sp.Integer(1), sp.Integer(0), sp.Integer(0), sp.Integer(0))
@@ -164,21 +165,76 @@ def _numeric(point, dps):
         return tuple(converted)
 
 
-def phase_from_exact_quaternions(g1, g2, g3, k=1, dps=80):
-    """Evaluate the source-note A convention for exact algebraic quaternions."""
+def _evaluate(g1, g2, g3, k, dps, method, details):
+    if not isinstance(k, (Integral, sp.Integer)):
+        raise TypeError('The level k must be an integer')
+    if method not in ('edge', 'angle'):
+        raise ValueError('method must be edge or angle')
+    inputs = tuple(_reduce_point(g) for g in (g1, g2, g3))
+    for g in inputs:
+        if len(g) != 4 or _sign(sum(x*x for x in g)-1) != 0:
+            raise ValueError('Exact unit quaternions required; use positive s2/s5 roots')
+    g1, g2, g3 = inputs
     p0 = I4
-    p1 = _reduce_point(g1)
+    p1 = g1
     p2 = _reduce_point(sympy_quaternion_multiply(g1, g2))
     p3 = _reduce_point(sympy_quaternion_multiply(p2, g3))
-    chain = exact_tetrahedron_chain((p0, p1, p2, p3))
-    with mp.workdps(dps):
-        volume = mp.mpf(0)
+    cumulative = (p0, p1, p2, p3)
+    chain = exact_tetrahedron_chain(cumulative)
+    level_digits = (abs(int(k)).bit_length()*30103)//100000+1
+    work_dps = int(dps)+level_digits+25
+    evaluator = oriented_volume_from_edges if method == 'edge' else oriented_volume
+    records, volumes = [], []
+    with mp.workdps(work_dps):
         for sign, vertices in chain:
             determinant = sp.Matrix.hstack(*(sp.Matrix([_actual(x) for x in v]) for v in vertices)).det()
-            if sp.simplify(determinant) == 0:
-                continue
-            volume += sign * oriented_volume(tuple(_numeric(v, dps) for v in vertices), dps=dps-5)
-        return mp.exp(-1j * int(k) * volume / mp.pi)
+            orientation = _sign(determinant)
+            numeric = tuple(_numeric(v, work_dps) for v in vertices)
+            value = (evaluator(numeric, dps=int(dps)+level_digits+10)
+                     if orientation else mp.mpf(0))
+            if orientation and mp.sign(value) != orientation:
+                raise ArithmeticError('Numerical orientation disagrees with exact determinant')
+            volumes.append(sign*value)
+            if details:
+                lengths = []
+                for i, j in EDGE_PAIRS:
+                    aa = mp.fsum(x*x for x in numeric[i])
+                    bb = mp.fsum(x*x for x in numeric[j])
+                    ab = mp.fsum(x*y for x, y in zip(numeric[i], numeric[j]))
+                    cosine = max(mp.mpf(-1), min(mp.mpf(1), ab/mp.sqrt(aa*bb)))
+                    lengths.append(mp.nstr(mp.acos(cosine), int(dps)))
+                records.append({'coefficient': sign, 'orientation': orientation,
+                                'vertices': [[str(x) for x in v] for v in vertices],
+                                'edge_lengths': lengths,
+                                'oriented_volume': mp.nstr(value, int(dps))})
+        volume = mp.fsum(volumes)
+        phase = mp.exp(-1j*int(k)*volume/mp.pi)
+        if not details:
+            return phase
+        return {'convention': 'source A: exp(-i*k*V/pi)', 'method': method,
+                'dps': int(dps), 'k': int(k),
+                'inputs': [[str(x) for x in g] for g in inputs],
+                'cumulative_vertices': [[str(x) for x in v] for v in cumulative],
+                'branch': 'empty' if not chain else ('direct' if _safe(cumulative) else 'cone'),
+                'edge_order': ['23', '13', '03', '01', '02', '12'], 'terms': records,
+                'signed_volume': mp.nstr(volume, int(dps)),
+                'volume_over_pi2': mp.nstr(volume/mp.pi**2, int(dps)),
+                'phase': {'real': mp.nstr(mp.re(phase), int(dps)),
+                          'imag': mp.nstr(mp.im(phase), int(dps))}}
+
+
+def phase_from_exact_quaternions(g1, g2, g3, k=1, dps=80, *, method='edge'):
+    """Source-A phase of exact unit E-type quaternions, with exact branch choices.
+
+    Coordinates are rational or in one positive quadratic field (s2 or s5).
+    method='angle' retains the independent old volume route for crosschecks.
+    """
+    return _evaluate(g1, g2, g3, k, dps, method, False)
+
+
+def phase_details(g1, g2, g3, k=1, dps=80, *, method='edge'):
+    """JSON-ready inputs, finite chain terms, six lengths, volumes and phase."""
+    return _evaluate(g1, g2, g3, k, dps, method, True)
 
 
 def ade_group(name):

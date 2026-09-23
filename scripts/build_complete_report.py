@@ -1,4 +1,4 @@
-"""Combine the fully proved SU(2) note and the ADE supplement into one PDF."""
+"""Put the explicit group/edge/E-type answer first, followed by the SU(2) note."""
 from pathlib import Path
 import shutil
 import subprocess
@@ -14,7 +14,7 @@ def main():
     pdfunite = shutil.which("pdfunite")
     if not pdfunite:
         raise SystemExit("pdfunite is required to combine the two verified PDFs")
-    subprocess.run([pdfunite, str(main_pdf), str(ade_pdf), str(output)], check=True)
+    subprocess.run([pdfunite, str(ade_pdf), str(main_pdf), str(output)], check=True)
     print(f"Wrote {output.relative_to(root)} ({output.stat().st_size} bytes)")
 
 

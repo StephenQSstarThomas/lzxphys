@@ -9,7 +9,7 @@ from pathlib import Path
 
 import mpmath as mp
 
-from su2_omega import IDENTITY, oriented_volume, quaternion_multiply
+from su2_omega import IDENTITY, oriented_volume, oriented_volume_from_edges, quaternion_multiply
 
 RESULTS = Path(__file__).resolve().parents[1] / 'results'
 
@@ -58,7 +58,7 @@ def edge_volume(vertices, dps=85):
 def main():
     samples = json.loads((RESULTS / 'SU2_validation.json').read_text())['samples']
     result = {'route': 'Murakami v4 Theorem 1.2, explicit fixed-z log derivatives',
-              'edge_dps': 85, 'angle_dps': 70, 'indices': [0,3,12,18], 'samples': []}
+              'edge_dps': 85, 'angle_dps': 70, 'indices': list(range(len(samples))), 'samples': []}
     for index in result['indices']:
         vertices = [IDENTITY]
         for g in samples[index]['raw_quaternions']:
@@ -66,12 +66,18 @@ def main():
         with mp.workdps(85):
             edge = edge_volume(vertices)
             angle = oriented_volume(vertices,dps=70)
+            production = oriented_volume_from_edges(vertices, dps=70)
             error = abs(edge-angle)
+            production_error = abs(production-angle)
             result['samples'].append({'index':index, 'edge_volume':mp.nstr(edge,65),
-                                      'angle_volume':mp.nstr(angle,65), 'error':float(error)})
-            print(index, 'edge/angle error:', mp.nstr(error,8))
+                                      'angle_volume':mp.nstr(angle,65), 'error':float(error),
+                                      'production_edge_volume':mp.nstr(production,65),
+                                      'production_error':float(production_error)})
+            print(index, 'independent edge/angle:', mp.nstr(error,8),
+                  'production edge/angle:', mp.nstr(production_error,8))
     result['maximum_error'] = max(x['error'] for x in result['samples'])
-    result['passed'] = result['maximum_error'] < 1e-65
+    result['maximum_production_error'] = max(x['production_error'] for x in result['samples'])
+    result['passed'] = max(result['maximum_error'], result['maximum_production_error']) < 1e-65
     (RESULTS / 'SU2_edge_crosscheck.json').write_text(json.dumps(result,indent=2)+'\n')
     if not result['passed']:
         raise SystemExit('Independent edge formula disagrees; inspect the saved report')

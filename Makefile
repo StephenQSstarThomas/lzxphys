@@ -1,7 +1,7 @@
 PYTHON ?= python
 TECTONIC ?= tectonic
 
-.PHONY: install test baseline validate edge verify pdf adepdf all clean
+.PHONY: install test baseline validate edge verify pdf adepdf completepdf all clean
 
 install:
 	$(PYTHON) -m pip install -e '.[validation]'
@@ -32,6 +32,9 @@ adepdf:
 	mkdir -p build/ade_review
 	$(TECTONIC) --keep-logs --outdir build/ade_review paper/su2_ade_review.tex
 	cp build/ade_review/su2_ade_review.pdf paper/su2_ade_review.pdf
+
+completepdf: pdf adepdf
+	$(PYTHON) scripts/build_complete_report.py
 
 all:
 	$(MAKE) verify

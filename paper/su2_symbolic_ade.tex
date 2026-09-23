@@ -1,0 +1,355 @@
+\section{09-23 主结果：原几何相位的纯符号解析式}
+\label{sec:symbolic-ade}
+
+本节取代 09-22 被否决的 transfer 设计作为当前研究路线：先代入完整
+$\Li_2$ 公式并尝试纯符号恒等式，再用同一个四面体的直接几何体积。
+不使用数值拟合、数值归约或另一上同调代表替换当前相位。
+后文旧代数代表保留为历史附录性质的比较，\emph{不是本节的方法或证据}。
+本节的精确实现拒绝浮点输入；历史数值接口仅保留兼容性。
+
+已完成的范围是：一般位置完整解析主程序、$2T$ 的十二类实际有理体积、
+$2O$ 的 84 类和 $2I$ 的 563 类完整非退化参数表，以及原 E/F/T
+退化链的有限解析接口。必须区分完整解析表达与消去全部特殊函数：
+后者对 $2O,2I$ 尚未完成；事实上，要求所有类型都是有理体积已被下文反例排除。
+原始任务提示文件当前未在 checkout 中找到，本文按本轮用户明确给出的要求执行。
+
+\subsection{三个群元直接给出六个迹与取向}
+
+固定 $g=x_0I+i\boldsymbol{x}\cdot\boldsymbol{\sigma}$，累计顶点为
+\[
+(I,g_1,g_1g_2,g_1g_2g_3).
+\]
+本节边序严格为 $(01,02,03,23,13,12)$：
+\begin{align}
+\ell_1&=\arccos\tfrac12\Tr g_1,&
+\ell_2&=\arccos\tfrac12\Tr(g_1g_2),&
+\ell_3&=\arccos\tfrac12\Tr(g_1g_2g_3),\\
+\ell_4&=\arccos\tfrac12\Tr g_3,&
+\ell_5&=\arccos\tfrac12\Tr(g_2g_3),&
+\ell_6&=\arccos\tfrac12\Tr g_2.
+\end{align}
+对边为 $j$ 与 $j+3$（模 6）。令 $A=g_1,B=g_1g_2,C=g_1g_2g_3$，则
+\begin{equation}
+ D=\det(q(I),q(A),q(B),q(C))=\tfrac14\Tr\bigl(A(BC-CB)\bigr).
+ \label{eq:exact-orientation}
+\end{equation}
+由 $BC-CB=-2i(\boldsymbol b\times\boldsymbol c)\cdot\boldsymbol\sigma$
+直接得右边为 $\boldsymbol a\cdot(\boldsymbol b\times\boldsymbol c)$。
+不可把 $A,B,C$ 误写成三个增量本身。输入
+$e_1,e_2,(0,3/5,0,4/5)$ 时正确值为 $3/5$，误用增量会得到 $4/5$。
+
+$D\ne0$ 保证顶点线性无关、正锥不含零，从而存在共同开半球，
+对应唯一凸短测地线四面体。单四面体入口拒绝 $D=0$，绝不以
+$\operatorname{sgn}(0)=0$ 把全局相位置为 1；例如循环子群全部位于大圆，
+仍必须保留其进位公式或全局链构造。
+
+\subsection{八个二重对数及六个显式对数项}
+
+以下是 Murakami 定理 1.2 的边长代入及固定 $z$ 偏导展开，
+没有隐式积分或待求偏导。记 $c_j=\cos\ell_j$，
+$b_j=c_j+i\sqrt{1-c_j^2}$，$a_j=-b_{j+3}^{-1}$，正平方根及主支角约定不变。
+\begin{align}
+q_0={}&a_1a_4+a_2a_5+a_3a_6+a_1a_2a_6+a_1a_3a_5\notag\\
+ &+a_2a_3a_4+a_4a_5a_6+\prod_{j=1}^6a_j,\\
+q_1={}&-\sum_{j=1}^3(a_j-a_j^{-1})(a_{j+3}-a_{j+3}^{-1}),
+\qquad q_2=\overline{q_0},\\
+\Delta={}&q_1^2-4q_0q_2=16\det G,\qquad G=V^{\mathsf T}V,\\
+z={}&\frac{-q_1+\sqrt\Delta}{2q_2}
+     =\frac{-2q_0}{q_1+4\sqrt{\det G}}.
+\end{align}
+其中 $q_2$ 也等于 $q_0$ 每个单项式取倒数后的和。为完整指定八个变元，令
+\begin{align}
+ Z_0&=z,&Z_1&=b_1b_2b_4b_5z,\\
+ Z_2&=b_1b_3b_4b_6z,&Z_3&=b_2b_3b_5b_6z,\\
+ Z_4&=b_4b_5b_6z,&Z_5&=b_2b_3b_4z,\\
+ Z_6&=b_1b_3b_5z,&Z_7&=b_1b_2b_6z.
+\end{align}
+记 $L_r=\log(1-Z_r)$（各自取主支，不能擅自合并）：
+\begin{align}
+\Sigma_1&=L_1+L_2-L_6-L_7,&\Sigma_2&=L_1+L_3-L_5-L_7,\\
+\Sigma_3&=L_2+L_3-L_5-L_6,&\Sigma_4&=L_1+L_2-L_4-L_5,\\
+\Sigma_5&=L_1+L_3-L_4-L_6,&\Sigma_6&=L_2+L_3-L_4-L_7.
+\end{align}
+完整主程序计算
+\begin{align}
+W={}&\tfrac12\Re\left[\sum_{r=0}^3\Li_2(Z_r)-\sum_{r=4}^7\Li_2(Z_r)\right]
+ -\tfrac12\sum_{j=1}^3(\pi-\ell_j)(\pi-\ell_{j+3})\notag\\
+&-\pi\Arg(-q_2)
+ -\tfrac12\sum_{j=1}^6\ell_j\bigl(\pi-\ell_{j+3}+\Im\Sigma_j\bigr)-\tfrac{\pi^2}{2}.
+\end{align}
+\begin{equation}
+\boxed{\omega_k(g_1,g_2,g_3)={}
+ \exp\!\left[-\frac{ik}{\pi}\operatorname{sgn}(D)W\right]},\qquad k\in\mathbb Z.
+\label{eq:exact-master-phase}
+\end{equation}
+$W$ 是体积模 $2\pi^2$；实际正体积为其在 $(0,\pi^2)$ 的代表。
+整数 level 的相位不需要通过小数来选择代表。
+
+\paragraph{主支控制。}
+$q_1=4\sum\sin\ell_j\sin\ell_{j+3}>0$，$\Delta>0$，故稳定根满足
+$|z|<1$，全部 $Z_r$ 同模；因而 $1-Z_r$ 的实部为正，避免了对数支割。
+正定相关矩阵域连通，Murakami 的驻点恒等式
+$\exp(2z\partial_zL_e)=1$ 使连续量 $z\partial_zL_e$ 为常数 $\pi i$
+（在正交例校准）；若 $q_0=0$，稳定根为零，导数乘积将为零，矛盾。
+$\Arg(-q_2)$ 的跳跃只改变整球体积。
+这里需要实际 Gram 正定，不能用任意六个数满足 $\det G>0$ 来代替。
+
+\subsection{已经完成的严格符号化简}
+
+通用约简器仅在已证明的域内使用共轭、Euler 反射及倍角恒等式：
+\begin{align}
+\Re\Li_2(\bar z)&=\Re\Li_2(z),&& |z|<1,\\
+\Li_2(z)+\Li_2(1-z)&=\pi^2/6-\log z\log(1-z),&&|z|,|1-z|<1,\\
+\Li_2(z)+\Li_2(-z)&=\tfrac12\Li_2(z^2),&&|z|<1.
+\end{align}
+未知域不强行约简，剩余项明确返回；这不是所有多重对数恒等式的完备判定器。
+
+\paragraph{正交校准。}
+输入 $(e_1,e_3,e_1)$ 给累计顶点 $(e_0,e_1,e_2,e_3)$，
+$q_0=-4-4i,q_1=12,q_2=-4+4i,z=(1+i)/2$。
+四个正项与四个负项互为共轭，故 $\Li_2$ 实部完全抵消。
+又 $\Sigma_j=-i\pi$、$\Arg(-q_2)=-\pi/4$，所以
+\[
+ W=-\frac{3\pi^2}{8}+\frac{\pi^2}{4}+\frac{3\pi^2}{4}-\frac{\pi^2}{2}
+   =\frac{\pi^2}{8},\qquad \omega_k=e^{-ik\pi/8}.
+\]
+这也等于 $S^3$ 正交卦限的体积 $2\pi^2/16$。
+
+\paragraph{两参数族的完整 $\Li_2$ 恒等式证明。}
+令边长为 $(\alpha,\pi/2,\pi/2,\beta,\pi/2,\pi/2)$，
+$0<\alpha,\beta<\pi$。设 $p=e^{i\alpha},q=e^{i\beta}$，
+$S=pq+p+q-1$，$\gamma=\Arg S$，$\eta=\gamma-(\alpha+\beta)/2$。
+由于
+\[
+ S=2e^{i(\alpha+\beta)/2}
+ \left(\cos\frac{\alpha-\beta}{2}+i\sin\frac{\alpha+\beta}{2}\right),
+\]
+有 $0<\eta<\pi/2$、$0<\gamma<\pi$，且 $z=-2/S$。八项合为两倍
+\[
+F=\Li_2(z)+\Li_2(-pqz)-\Li_2(-pz)-\Li_2(-qz).
+\]
+分解
+\begin{align}
+1-z&=(p+1)(q+1)/S,&1+pqz&=-(p-1)(q-1)/S,\\
+1+pz&=(p+1)(q-1)/S,&1+qz&=(p-1)(q+1)/S.
+\end{align}
+记这四个主支对数分别为 $L_U,L_V,L_X,L_Y$。
+逐项计算模和主辐角（正交点的符号为 $-i\pi$）给出
+\begin{align}
+ L_U+L_V-L_X-L_Y&=-i\pi,\\
+ L_X-L_V&=\log\cot(\alpha/2)+i\pi/2,\\
+ L_Y-L_V&=\log\cot(\beta/2)+i\pi/2.
+\end{align}
+用 $d\Li_2(w)=-\log(1-w)d\log w$ 得
+\[
+dF=i\pi\,d\log z+i(L_X-L_V)d\alpha+i(L_Y-L_V)d\beta,
+\quad d\Re F=\pi\,d\eta.
+\]
+正交点 $\eta=\pi/4,\Re F=0$ 固定积分常数，故
+$\Re F=\pi\eta-\pi^2/4$。
+六个 $\Im\Sigma_j=-\pi$，$\Arg(-q_2)=\gamma-\pi$，代回主式即
+\[
+ W=\alpha\beta/2.
+\]
+允许实数 $-\pi<\alpha<0$ 时，边长用 $|\alpha|$，取向使
+$V_{\rm or}=\alpha\beta/2$。独立参数化
+\[
+x=(\cos\rho\cos u,\cos\rho\sin u,\sin\rho\cos v,\sin\rho\sin v)
+\]
+的有向体积形式为 $\cos\rho\sin\rho\,du\wedge d\rho\wedge dv$，
+$u:0\to\alpha,\rho:0\to\pi/2,v:0\to\beta$，积分也为 $\alpha\beta/2$。
+特别地 $(\pm\pi/3,\pi/4)$ 给出 $\pm\pi^2/24$；相同边长仍需取向信息。
+
+\section{2T 的十二类实际体积及几何证明}
+\label{sec:2t-actual}
+
+$2T$ 点集为 $\{\pm e_j\}$ 与全部 $(\pm1,\pm1,\pm1,\pm1)/2$。
+枚举 $\binom{24}{4}=10626$ 个无序四点集合，5586 个秩不足 4，5040 个非退化。
+六个 Gram 元在 24 种顶点排列下取规范键，恰有十二类；满秩矩阵具有相同 Gram
+当且仅当由一个 $O(4)$ 等距变换联系，因此此分类确实是无向几何分类。
+
+表中 $K=2(G_{01},G_{02},G_{03},G_{12},G_{13},G_{23})$ 的置换规范键，
+$m$ 为下文严格证明的室数。
+\begin{center}\small
+\begin{tabular}{@{}rrrrrr|rrc@{}}
+\toprule
+\multicolumn{6}{c|}{$K$}&重数&$m$&$\Vol/\pi^2$\\\midrule
+-1&-1&-1&0&0&0&192&270&$15/32$\\
+-1&-1&-1&0&1&1&576&84&$7/48$\\
+-1&-1&0&0&-1&1&576&120&$5/24$\\
+-1&-1&0&1&-1&-1&288&204&$17/48$\\
+-1&-1&0&1&1&1&576&36&$1/16$\\
+-1&-1&1&0&0&0&576&66&$11/96$\\
+-1&-1&1&1&-1&0&576&60&$5/48$\\
+-1&0&0&1&1&0&576&30&$5/96$\\
+-1&0&1&1&0&1&576&24&$1/24$\\
+0&0&0&0&0&0&48&72&$1/8$\\
+0&0&1&0&1&1&192&18&$1/32$\\
+0&1&1&1&1&1&288&12&$1/48$\\\bottomrule
+\end{tabular}\end{center}
+
+\subsection{为什么有限室计数恰好是实际体积}
+
+$F_4$ 短根为 $\{\pm e_j\}$ 与半符号根，长根为 $\{\pm e_i\pm e_j\}$。
+其中心超平面共 24 个：4 个坐标面、12 个双坐标面、8 个全符号面。
+带符号置换与
+\[
+H=\frac12\begin{pmatrix}1&1&1&1\\1&1&-1&-1\\1&-1&1&-1\\1&-1&-1&1\end{pmatrix}
+\]
+生成保持根集的正交群 $W$；$H$ 正是根 $(1,-1,-1,-1)/2$ 的反射。
+$W$ 在 24 个短根上传递，$e_0$ 稳定子必置换其余六个正交短根，恰为阶 48 的
+$B_3$。所以 $|W|=24\cdot48=1152$。
+
+任意三个独立 Hurwitz 顶点张成的面都在这些超平面内。证明是先把第一个顶点送到
+$e_0$，另两点为轴或半符号点：轴/轴给轴法向；轴/半符号点给双坐标法向；
+两个半符号点在剩余三维的立方体投影，独立叉积只有两个等绝对值的非零分量。
+变回后仍是 $F_4$ 根法向。
+
+基本室可取
+\[
+x_1>x_2>x_3>0,\qquad x_0>x_1+x_2+x_3.
+\]
+它的内部没有任何上述超平面。四个 inward 法向为
+$e_1-e_2,e_2-e_3,e_3,(e_0-e_1-e_2-e_3)/2$。
+带根长颜色的角图为 $3$--$4$--$3$、颜色依次为长/长/短/短，
+保持颜色与邻接的自同构只有恒等，故室稳定子平凡。
+反射跨越相邻墙使 $W$ 在所有室上传递，所以有 1152 个全等室，
+每室体积为 $\pi^2/576$。四面体的四个面都在墙上，因而它是完整小室的并，
+边界体积为零。这不是采样估计。
+
+\subsection{纯整数的群元体积公式}
+
+令 $P$ 为 $(8,3,2,1),(7,4,3,2),(6,5,4,1)$ 的全部带符号排列。
+三个不交集合各有 384 个点；第一个点在基本室内，而且
+\[
+H(8,3,2,1)=(7,4,3,2),\qquad H(8,3,2,-1)=(6,5,4,1).
+\]
+因此这 1152 点属于同一 $W$ 轨道，恰好每个室一个。对顶点矩阵 $V$，
+\begin{align}
+m(V)&=\#\{p\in P:(V^{-1}p)_j>0\text{ 对所有 }j\},\\
+V_{\rm or}&=\operatorname{sgn}(\det V)\frac{m(V)\pi^2}{576},\\
+\omega_k&=\exp\left[-\frac{ik\pi}{576}\operatorname{sgn}(\det V)m(V)\right].
+\end{align}
+全部正负号由整数余子式判定。这是原四面体的实际体积，不包含 $\beta$ 或代表转换。
+各类型先尝试 $\Li_2$ 代入，未能消去的项由此几何恒等式识别。
+
+\section{2O 与 2I：完整解析分类与有理体积的障碍}
+\label{sec:oi-exact}
+
+$2O=2T\cup\{(\pm e_i\pm e_j)/\sqrt2\}$。
+$2I=2T$ 加上 $(0,\pm1/2,\pm\varphi/2,\pm\varphi^{-1}/2)$ 的所有偶坐标置换，
+其中 $\varphi=(1+\sqrt5)/2$。
+坐标分别属于 $\mathbb Q(\sqrt2)$、$\mathbb Q(\sqrt5)$，程序使用整数对，
+不靠浮点阈值判定秩或比较 Gram 键。
+
+左乘等距变换把一个顶点移到 $e_0$，枚举剩余三个不同点，再在 24 个顶点排列下
+规范化 Gram。每个无序集合有四种被选中的基点，故全部集合重数为锚定重数乘
+$|G|/4$，有序三输入重数为锚定重数乘 6。
+\begin{center}\small
+\begin{tabular}{@{}crrrrr@{}}\toprule
+群&类型&锚定非退化&锚定退化&全部非退化集合&非退化三输入\\\midrule
+$2T$&12&840&931&5040&5040\\
+$2O$&84&10080&6135&120960&60480\\
+$2I$&563&212520&61299&6375600&1275120\\\bottomrule
+\end{tabular}\end{center}
+
+完整电子参数表为 \path{results/SU2_symbolic_ADE_exact.json}：每行含代表坐标索引、
+全部六个 Gram 元、重数、公式次序的六个余弦及 $\det G$。
+共同的 \texttt{formula\_template} 是显式顺序赋值程序，每行
+\texttt{formula\_inputs} 给齐代入参数，直至式 \eqref{eq:exact-master-phase}，
+不依赖另一个体积数据库或未展示的相位公式。
+锚定代表与规范 Gram 可能有不同顶点次序，但 $\det G$ 和无向体积不变；
+有序输入自己的 $\operatorname{sgn}D$ 必须另行恢复。
+三群共 659 类型逐类记录符号化简尝试；时间预算耗尽仅表示该次 CAS 尝试未结束，
+绝不是不可化简证明。
+
+\subsection{2O 中实际无理体积的严格反例}
+
+取累计顶点
+\[
+e_0,\quad e_1,\quad (e_1+e_2)/\sqrt2,\quad(e_2+e_3)/\sqrt2,
+\qquad D=1/2.
+\]
+对应三个输入是 $e_1,(e_0+e_3)/\sqrt2,(e_0+e_1-e_2+e_3)/2$，均属于 $2O$。
+后三点所在 $S^2$ 三角形的内角为
+$\pi/4,\pi-\arctan\sqrt2,\pi/2-\arctan\sqrt2$。
+Girard 公式给面积 $\Omega=3\pi/4-2\arctan\sqrt2$。
+设 $\theta=\Omega/2$，则
+$\tan\theta=1/(3+\sqrt2)$、$0<\theta<\pi/8$。
+与正交点 $e_0$ 作球面 join，积分 $\int_0^{\pi/2}\sin^2u\,du=\pi/4$，所以
+\begin{equation}
+\boxed{V_{2O}=\frac\pi2\arctan\frac1{3+\sqrt2}},\qquad
+\omega_k=\exp\left[-\frac{ik}{2}\arctan\frac1{3+\sqrt2}\right].
+\end{equation}
+令 $t=\tan\theta$，有
+$e^{2i\theta}=(1+it)/(1-it)\in\mathbb Q(\sqrt2,i)=\mathbb Q(\zeta_8)$。
+这个域的单位根只有 $\mu_8$，但 $0<2\theta<\pi/4$ 排除所有这些根。
+所以 $\theta/\pi$、$V_{2O}/\pi^2$ 均无理，非零整数 level 的相位也不是单位根。
+
+\subsection{2I 中实际无理体积的严格反例}
+
+取累计顶点
+\[
+ e_0,e_1,e_2,(0,1/2,\varphi/2,\varphi^{-1}/2),\qquad D=\varphi^{-1}/2>0.
+\]
+对应输入 $e_1,e_3,(\varphi/2,\varphi^{-1}/2,0,-1/2)$ 均属于 $2I$。
+空间三角形的 Girard 公式及半角恒等式给出
+\[
+\tan\frac\Omega2=\frac{\det(A,B,C)}{1+A\cdot B+B\cdot C+C\cdot A}
+ =\frac1{4\varphi+1}.
+\]
+同一个 join 积分产生
+\begin{equation}
+\boxed{V_{2I}=\frac\pi2\arctan\frac1{4\varphi+1}},\qquad
+\omega_k=\exp\left[-\frac{ik}{2}\arctan\frac1{4\varphi+1}\right].
+\end{equation}
+此时 $e^{2i\theta}\in\mathbb Q(\sqrt5,i)$，其单位根只有 $\mu_4$。
+具体地，圆分次数必须整除 4；$\mu_3,\mu_6$ 要求 $\sqrt{-3}$，
+$\mu_8$ 要求 $\sqrt2$，$\mu_{12}$ 要求 $\sqrt3$，都不在此域内。
+$\mu_5,\mu_{10}$ 给循环四次域，不能等于双二次域。
+而 $0<2\theta<\pi/2$ 排除 $\mu_4$，所以同样得到无理体积及非单位根相位。
+$2O$ 的 $\mu_8$ 判断也可由同一低次数圆分域列表核验。
+
+这两个反例说明：\emph{通过坐标符号把 $2O,2I$ 所有类型都化成有理体积并不可行}。
+它不妨碍完整 $\Li_2$/对数解析式，也不妨碍个别类型具有更简短的几何表达；
+不得把符号约简尚未完成与已证明的无理性混为一谈。
+这不与有限群反常类的有限阶矛盾：类的 $N$ 次幂平凡只表示
+$\omega^N$ 是某个余边界，不意味着原代表每个逐点值都满足 $\omega^N=1$。
+本轮并未利用这种转换更换代表。
+
+\section{精确退化覆盖、复现与本轮边界}
+
+全局接口沿用原 E/F/T 代表：相邻重复规范化，精确判定零是否在顶点凸包，
+不安全边经固定 $J=e_1$ 分段，不安全面及三链按原规则锥接边界。
+锥点取首个不落在相关张成空间内的 $a(1,t,t^2,t^3)$，$0\le t\le3M$。
+每个真子空间至多排除三个整数候选，所以过程有限，每面至多 6 项，每三链至多 24 项。
+安全的降秩项积分为零但保留链记录；满秩项按正范数单位化后代入本节完整解析式。
+最后取各项系数乘定向体积的和，再求负号相位。
+链边界相容和闭三链整球体积证明五边形，不能仅由有限测试声称所有输入成立。
+
+锥点通常不属于 E 群，不能强行归入十二、84 或 563 类型表。
+$2T$ 非退化群顶点的有理体积表，不等于证明了全部退化填充单形也有有理体积。
+\texttt{expand=False} 仅返回链审计；有未展开满秩项时相位字段为
+\texttt{None}。默认展开给精确特殊函数表达式，\texttt{reduce=True} 才请求额外 CAS 化简。
+
+\begin{itemize}
+\item \path{src/su2_symbolic.py}：群元/矩阵入口、完整主式、保守符号约简及双圆弧证书。
+\item \path{src/su2_2t_geometry.py}：十二类及严格 $F_4$ 几何室公式。
+\item \path{src/su2_exact_ade.py}：三群精确分类、无理体积证书及原退化链解析式。
+\item \path{scripts/check_symbolic_2t.py}：逐类型符号尝试、公共公式模板及全参数导出。
+\item \path{docs/review-0923/SU2_LI2_ADE_EXACT.md}：完整文字推导、命令与审核记录。
+\end{itemize}
+复现新数学模块只需 SymPy；不能把后文历史浮点误差当成本节的证明。
+完整回归为 70 项通过，其中 31 项为新增纯精确测试。
+659 个类型均有批量记录；每类四秒的符号尝试结果如下：
+\begin{center}
+\begin{tabular}{@{}crrrr@{}}\toprule
+群&消去 $\Li_2$&明确剩余项&预算内未完成&总数\\\midrule
+$2T$&3&9&0&12\\
+$2O$&17&42&25&84\\
+$2I$&33&40&490&563\\\bottomrule
+\end{tabular}\end{center}
+消去 $\Li_2$ 不保证全部 $\log/\Arg$ 也被消去，更不等同于有理体积；
+预算内未完成不等同于不可化简。完整解析模板与参数覆盖不受预算影响。
+本报告可供专家提出意见，不声称已经通过外部同行评议。
+\input{su2_exact_catalogue.tex}

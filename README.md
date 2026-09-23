@@ -4,9 +4,89 @@
 
 **阅读入口：[完整综合 PDF](paper/su2_complete_report.pdf) · [主研究笔记 PDF](paper/su2_cocycle.pdf) · [ADE 补充报告 PDF](paper/su2_ade_review.pdf) · [ADE LaTeX 源码](paper/su2_ade_review.tex)**
 
-**本轮 E 型推进：[精确代数公式、代表转换与验收记录](docs/review-0922/SU2_E_ALGEBRAIC_RESEARCH.md)。** 保留原几何公式，新增只用群元、行列式和精确正负号的轨道计数代表，并给出显式二余链 β，证明新旧代表共边界等价。综合 PDF 使用单一标题、目录、连续编号和统一的相位约定；保留完整 SU(2)/CS 推导。它是专家审阅稿，不表示已经获得外部同行评审。
+## 当前路线（2026-09-23）
 
-[前一轮人类 review 答复](docs/review-0922/SU2_HUMAN_REVIEW_RESPONSE.md) 保留从三个群元的六个迹到边长体积的完整公式。E 型现已给出有界精确代数公式，但未化为类似 D 型八行表的专属最短表；任意 n 的 D 表完整证明仍是单列遗留项。
+[本轮完整推导](docs/review-0923/SU2_LI2_ADE_EXACT.md)：完整 Li₂ 解析式 → 纯符号恒等式 → 同一个四面体的直接几何。
+不使用 transfer、不进行数值拟合或数值归约、不以另一上同调代表替代原几何相位。
+旧计数代表和数值接口仅保留作历史材料及兼容性回归，不参与新结果证明。
+
+| 范围 | 本轮结果 |
+|---|---|
+| 一般 SU(2) | 三个群元的六个迹、累计取向迹、完整主支 Li₂/log 程序 |
+| 纯符号化简 | 正交例、任意双圆弧族的完整证明；带适用域的共轭/Euler/倍角约简 |
+| 2T | 12 种非退化无向类型，F4 几何证明及实际有理体积短表 |
+| 2O | 全部 84 种非退化类型的精确参数与解析相位，无理体积反例 |
+| 2I | 全部 563 种非退化类型的精确参数与解析相位，无理体积反例 |
+| E 型退化输入 | 保持原 E/F/T，至多 24 项的完整精确解析表达 |
+
+“完整解析表达”不等于“全部特殊函数已消去”：2O/2I 的全部进一步化简尚未完成。
+两群都存在严格证明的非有理体积，不能承诺像 2T 一样的全有理表。
+退化链锥点也不一定属于群，不能强行查群顶点类型表。
+A、D 沿用现有内容；本轮聚焦 E 型，不声称补齐旧任意 n 的 D 表逐分支证明。
+新版综合 PDF 保留原完整 SU(2)/CS 推导、统一目录及编号；它是专家审阅稿，并非已通过外部同行评议。
+
+### 纯符号使用
+
+Python 3.11+、SymPy 1.14.0：`python -m pip install -e '.[exact]'`。
+
+```python
+from sympy import pi
+from su2_symbolic import group_formula
+from su2_2t_geometry import phase_2t
+from su2_exact_ade import global_formula, classify_group
+
+triple = ((0, 1, 0, 0), (0, 0, 0, 1), (0, 1, 0, 0))
+formula = group_formula(*triple)
+assert formula['raw_volume'] == pi**2 / 8
+geometry = phase_2t(*triple)  # 同一四面体，72 个 F4 室
+types = classify_group('2I')  # 563 行，返回独立副本
+center = (-1, 0, 0, 0)
+full = global_formula('2I', center, center, center)  # 完整精确表达，不强制 CAS 化简
+```
+
+新边序为 `(01,02,03,23,13,12)`，主式返回体积模 `2*pi**2`。
+入口拒绝 Float、非单位群元、非整数 level 和非法群成员。
+单四面体入口拒绝退化；全局入口处理退化。
+只需完整通用式时可用 `group_formula(..., reduce=False)`；默认符号约简可能较耗时。
+`expand=False` 仅作链审计，有未展开的满秩项时明确返回 `phase=None`。
+
+### 完整参数表和精确复现
+
+[精确 JSON](results/SU2_symbolic_ADE_exact.json) 保存全部 659 类型的代表、Gram 键、重数、
+六个余弦、行列式和完整公共 `formula_template`；每行 `formula_inputs` 可直接代入。
+PDF 内也印有全部 84/563 个 Gram 参数键及解码规则，专家无需运行程序才能读到完整表。
+另含 2T 体积表、两组无理性证书和逐类型符号尝试。
+CAS 超时仅表示该次尝试未完成；缓存与耗时会影响尝试状态，不影响精确参数表。
+
+```bash
+# 新路线测试：纯精确，不作浮点拟合
+python -m unittest tests.test_su2_symbolic tests.test_2t_geometry tests.test_exact_ade tests.test_exact_certificates tests.test_symbolic_cli -v
+
+# 完整参数/公式表，无需执行耗时的逐类尝试
+python -m scripts.check_symbolic_2t --symbolic-trials none --output build/exact_catalogue.json
+
+# 每个类型都尝试纯符号化简，并保存结果或明确的超时状态
+python -m scripts.check_symbolic_2t --symbolic-trials all --symbolic-budget-seconds 4 --jobs 4 --output results/SU2_symbolic_ADE_exact.json
+
+# 任意类型的完整展开式，不作浮点求值
+python -m scripts.check_symbolic_2t --group 2I --type-index 0 --output build/2I_type0.json
+python scripts/build_complete_report.py --engine tectonic
+```
+
+也可用 `make symboliccheck`、`make symbolicreport`、`make completepdf`。
+完整兼容性回归需安装 `.[validation]`；其中旧 mpmath 测试不作为本轮数学证据。
+旧 `make verify` 会执行历史数值检查，不是新纯精确路线的必要步骤。
+
+新代码：[Li₂ 主程序](src/su2_symbolic.py)、[2T 几何](src/su2_2t_geometry.py)、
+[三群分类及全局相位](src/su2_exact_ade.py)、[本轮 PDF 章节](paper/su2_symbolic_ade.tex)。
+完整参数表由 `python -m scripts.render_exact_catalogue` 纯整数枚举生成。
+
+## 历史材料（以下截至 09-22）
+
+以下说明保留旧接口及当时的完成度，当前范围以上面的 09-23 说明为准。
+[旧计数代表研究](docs/review-0922/SU2_E_ALGEBRAIC_RESEARCH.md) 给出同类但逐点不同的代表及比较余链，
+**不作为本轮用户要求的解法**。
+[历史人类 review 答复](docs/review-0922/SU2_HUMAN_REVIEW_RESPONSE.md) 保留当时的边长公式审计。
 
 采用反厄米联络、基本表示普通迹，固定
 

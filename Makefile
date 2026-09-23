@@ -1,7 +1,7 @@
 PYTHON ?= python
 TECTONIC ?= tectonic
 
-.PHONY: install test baseline validate edge adecheck eexact verify pdf adepdf completepdf all clean
+.PHONY: install test baseline validate edge adecheck eexact symboliccheck symbolicreport verify pdf adepdf completepdf all clean
 
 install:
 	$(PYTHON) -m pip install -e '.[validation]'
@@ -23,6 +23,14 @@ adecheck:
 
 eexact:
 	$(PYTHON) -m scripts.check_e_algebraic
+
+# New exact route: no floating computation or change of representative.
+symboliccheck:
+	$(PYTHON) -m unittest tests.test_su2_symbolic tests.test_2t_geometry tests.test_exact_ade tests.test_exact_certificates tests.test_symbolic_cli -v
+
+# CAS timeouts are recorded as unfinished attempts, not impossibility claims.
+symbolicreport:
+	$(PYTHON) -m scripts.check_symbolic_2t --symbolic-trials all --symbolic-budget-seconds 4 --jobs 4 --output results/SU2_symbolic_ADE_exact.json
 
 # Keep these sequential: the edge crosscheck consumes the main validation report.
 verify:

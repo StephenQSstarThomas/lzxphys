@@ -15,7 +15,7 @@
 \newcommand{\Li}{\operatorname{Li}}
 \title{SU(2) 反常与 ADE 有限子群：从有向体积到具体闭余循环}
 \author{}
-\date{2026 年 9 月 22 日}
+\date{2026 年 9 月 23 日}
 
 \begin{document}
 \maketitle
@@ -26,8 +26,9 @@
 对二元二面体群给出精确群律、八分支有向体积表和有理数闭性验证；
 从三个群元素的六个迹直接给出边长体积公式；
 对 $2T,2O,2I$ 写出精确元素集合、有限分支相位公式和三组独立手算实例。
-另给有界的精确代数计数代表、与几何代表的显式余边界及完整类阶证明。
-数值结果区分数学证明、精确代数检查和高精度浮点检查。
+09-23 新增完整主支纯符号程序、$2T$ 十二类实际体积证明、
+$2O$ 的 84 类和 $2I$ 的 563 类完整解析参数，以及两群不能全部有理化的严格反例。
+旧计数代表与数值记录仅作为历史材料保留，不参与新路线。
 \end{abstract}
 
 \tableofcontents
@@ -67,6 +68,7 @@ I_4=-\frac{k}{8\pi^2}\Tr(F\wedge F).
 p_0=e,\quad p_1=g_1,\quad p_2=g_1g_2,\quad p_3=g_1g_2g_3.
 \]
 \input{su2_group_edge_formula.tex}
+\input{su2_symbolic_ade.tex}
 
 \section{closed 与 non-exact}
 
@@ -170,11 +172,12 @@ $(s_1s_2s_3)$ & $v_n$\\ \midrule
 \input{su2_e_explicit.tex}
 \input{su2_e_algebraic.tex}
 
-\section{复现结果与完成状态}\label{sec:ade-validation}
+\section{09-22 历史复现记录}\label{sec:ade-validation}
 
-本轮新增的精确计数接口与验证记录为：
+以下记录属于 09-22，不作为 09-23 解析/几何新路线的证明。
+当时新增的精确计数接口与验证记录为：
 \begin{itemize}
-\item 当前 39 项单元测试通过，覆盖原几何接口及新增计数、链边界、
+\item 当时 39 项单元测试通过，覆盖原几何接口及新增计数、链边界、
 正依赖、射线缩放、字段约化和输入验证；
 \item $2T,2O,2I$ 各选取 16 个确定性四元组，全部精确验证
 $\delta A\equiv0\pmod N$；保存五个整数计数、全部输入与链分支；
@@ -220,7 +223,7 @@ $2I$ & 3 & $8.464\times10^{-66}$\\
 以及三群的精确乘法闭包；D 表有理数检查保留历史报告。
 这些检查不算作 E 型四元组穷举。
 
-\section{源码入口、修复与剩余边界}
+\section{历史源码入口及当时的剩余边界}
 \begin{sloppypar}
 \begin{itemize}
 \item \path{src/su2_omega.py}：\texttt{omega\_quaternions\_edge} 由三个群元经边长求 A 约定相位；
@@ -232,9 +235,9 @@ $2I$ & 3 & $8.464\times10^{-66}$\\
 \texttt{gauge\_details} 返回转换平均的全部项；
 \item \path{scripts/check_e_algebraic.py}：持久化精确整数五边形及完整余边界比较；
 \item \path{scripts/check_ade_phase.py}：逐项五边形、手算例及退化例报告；
-\item \path{docs/review-0922/SU2_HUMAN_REVIEW_RESPONSE.md}：本轮完整审计及可复制公式。
+\item \path{docs/review-0922/SU2_HUMAN_REVIEW_RESPONSE.md}：09-22 审计及可复制公式。
 \end{itemize}
-本轮还修复 $a^rb$ 坐标的末分量符号（应为 $-\sin(\pi r/n)$）、
+09-22 还修复 $a^rb$ 坐标的末分量符号（应为 $-\sin(\pi r/n)$）、
 E 入口静默截断非整数 $k$、A 包装函数在默认精度取倒数造成的精度丢失，
 并声明 SymPy 验证依赖，修正 $\partial T$ 末项漏参数。
 复现命令（先安装 \texttt{.[validation]}）：
@@ -246,10 +249,11 @@ python -m scripts.check_e_algebraic
 make adepdf
 make completepdf
 \end{verbatim}
-当前 checkout 无 09-21 命名资料或原源 A 附件；本轮沿用已有 A 负号约定。
-已给出 E 型完整有限几何公式及精确有界代数计数公式，
-并证明显式余边界转换和完整类阶；E 型专属短表尚未导出。
-任意 $n$ 的 D 表逐分支证明也仍需补齐。这些边界不以数值通过代替。
+该阶段 checkout 无 09-21 命名资料或原源 A 附件，沿用已有 A 负号约定。
+当时已给 E 型有限几何公式及代数计数公式、余边界转换和类阶证明，
+但未导出专属短表；任意 $n$ 的 D 表逐分支证明也未补齐。
+09-23 的新范围按用户要求聚焦 E 型；当前十二类、84 类、563 类及真实化简边界
+以第 \ref{sec:symbolic-ade}--\ref{sec:oi-exact} 节为准，不以旧记录替代。
 \end{sloppypar}
 
 \ifdefined\SUComplete\expandafter\endinput\fi

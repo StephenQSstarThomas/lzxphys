@@ -1,0 +1,183 @@
+\section{E 型的精确代数代表与显式余边界}\label{sec:E-algebraic}
+
+本节保留第 \ref{sec:E-explicit} 节的几何代表，另给同类的计数代表。
+后者只使用原字段中的四阶行列式、精确符号和有界整数求和，
+不含体积积分、反三角函数或二重对数。它并非原几何相位的逐点化简，
+也不是已经导出的 E 型专属短分支表。
+
+\subsection{由三个群元素到整数指数的完整公式}
+取 $\Gamma=\mathcal Q_6,\mathcal Q_7,\mathcal Q_8$，分别令 $N=24,48,120$。
+使用前节全部给定的群元素、乘法、相邻重复规则及 E/F/T 有限链，展开
+\[
+T(e_0,g_1,g_1g_2,g_1g_2g_3)
+=\sum_{\nu=1}^{M\le24}c_\nu[v_{\nu0},v_{\nu1},v_{\nu2},v_{\nu3}].
+\]
+记 $D_\nu=\det(v_{\nu0},v_{\nu1},v_{\nu2},v_{\nu3})$。
+对 $D_\nu\ne0$、$h\in\Gamma$ 和 $0\le j,s\le3$，定义 Cramer 分子
+\[
+d_{\nu hjs}=\det(v_{\nu0},\ldots,v_{\nu,j-1},he_s,
+v_{\nu,j+1},\ldots,v_{\nu3}).
+\]
+令 $\operatorname{lsign}(a_0,a_1,a_2,a_3)$ 为首个非零项的符号，并设
+\begin{equation}
+I_{\nu h}=\prod_{j=0}^3\mathbf1\!\left\{
+\operatorname{lsign}(d_{\nu hj0},d_{\nu hj1},d_{\nu hj2},d_{\nu hj3})
+=\operatorname{sgn}D_\nu\right\}.
+\label{eq:count-indicator}
+\end{equation}
+各系数组不会全为零，因为非零 Cramer 线性泛函不能湮灭基
+$he_0,\ldots,he_3$。完整相位为
+\begin{equation}
+A_\Gamma(g_1,g_2,g_3)
+=\sum_{\nu:D_\nu\ne0}c_\nu\operatorname{sgn}(D_\nu)
+\sum_{h\in\Gamma}I_{\nu h}\in\mathbb Z.\label{eq:count-integer}
+\end{equation}
+\begin{equation}
+\boxed{\widehat\omega_{\Gamma,k}(g_1,g_2,g_3)
+=\exp\left(-\frac{2\pi i k}{N}A_\Gamma(g_1,g_2,g_3)\right),
+\quad k\in\mathbb Z.}\label{eq:count-phase}
+\end{equation}
+实现可直接返回 $-kA_\Gamma\bmod N$，复数近似不是定义的一部分。
+令 $V_\nu$ 以四个顶点为列，$L_h$ 为左乘 $h$ 的矩阵；等价判据为
+$V_\nu^{-1}L_h$ 的每一行首个非零项均为正。
+每次至多 $24N$ 个单形与轨道点的判定，即 $576,1152,2880$ 个判定；
+此数不是基本算术运算次数。
+
+全部算术留在 $\mathbb Q$、$\mathbb Q(\sqrt2)$、$\mathbb Q(\sqrt5)$ 中。
+对 $a+b\sqrt d$，同号时直接取符号，异号时比较 $a^2$ 与 $db^2$；
+$d=2,5$ 非平方，非零有理 $a,b$ 不会造成相等歧义。
+正射线缩放不改变结果，负比例不能视为相同顶点。
+降秩项在链级保留，仅在三维计数与积分中贡献零；
+也不能在参数化奇异链中把倒序单形直接当成负单形约去。
+
+\subsection{全部输入的闭性、归一化与退化分支}
+令 $r(\varepsilon)=(1,\varepsilon,\varepsilon^2,\varepsilon^3)$。
+Cramer 法则给出
+\[
+\bigl(V_\nu^{-1}L_h r(\varepsilon)\bigr)_j
+=D_\nu^{-1}\sum_{s=0}^3d_{\nu hjs}\varepsilon^s.
+\]
+充分小的正 $\varepsilon$ 下，其符号就是式 \eqref{eq:count-indicator}。
+群和全部输入有限，涉及的边界、降秩像及其群平移只占有限个真线性子空间。
+任一非零线性泛函作用在 $r(\varepsilon)$ 上都是次数至多三的非零多项式。
+故存在一个共同的充分小正实数，使全部符号规则同时成立且避开这些低维像。
+这提供普通实球面中的解释；实际公式无需选择浮点 $\varepsilon$。
+
+满秩安全径向单形在单位点 $y$ 上的局部重数为
+$\operatorname{sgn}D_\nu$ 当且仅当 $V_\nu^{-1}y$ 的四坐标全正。
+因此 $A_\Gamma$ 是 $T$ 在完整轨道
+$\{hr(\varepsilon)/\|r(\varepsilon)\|:h\in\Gamma\}$ 上的有向重数之和。
+左乘保向并置换轨道，故此计数的齐次版本等变。
+对闭三链 $Z$，在避开边界和低维像的点上，局部次数定理给出
+\begin{equation}
+\chi_y(Z)=\deg Z=\frac1{2\pi^2}\int_ZdV\in\mathbb Z.
+\label{eq:count-degree}
+\end{equation}
+规范化奇异链的分裂提升只添加退化项，低维像对该重数与三维积分都为零，
+所以同一公式适用于这里的规范化链。
+
+由 $\partial T=\delta F$，有 $\partial(\delta T)=0$，从而
+\begin{equation}
+\boxed{\delta A_\Gamma=N\deg(\delta T)\in N\mathbb Z.}
+\label{eq:count-cocycle}
+\end{equation}
+非齐次写成
+\[
+A(b,c,d)-A(ab,c,d)+A(a,bc,d)-A(a,b,cd)+A(a,b,c)\equiv0\pmod N.
+\]
+式 \eqref{eq:count-phase} 因而满足完整五边形。
+任一输入为单位元时累计顶点相邻重复，$T=0$、$A=0$、相位为 1。
+反足及无反足但正依赖的输入由同一 E/F/T 分支覆盖。
+
+\subsection{与几何代表逐点成立的转换公式}
+定义实上链
+\[
+t(g,h,l)=\frac1{2\pi^2}\int_{T(e_0,g,gh,ghl)}dV,
+\qquad \tau(g,h,l)=\frac{A_\Gamma(g,h,l)}N,
+\qquad f=\tau-t.
+\]
+式 \eqref{eq:count-degree} 给出 $\delta\tau=\delta t=\deg(\delta T)$，
+故 $\delta f=0$ 是实数等式。明确取有限和
+\begin{equation}
+B(g,h)=\frac1N\sum_{x\in\Gamma}f(x,g,h),
+\qquad \beta_k(g,h)=\exp[-2\pi i kB(g,h)].
+\label{eq:count-beta}
+\end{equation}
+对 $\delta f(x,g,h,l)=0$ 求平均，使用 $x\mapsto xg$ 置换群，得到
+\[
+f(g,h,l)=B(h,l)-B(gh,l)+B(g,hl)-B(g,h)=\delta B(g,h,l).
+\]
+因此不是仅断言存在某个二余链，而是逐点有
+\begin{equation}
+\boxed{\widehat\omega_{\Gamma,k}=\omega^{\rm geom}_{A,k}\,\delta\beta_k,
+\qquad \delta\beta_k(g,h,l)=
+\frac{\beta_k(h,l)\beta_k(g,hl)}{\beta_k(gh,l)\beta_k(g,h)}.}
+\label{eq:count-conversion}
+\end{equation}
+$B$、$\beta$ 归一化。计算新相位本身不需先计算 $B$；
+只有比较两代表时，式 \eqref{eq:count-beta} 才调用已给出的几何体积公式。
+
+\subsection{完整类阶的 Gysin 证明}
+$\Gamma$ 在 $S^3$ 上左乘自由且保向。相应定向四维实表示的球面丛满足
+\[
+S^3\longrightarrow E\Gamma\times_\Gamma S^3\longrightarrow B\Gamma,
+\qquad E\Gamma\times_\Gamma S^3\simeq S^3/\Gamma.
+\]
+商为定向闭三流形，Gysin 序列中的相关部分是
+\[
+H^3(S^3/\Gamma;\mathbb Z)\cong\mathbb Z
+\xrightarrow{\ \times N\ }H^0(B\Gamma;\mathbb Z)\cong\mathbb Z
+\xrightarrow{\ \smile e\ }H^4(B\Gamma;\mathbb Z)\longrightarrow0.
+\]
+第一箭头是沿纤维积分：在上述同伦等价下纤维包含对应覆盖
+$S^3\to S^3/\Gamma$，其次数为 $N$；最右零来自商空间的四次上同调消失。
+所以 $H^4(B\Gamma;\mathbb Z)=\mathbb Z/N$，由 Euler 类 $e$ 生成。
+
+利用 $S^3$ 的二连通性可在 bar 模型三骨架上构造等变参考截面；
+其四胞腔延拓障碍是边界映到球面的次数，即 Euler 类。
+E/F/T 的积分链与该参考截面的链在零至二维依次比较，
+差由更高一维链填充；三维差的次数是一个整数三上链。
+因此两种四维障碍只差这个三上链的余边界，
+$[\deg(\delta T)]=e$（随所选定向固定符号）。
+这一比较不把形式链假定为一个单独的胞腔映射。
+由 $0\to\mathbb Z\to\mathbb R\to U(1)\to0$ 的连接同态，
+$[\exp(-2\pi ikt)]$ 映到 $-k[\deg(\delta T)]$。
+有限群的正次实上同调为零，此连接同态为同构。结合转换公式，得到
+\begin{equation}
+\boxed{\operatorname{ord}[\widehat\omega_{\Gamma,k}]
+=\operatorname{ord}[\omega^{\rm geom}_{A,k}]
+=\frac{N}{\gcd(k,N)}.}\label{eq:count-order}
+\end{equation}
+这也与 Epa--Ganter 的结果一致\cite{epa}。
+$C_4$ 配对只能校准该限制；三群循环子群阶的最小公倍数为 $12,24,60$，
+故循环限制本身不能证明完整的 $24,48,120$ 阶。
+
+\subsection{计数为 1、2、4 的具体输入及代表差异}
+仍取 $g_1=e_1,g_2=e_3$ 和前节的三个 $g_3$。
+每条链均为正取向直接四面体，全部贡献者如下：
+\begin{longtable}{@{}c p{0.60\linewidth} c@{}}
+\toprule 群 & 满足 $I_{\nu h}=1$ 的全部 $h$ & $A$\\\midrule
+$2T$ & $e_0$ & 1\\
+$2O$ & $e_0,\ (1,0,1,0)/\sqrt2$ & 2\\
+$2I$ & $e_0,\ (1,\varphi^{-1},\varphi,0)/2,$\newline
+$(\varphi,1,\varphi^{-1},0)/2,\ (\varphi^{-1},\varphi,1,0)/2$ & 4\\
+\bottomrule
+\end{longtable}
+相应计数相位为 $e^{-i\pi k/12},e^{-i\pi k/12},e^{-i\pi k/15}$，
+而原几何相位为 $e^{-i\pi k/32},e^{-i\pi k/16},e^{-ik\theta/2}$，
+其中 $\theta=\arctan(1/(4\varphi+1))$。
+二者不同是式 \eqref{eq:count-conversion} 的代表变换，不是数值误差。
+
+事实上最后一个原几何相位在非零整数 $k$ 时甚至不是单位根。
+令 $u=(4\varphi+1)^{-1}$，则
+\[
+e^{2i\theta}=\frac{1+iu}{1-iu}\in K=\mathbb Q(\sqrt5,i),
+\qquad 0<\theta<\pi/4.
+\]
+$K$ 中单位根只有 $\{\pm1,\pm i\}$：若含原始 $m$ 次根，则
+$\phi(m)\mid4$，候选仅为 $1,2,3,4,5,6,8,10,12$。
+三个二次子域 $\mathbb Q(\sqrt5),\mathbb Q(i),\mathbb Q(\sqrt{-5})$
+排除需要 $\sqrt{-3},\sqrt2,\sqrt3$ 的候选；
+$\mathbb Q(\zeta_5)$ 为循环四次扩张，而 $K$ 的 Galois 群为 $C_2\times C_2$，
+故也排除 $5,10$。上述开区间排除剩余四根，故 $\theta/\pi$ 无理。
+因此不能把原几何 E8 接口的点值改写为 $\mu_{120}$ 值表。

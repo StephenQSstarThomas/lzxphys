@@ -1,7 +1,7 @@
 PYTHON ?= python
 TECTONIC ?= tectonic
 
-.PHONY: install test baseline validate edge adecheck verify pdf adepdf completepdf all clean
+.PHONY: install test baseline validate edge adecheck eexact verify pdf adepdf completepdf all clean
 
 install:
 	$(PYTHON) -m pip install -e '.[validation]'
@@ -21,6 +21,9 @@ edge:
 adecheck:
 	$(PYTHON) -m scripts.check_ade_phase
 
+eexact:
+	$(PYTHON) -m scripts.check_e_algebraic
+
 # Keep these sequential: the edge crosscheck consumes the main validation report.
 verify:
 	$(MAKE) test
@@ -28,6 +31,7 @@ verify:
 	$(MAKE) validate
 	$(MAKE) edge
 	$(MAKE) adecheck
+	$(MAKE) eexact
 
 pdf:
 	$(PYTHON) scripts/build_paper.py --engine $(TECTONIC)
@@ -37,8 +41,8 @@ adepdf:
 	$(TECTONIC) --keep-logs --outdir build/ade_review paper/su2_ade_review.tex
 	cp build/ade_review/su2_ade_review.pdf paper/su2_ade_review.pdf
 
-completepdf: pdf adepdf
-	$(PYTHON) scripts/build_complete_report.py
+completepdf:
+	$(PYTHON) scripts/build_complete_report.py --engine $(TECTONIC)
 
 all:
 	$(MAKE) verify

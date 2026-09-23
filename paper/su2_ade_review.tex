@@ -1,3 +1,4 @@
+\ifdefined\SUComplete\else
 \documentclass[UTF8,11pt,fontset=none]{ctexart}
 \usepackage[a4paper,margin=25mm]{geometry}
 \setCJKmainfont{Droid Sans Fallback}[AutoFakeBold=2]
@@ -25,11 +26,13 @@
 对二元二面体群给出精确群律、八分支有向体积表和有理数闭性验证；
 从三个群元素的六个迹直接给出边长体积公式；
 对 $2T,2O,2I$ 写出精确元素集合、有限分支相位公式和三组独立手算实例。
+另给有界的精确代数计数代表、与几何代表的显式余边界及完整类阶证明。
 数值结果区分数学证明、精确代数检查和高精度浮点检查。
 \end{abstract}
 
 \tableofcontents
 \clearpage
+\fi
 
 \section{资料审计与统一约定}
 
@@ -165,12 +168,33 @@ $(s_1s_2s_3)$ & $v_n$\\ \midrule
 再应用上节的边、面比较；不能只从两者都闭就推出同类。
 
 \input{su2_e_explicit.tex}
+\input{su2_e_algebraic.tex}
 
-\section{复现结果与完成状态}
+\section{复现结果与完成状态}\label{sec:ade-validation}
 
-本轮人类 review 修正后的实际检查：
+本轮新增的精确计数接口与验证记录为：
 \begin{itemize}
-\item 26 项单元测试通过，包括六边长顺序、镜像取向、中心退化及三组手算例；
+\item 当前 39 项单元测试通过，覆盖原几何接口及新增计数、链边界、
+正依赖、射线缩放、字段约化和输入验证；
+\item $2T,2O,2I$ 各选取 16 个确定性四元组，全部精确验证
+$\delta A\equiv0\pmod N$；保存五个整数计数、全部输入与链分支；
+\item 三组手算例精确计数分别为 $1,2,4$；$C_4$ 的计数相位配对
+指数分别为 $6,12,30$（分母为 $24,48,120$），均给出 $i$；
+\item 每群一个完整的式 \eqref{eq:count-conversion} 比较，
+保存四个 $\beta$ 的全部 $N$ 项平均输入。
+\end{itemize}
+转换比较使用 45 位输出精度，残差分别为
+$4.5484781\times10^{-46}$、$3.1517170\times10^{-46}$、
+$6.1152770\times10^{-46}$，均低于检查阈值 $10^{-39}$。
+精确整数五边形没有浮点容差；上述转换比较仍是浮点验证，
+代表转换和全输入闭性的依据是第 \ref{sec:E-algebraic} 节的证明。
+完整数据见 \path{docs/review-0922/SU2_E_algebraic_validation.json}。
+这些是选定样本，未穷举 E 型全部四元组。
+
+以下浮点记录来自前一轮几何代表复核，作为历史基线保留；
+不代表新增计数接口的当前测试总数或精确模整数覆盖数：
+\begin{itemize}
+\item 当时 26 项单元测试通过，包括六边长顺序、镜像取向、中心退化及三组手算例；
 \item $2T,2O,2I$ 各 3 组五边形，保存精确输入和全部五项；
 \item 各群的手算例与边长路线、独立二面角路线比较；
 \item 中心 $(-1,-1,-1)$ 的相位为 $-1$，含单位元的相位为 1。
@@ -202,6 +226,11 @@ $2I$ & 3 & $8.464\times10^{-66}$\\
 \item \path{src/su2_omega.py}：\texttt{omega\_quaternions\_edge} 由三个群元经边长求 A 约定相位；
 \item \path{scripts/ade_phase.py}：\texttt{phase\_from\_exact\_quaternions} 是 E 型入口，默认边长路线；
 \texttt{phase\_details} 返回全部计算项，\texttt{method='angle'} 保留独立二面角比较；
+\item \path{scripts/ade_count.py}：独立的 E 型精确计数代表，返回模群阶的整数指数；
+与原几何接口的关系是式 \eqref{eq:count-conversion}，不是逐点相等；
+\texttt{count\_details} 返回计数及指数，\texttt{algebraic\_phase} 返回复近似，
+\texttt{gauge\_details} 返回转换平均的全部项；
+\item \path{scripts/check_e_algebraic.py}：持久化精确整数五边形及完整余边界比较；
 \item \path{scripts/check_ade_phase.py}：逐项五边形、手算例及退化例报告；
 \item \path{docs/review-0922/SU2_HUMAN_REVIEW_RESPONSE.md}：本轮完整审计及可复制公式。
 \end{itemize}
@@ -213,13 +242,17 @@ E 入口静默截断非整数 $k$、A 包装函数在默认精度取倒数造成
 python -m unittest discover -s tests -v
 python -m scripts.su2_edge_crosscheck
 python -m scripts.check_ade_phase
+python -m scripts.check_e_algebraic
 make adepdf
+make completepdf
 \end{verbatim}
 当前 checkout 无 09-21 命名资料或原源 A 附件；本轮沿用已有 A 负号约定。
-已交付的是 E 型完整有限几何公式，专属短表尚未导出；
+已给出 E 型完整有限几何公式及精确有界代数计数公式，
+并证明显式余边界转换和完整类阶；E 型专属短表尚未导出。
 任意 $n$ 的 D 表逐分支证明也仍需补齐。这些边界不以数值通过代替。
 \end{sloppypar}
 
+\ifdefined\SUComplete\expandafter\endinput\fi
 \begin{thebibliography}{9}
 \bibitem{jia} Q. Jia et al., \emph{Anomaly of Continuous Symmetries from Topological Defect Network}, arXiv:2510.14722v2 (2025).
 \bibitem{murakami} J. Murakami, \emph{Volume formulas for a spherical tetrahedron}, arXiv:1011.2584v4 (2011).

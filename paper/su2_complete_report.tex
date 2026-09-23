@@ -1,0 +1,81 @@
+\documentclass[UTF8,11pt,fontset=none]{ctexart}
+\usepackage[a4paper,margin=25mm,headheight=15pt]{geometry}
+\setCJKmainfont{Droid Sans Fallback}[AutoFakeBold=2,AutoFakeSlant=0.15]
+\setCJKsansfont{Droid Sans Fallback}[AutoFakeBold=2,AutoFakeSlant=0.15]
+\setCJKmonofont{Droid Sans Fallback}[AutoFakeBold=2,AutoFakeSlant=0.15]
+\setmainfont{DejaVu Serif}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}[Scale=MatchLowercase]
+\usepackage{amsmath,amssymb,mathtools,amsthm,booktabs,array,longtable,xcolor}
+\usepackage[unicode,colorlinks=true,linkcolor=blue!45!black,
+  citecolor=blue!45!black,urlcolor=blue!45!black]{hyperref}
+\hypersetup{pdftitle={SU(2) 反常与 ADE 有限子群：统一公式与完整推导}}
+\allowdisplaybreaks[2]
+\setlength{\emergencystretch}{2em}
+\setlength{\parskip}{0.25em}
+\raggedbottom
+\numberwithin{equation}{section}
+\theoremstyle{definition}
+\newtheorem{theorem}{定理}[section]
+\newtheorem{proposition}[theorem]{命题}
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{definition}[theorem]{定义}
+\newtheorem{remark}[theorem]{说明}
+\renewcommand{\proofname}{证明}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\Li}{Li}
+\DeclareMathOperator{\Arg}{Arg}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\conv}{conv}
+\DeclareMathOperator{\Span}{span}
+\DeclareMathOperator{\curv}{curv}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\C}{\mathbb C}
+\newcommand{\dd}{\mathrm d}
+\newcommand{\ee}{\mathrm e}
+\newcommand{\SU}{\mathrm{SU}(2)}
+\newcommand{\Dic}{\mathrm{Dic}}
+\newcommand{\Vol}{\operatorname{Vol}}
+\newcommand{\Id}{I}
+\newcommand{\Vor}{V_{\mathrm{or}}}
+\newcommand{\delG}{\delta_G}
+\newcommand{\file}[1]{\texttt{\detokenize{#1}}}
+\newcommand{\SUComplete}{}
+\title{SU(2) 反常与 ADE 有限子群：\\统一公式与完整推导}
+\author{}
+\date{2026 年 9 月 22 日}
+\begin{document}
+\maketitle
+\begin{abstract}
+本文将 SU(2) 背景反常的群元素相位、ADE 有限子群限制和完整几何推导合为一份报告。
+主约定采用源 A 的负体积相位，先给三个群元素直接决定的六边长公式、
+D 型八分支表、E 型全部输入的有限几何规则；再给 E 型的精确代数轨道计数公式。
+通过局部次数证明其闭性，以有限平均明确构造两代表间的二余链，
+并用 Gysin 序列证明类阶为 $N/\gcd(k,N)$。
+后半部完整保留 Chern--Simons 有限变换、共享链、微分特征类识别、
+二重对数和边长偏导推导；其中正体积相位统一标为 $\Omega_k=\omega_{A,k}^{-1}$。
+历史浮点记录与本轮精确验证分开标注，专属 E 型短表仍列为未完成的进一步化简。
+\end{abstract}
+\tableofcontents
+\clearpage
+\input{su2_ade_review.tex}
+\clearpage
+\section*{完整几何推导的相位约定}
+\addcontentsline{toc}{section}{完整几何推导的相位约定}
+以下保留原 SU(2) 推导中的正向 CS 插值及其所有证明，
+但用独立符号 $\Omega_k$ 表示其正体积相位：
+\[
+\Omega_k(g,h,l)=\exp\left(\frac{ik}{\pi}\int_TdV\right),
+\qquad \omega^{\rm geom}_{A,k}=\Omega_k^{-1},
+\qquad \widehat\omega_{\Gamma,k}=\Omega_k^{-1}\delta\beta_k.
+\]
+因此其循环配对为 $e^{-2\pi ik/n}$，前文 A 约定的配对为 $e^{2\pi ik/n}$；
+符号差由融合方向取逆明确解释，并不改变类阶。
+以下定理、局部校准和 Bockstein 符号均属于 $\Omega$ 约定。
+本报告只有一套目录、页码和引用；所有数值基线均注明所属阶段。
+\begingroup
+\let\omega\Omega
+\input{su2_cocycle.tex}
+\endgroup
+\end{document}

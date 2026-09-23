@@ -4,7 +4,9 @@
 
 **阅读入口：[完整综合 PDF](paper/su2_complete_report.pdf) · [主研究笔记 PDF](paper/su2_cocycle.pdf) · [ADE 补充报告 PDF](paper/su2_ade_review.pdf) · [ADE LaTeX 源码](paper/su2_ade_review.tex)**
 
-**本轮人类 review 答复：[三个群元素的边长体积公式与 E 型显式相位](docs/review-0922/SU2_HUMAN_REVIEW_RESPONSE.md)。** 综合 PDF 现在先放修订后的 ADE 答复，再附完整 SU(2) 推导。式 (2) 写出三个群元素给出的六个迹；式 (3)–(8) 给完整边长体积；式 (9)–(10) 给 E6/E7/E8 的元素集合、有限分支相位和三组手算实例。E 型尚未化为类似 D 型八行表的专属短表；不能把有限数值检查当作这一化简已经完成。
+**本轮 E 型推进：[精确代数公式、代表转换与验收记录](docs/review-0922/SU2_E_ALGEBRAIC_RESEARCH.md)。** 保留原几何公式，新增只用群元、行列式和精确正负号的轨道计数代表，并给出显式二余链 β，证明新旧代表共边界等价。综合 PDF 使用单一标题、目录、连续编号和统一的相位约定；保留完整 SU(2)/CS 推导。它是专家审阅稿，不表示已经获得外部同行评审。
+
+[前一轮人类 review 答复](docs/review-0922/SU2_HUMAN_REVIEW_RESPONSE.md) 保留从三个群元的六个迹到边长体积的完整公式。E 型现已给出有界精确代数公式，但未化为类似 D 型八行表的专属最短表；任意 n 的 D 表完整证明仍是单列遗留项。
 
 采用反厄米联络、基本表示普通迹，固定
 
@@ -64,6 +66,21 @@ phase = omega_quaternions_edge(*triple)     # exp(-i*pi/32)
 details = phase_details(*triple)           # 精确输入、分支、六边长、体积和相位
 ```
 
+新增 E 型代数代表（与几何代表同类，但逐点不同）：
+
+```python
+from scripts.ade_count import count_details, algebraic_phase, gauge_details
+
+exact = count_details('2T', *triple, k=1)
+assert exact['count'] == 1
+assert exact['exponent_mod_order'] == 23  # exp(2*pi*i*23/24) = exp(-i*pi/12)
+phase_alg = algebraic_phase('2T', *triple, dps=60)
+beta = gauge_details('2T', triple[0], triple[1], dps=45)
+# 对全部三元组：phase_alg = phase_geom * delta(beta)。完整证明见上面的研究稿。
+```
+
+`count_details` 保留未约化的有向整数计数和每个贡献者的精确群元；相位指数才按群阶取模。入口拒绝浮点坐标、非群成员和非整数 level。`gauge_details` 的体积比较使用高精度数值计算，返回全部平均项；它不参与整数计数的分支判断。
+
 若需要乘积恰为单位元或中心元，使用 `quaternion_multiply` 在精确四元数表示中完成乘法。矩阵入口检查尺寸和 SU(2) 数值残差，并将允许的舍入残差投影到明确的归一化四元数。它不会恢复浮点输入背后未被表示的精确代数关系。
 
 ## 重现检查
@@ -82,16 +99,19 @@ python -m scripts.su2_audit_checks
 python -m scripts.validate_su2
 python -m scripts.su2_edge_crosscheck
 python -m scripts.check_ade_phase
+python -m scripts.check_e_algebraic
 ```
 
 主验证先生成 `results/SU2_validation.json`，棱长路线随后读取其中固定的样本并生成 `results/SU2_edge_crosscheck.json`。报告路径由脚本位置确定。`requirements.txt` 固定完整计算环境中的两个数值包版本。
 
 | 检查 | 已执行结果 |
 |---|---|
-| 单元测试、精确链边界、异常输入 | 26 项通过；含边长与 E 型解析校准 |
+| 单元测试、精确链边界、异常输入 | 39 项通过；含 E 型字段、18 个分支样例的边界/等变检查和代表转换 |
 | 24 个一般输入与原三重积分 | 最大体积差约 `1.85e-13`，正负取向各 12 个 |
 | 棱长闭式独立复算 | 原固定样本扩展到全部 24 个，报告同时比较生产边长、独立边长及二面角路线 |
 | E 型逐项检查 | 每群 3 组五边形；保存全部五相位及其计算项，另有手算例和退化校准 |
+| 新 E 型代数代表 | 每群 16 组整数五边形，模群阶的余数均严格为 0；C4 配对为 +i |
+| 显式 β 转换 | 每群一个三元组、四个 β，共 768 个平均项；45 位输出的最大残差约 6.12e-46 |
 | 全局校准 | 中心值 `(-1)^k`、C4/C8 不变量、五边形、归一化均通过 |
 
 这些误差为实际交叉检查结果，未提供任意输入下的区间算术误差证书。数学证明和数值检查各自承担不同的验证作用。
@@ -106,11 +126,11 @@ make pdf
 # ADE 补充报告
 make adepdf
 
-# 合并为单一完整 PDF
+# 编译单一源入口的完整专家审阅稿（不是拼接两个 PDF）
 make completepdf
 ```
 
-LaTeX 源文件是 `paper/su2_cocycle.tex`；编译日志在忽略的 `build/paper/` 中。构建脚本检查缺字、未解析引用和溢出的排版盒子，通过后将 PDF 复制到 `paper/su2_cocycle.pdf` 并纳入版本控制。`make all` 顺序运行全部检查和 PDF 构建。
+原推导的 LaTeX 源文件是 `paper/su2_cocycle.tex`；完整报告入口为 `paper/su2_complete_report.tex`，复用原推导与 ADE/E 型章节，统一编译。构建脚本检查缺字、未解析引用和溢出的排版盒子，通过后更新对应 PDF。`make all` 顺序运行全部检查和 PDF 构建。
 
 ## 推导与来源
 

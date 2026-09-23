@@ -1,3 +1,4 @@
+\ifdefined\SUComplete\else
 \documentclass[UTF8,11pt,fontset=none]{ctexart}
 \usepackage[a4paper,margin=25mm,headheight=15pt]{geometry}
 \setCJKmainfont{Droid Sans Fallback}[AutoFakeBold=2,AutoFakeSlant=0.15]
@@ -66,6 +67,7 @@ $-k\widehat c_2$ 的平坦二级类。换面余边界、Bockstein 符号、
 
 \tableofcontents
 \clearpage
+\fi
 
 \section{问题、约定与结论的层次}\label{sec:conventions}
 
@@ -1316,6 +1318,9 @@ E/F/T 在该点按先前规则给出确定值，并与所有相邻胞腔共享�
 
 \section{计算实现、交叉核验与精度范围}\label{sec:computation}
 
+本节保留 2026 年 9 月 13 日的数值基线，以下样本数及测试数是历史记录，
+不能用作本轮 E 型接口的当前覆盖统计。
+
 理论公式的可执行实现位于 \file{src/su2_omega.py}。
 它使用 Python 标准库 \file{fractions} 中的 \file{Fraction} 保留输入有理正齐次四元数，
 对秩、反足、凸包含零和锥点候选作精确判定；
@@ -1335,7 +1340,7 @@ E/F/T 在该点按先前规则给出确定值，并与所有相邻胞腔共享�
 
 \begin{table}[htbp]
 \centering
-\caption{实际执行的主要交叉核验；误差为所运行样本的实测最大值}
+\caption{2026 年 9 月 13 日的历史交叉核验；误差仅指当时样本}
 \begin{tabular}{@{}p{0.46\linewidth}p{0.43\linewidth}@{}}
 \toprule
 检查 & 样本与结果\\
@@ -1447,5 +1452,13 @@ S. Schwede and B. Shipley,
 \emph{Equivalences of monoidal model categories},
 2003, Section 2.1, formula (2.1).
 \url{https://homepages.math.uic.edu/~bshipley/monoidalequi.final.pdf}.
+\ifdefined\SUComplete
+\bibitem{epa}
+N. Epa and N. Ganter,
+\emph{Platonic and alternating 2-groups}, arXiv:1605.09192v1,
+Theorem 1.1 and Proposition 4.1.
+\url{https://arxiv.org/abs/1605.09192v1}.
+\fi
 \end{thebibliography}
+\ifdefined\SUComplete\expandafter\endinput\fi
 \end{document}

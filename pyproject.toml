@@ -16,4 +16,4 @@ validation = ["numpy==2.4.4", "sympy==1.14.0"]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
-py-modules = ["su2_omega", "su2_symbolic", "su2_2t_geometry", "su2_exact_ade", "su2_polar_dual"]
+py-modules = ["su2_omega", "su2_symbolic", "su2_2t_geometry", "su2_exact_ade", "su2_polar_dual", "su2_polar_global", "su2_dic_exact"]
